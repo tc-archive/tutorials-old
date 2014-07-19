@@ -1,0 +1,68 @@
+/**
+ * Zmq Router / Dealer and Cluster Templates
+ *
+ */
+
+
+
+// |*| : Zmq Router Template
+//
+
+const
+	zmq = require('zmq'),
+	router = zmq.socket('router');
+	router.on('message', function() {
+
+let frames = Array.prototype.slice.call(null, arguments);
+	// ...
+});
+
+
+
+
+// |*| : Zmq Router Dealer Template
+//
+
+const
+	zmq = require('zmq'),
+	router = zmq.socket('router'),
+	dealer = zmq.socket('dealer');
+
+router.on('message', function() {
+let frames = Array.prototype.slice.call(null, arguments); dealer.send(frames);
+});
+
+dealer.on('message', function() {
+let frames = Array.prototype.slice.call(null, arguments);
+  router.send(frames);
+});
+
+
+
+// |*| : Node Clusterr Template
+//
+
+const 
+	cluster = require('cluster');
+
+if (cluster.isMaster) {
+	// fork some worker processes 
+	for (let i = 0; i < 10; i++) {
+    	// |*|| : Create a new Node.js process running the same script but where 'cluster.isMaster=false'.
+    	//		  These 'worker' processes can communicate through the 'master' through various events.
+    	cluster.fork();
+  	}
+
+  	// |*| : This is a 'master' process, manage the 'workers'!
+	//
+  	cluster.on('exit', function(worker, code, signal) {
+		console.log('Worker ' + worker.process.pid + ' exited with code ' + code);
+	});
+
+} else {
+	// |*| : This is a worker process, do some work!
+	//
+	cluster.on('online', function(worker) {
+	console.log('Worker ' + worker.process.pid + ' is online.');
+});
+}
