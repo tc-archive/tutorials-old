@@ -1,8 +1,10 @@
 %%%-------------------------------------------------------------------
 %%% @author Temple
-%%% @copyright (C) 2014, <COMPANY>
+%%% @author Gene I Sher
+%%% @copyright (C) 2014, http://www.springer.com/computer/swe/book/978-1-4614-4462-6
 %%% @doc
-%%%
+%%% Modified source code. Originally authored by Gene I Sher.
+%%% "Handbook of Neuroevolution through Erland", ISBN 978-1-4614-4463-3,
 %%% @end
 %%% Created : 12. Jul 2014 17:12
 %%%-------------------------------------------------------------------
@@ -16,19 +18,25 @@
 
 
 % *************************************************************************************************
-% The construct_Genotype function accepts the name of the file to which we’ll save the genotype,
-% sensor name, actuator name, and the hidden layer density parameters. We have to generate unique
-% Ids for every sensor and actuator. The sensor and actuator names are used as input to the
-% create_Sensor and create_Actuator functions, which in turn generate the actual Sensor and Actuator
-% representing tuples. We create unique Ids for sensors and actuators so that when in the future a
-% NN uses 2 or more sensors or actuators of the same type, we will be able to differentiate between
-% them using their Ids. After the Sensor and Actuator tuples are generated, we extract the NN’s input
-% and output vector lengths from the sensor and actuator used by the system. The Input_VL is then
-% used to specify how many weights the neurons in the input layer will need, and the Output_VL
-% specifies how many neurons are in the output layer of the NN. After appending the
-% HiddenLayerDensites to the now known number of neurons in the last layer to generate the full
-% LayerDensities list, we use the create_NeuroLayers function to generate the Neuron representing
-% tuples. We then update the Sensor and Actuator records with proper fanin and fanout ids from the
+% The construct_Genotype function accepts the name of the file to which we’ll save the 'genotype',
+% 'sensor name', 'actuator name', and the 'hidden layer density' parameters.
+%
+% We have to generate unique Ids for every sensor and actuator. The sensor and actuator names are
+% used  as input to the create_Sensor and create_Actuator functions, which in turn generate the
+% actual Sensor and Actuator representing tuples. We create unique Ids for sensors and actuators so
+% that when in the  future a  NN uses 2 or more sensors or actuators of the same type, we will be
+% able to differentiate between them using their Ids.
+%
+% After the Sensor and Actuator tuples are generated, we extract the NN’s input and output vector
+% lengths from the sensor and actuator used by the system. The Input_VL is then used to specify how
+% many weights the neurons in the input layer will need, and the Output_VL specifies how many
+% neurons  are in the output layer of the NN.
+%
+% After appending the HiddenLayerDensites to the now known number of neurons in the last layer to
+% generate the full LayerDensities list, we use the create_NeuroLayers function to generate the
+% Neuron representing tuples.
+%
+% We then update the Sensor and Actuator records with proper fanin and fanout ids from the
 % freshly created Neuron tuples, compose the Cortex, and write the genotype to file.
 %
 construct_Genotype(SensorName,ActuatorName,HiddenLayerDensities) ->

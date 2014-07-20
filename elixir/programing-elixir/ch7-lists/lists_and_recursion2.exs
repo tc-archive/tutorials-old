@@ -77,13 +77,13 @@ defmodule ListIt do
 
   defp do_caesar([], _n, _range), do: [] 
   defp do_caesar([head|tail], n, sc..ec) 
-    # when n >= 0 do
-      do
+    when n >= 0 do
     [sc + rem(head - sc + n, ec - sc + 1) | do_caesar(tail, n, sc..ec)]
   end
   defp do_caesar([head|tail], n, sc..ec) 
     when n < 0 do
-    [sc + rem(head + ec + n, ec - sc + 1) | do_caesar(tail, n, sc..ec)]
+      IO.puts("#{rem(head - sc + n, ec - sc + 1)}")
+    [sc + rem(head - sc + n, ec - sc + 1) | do_caesar(tail, n, sc..ec)]
   end
 
 
