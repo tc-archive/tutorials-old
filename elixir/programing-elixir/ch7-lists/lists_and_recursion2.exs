@@ -51,6 +51,12 @@ defmodule ListIt do
   defp do_max([head|tail], max) when head > max, do: do_max(tail, head)
   defp do_max([head|tail], max) when head <= max, do: do_max(tail, max)
 
+  # Book solution using the Kernal module max funtion.
+  # max([]) is undefined...
+  # max of a single element list is that element
+  def max_2([x]), do: x
+  def max_2([ head | tail ]), do: Kernel.max(head, max(tail))
+
 
   # ***********************************************************************************************
   @doc """
@@ -60,14 +66,6 @@ defmodule ListIt do
 
   iex> MyList.caesar('ryvkve', 13) ?????? :)
   """
-
-  # def caesar(charlist, n) when n >= 0, do: do_caesar(charlist, n)
-  # defp do_caesar([], _n), do: [] 
-  # defp do_caesar([head|tail], n) do
-  #   [?A + rem(head - ?A + n, _range()) | do_caesar(tail, n)]
-  # end
-
-
   def caesar(charlist, n, sc..ec \\ ?A..?z) 
     when ec > sc do 
     do_caesar(charlist, n, sc..ec)
@@ -80,22 +78,25 @@ defmodule ListIt do
     when n >= 0 do
     [sc + rem(head - sc + n, ec - sc + 1) | do_caesar(tail, n, sc..ec)]
   end
-  defp do_caesar([head|tail], n, sc..ec) 
-    when n < 0 do
-      IO.puts("#{rem(head - sc + n, ec - sc + 1)}")
-    [sc + rem(head - sc + n, ec - sc + 1) | do_caesar(tail, n, sc..ec)]
-  end
+  # TODO: Get the negative wrap working... This does not work quite as expected!
+  # defp do_caesar([head|tail], n, sc..ec) 
+  #   when n < 0 do
+  #   [ec - rem(head - sc - n, ec - sc + 1) | do_caesar(tail, n, sc..ec)]
+  # end
 
 
+  # an alternative using an accumlator and a fixed alphabet range ?a..?z
   def caesar_acm(charlist, n), do: do_caesar_acm(charlist, n, [])
   defp do_caesar_acm([], _n, res), do: res 
   defp do_caesar_acm([head|tail], n, res) do
-    do_caesar_acm(tail, n, res ++ [?A + rem(head - ?A + n, 58)])
+    do_caesar_acm(tail, n, res ++ [?a + rem(head - ?a + n, ?z - ?a + 1)])
   end
 
-  def _range(), do: ?z - ?A + 1
 
-
+  @doc """
+  Create a list of tuples pairing the a character representation with its 
+  binary integer representation. 
+  """
   def charmap char1..char2 do
     for x <- char1..char2, do: {"#{[x]}", x}
   end
