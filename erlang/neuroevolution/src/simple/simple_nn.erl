@@ -39,6 +39,23 @@
 % Then the Cortex element is registered and provided with the PIds of all the elements in the NN
 % system.
 %
+%
+% --- Erlang ---
+%
+% 1) Spawn a N_PId 'neuron' process for this module with the defined Weights and intially undefined
+%    (input) 'sensor' and (output) 'actuator' processes. These will be specified in Step 3.
+% 2) Spawn S_PId 'sensor' and A_PId 'actuator' process with a reference to the single N_PId neuron.
+% 3) Send an 'init' message to the N_PId process providing the SPId and APId references.
+% 4) Spawn and register a (CPId) 'cortex' process with SPId, NPId, and APId references.
+%
+% This effectively creates a complete 'single neuron network' with individual 'sensor', 'neuron'
+% and 'actuator' processes governed by an individual 'cortex' process.
+%
+%                                  |---------- Cortex -----------|
+%                                  |             |               |
+%                                  V             V               V
+%                                Sensor -----> Neuron -----> Actuator
+%
 create() ->
 	Weights = [random:uniform()-0.5,random:uniform()-0.5,random:uniform()-0.5],
 	N_PId = spawn(?MODULE,neuron,[Weights,undefined,undefined]),
@@ -54,14 +71,26 @@ create() ->
 % has all the PIds of the elements in the NN system, so that it can terminate the whole system when
 % requested.
 %
-cortex(Sensor_PId,Neuron_PId,Actuator_PId) ->
+%
+% --- Erlang ---
+%
+% A 'reciever' method that is bound to the 'cortex' process.
+%
+% After initialisation it has reference  to the S_PId (sensor), N_PId (neuron), and, A_PId
+% (actuator). It then has the cabability to manage and orchestrate the use of each process.
+%
+% The 'recieve block' matches on and perform the following messaging functions:
+% 1) sense_think_act: Command the 'sensor' to initiate a 'pulse'.
+% 2) terminate      : Command all manged processes to terminate.
+%
+cortex(Sensor_PId,Neuron_PId,Actuator_PId) ->     % Reference to three managed processes.
 	receive
 
 		sense_think_act ->
-			Sensor_PId ! sync,
-			cortex(Sensor_PId,Neuron_PId,Actuator_PId);
+			Sensor_PId ! sync,                          % Tell the 'sensor' to initiate a pulse event.
+			cortex(Sensor_PId,Neuron_PId,Actuator_PId); % Keep alive!
 
-		terminate ->
+		terminate ->                                  % Terminate all processes.
 			Sensor_PId ! terminate,
 			Neuron_PId ! terminate,
 			Actuator_PId ! terminate,

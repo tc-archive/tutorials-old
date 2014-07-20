@@ -45,9 +45,9 @@
 % The create function spawns a single neuron, where the weights and the bias are generated randomly
 % to  be between -0.5 and 0.5.
 %
-% Erlang >>>
+% --- Erlang ---
 %
-% This initialiser function 'spawns' and 'registers' a new erlang process called "neuron" which is
+% This initialiser function 'spawns' and 'registers' a new Erlang process called "neuron" which is
 % initialised with the 'loop' function, and, the specified random input weights and bias.
 %
 % The specified 'loop function' contains a 'recieve block' that accepts tuples of the form
@@ -66,7 +66,7 @@ create() ->
 % The output is also a vector of length one.
 %
 %
-% Erlang >>>
+% --- Erlang ---
 %
 % The specified 'loop function' contains a 'recieve block' that accepts tuples of the form
 % {From, Input} where 'From' is the PId of the calling process and 'Input' a list of 'input signal'
@@ -98,9 +98,9 @@ loop(Weights) ->                          % The input weights + bias.
 % then add to the accumulator.
 %
 %
-% Erlang >>>
+% --- Erlang ---
 %
-% Recursively determien the dot-product of the input and weights with the base case handing the
+% Recursively determine the dot-product of the input and weights with the base case handing the
 % bias.
 %
 dot([I|Input], [W|Weights], Acc) ->       % List of Input, List of Weight + Bias, Accumulator
@@ -114,8 +114,9 @@ dot([], [Bias], Acc)->                    % In the base case simply add the rema
 % ensures that the signal we are sending is a vector of length 2.
 %
 %
-% Erlang >>>
-%
+% --- Erlang ---
+% If the specified Signal is a valid input to the neuron process; then forward the Signal to the
+% neuron process with a callback reference to this process.
 %
 %
 sense(Signal) ->                            % List of (2) input values
