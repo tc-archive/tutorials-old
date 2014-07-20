@@ -15,6 +15,16 @@
 -export([]).
 -compile(export_all).
 
+% *************************************************************************************************
+% Overview
+%
+% In the following algorithm, we spawn a process to represent our Neuron, and register it so that
+% we can send and receive signals from it.
+%
+% We use a simple remote procedure call function called ‘sense’ to send signals to the registered
+% neuron, and then receive the neuron’s output.
+
+
 
 % *************************************************************************************************
 % Usage
@@ -34,25 +44,49 @@
 % *************************************************************************************************
 % The create function spawns a single neuron, where the weights and the bias are generated randomly
 % to  be between -0.5 and 0.5.
+%
+% Erlang >>>
+%
+% This initialiser function 'spawns' and 'registers' a new erlang process called "neuron" which is
+% initialised with the 'loop' function, and, the specified random input weights and bias.
+%
+% The specified 'loop function' contains a 'recieve block' that accepts tuples of the form
+% {From, Input} where 'From' is the PId of the calling process and 'Input' an extended list of
+% 'input signal' float values (that, in this static case with bias should be 3).
+%
 create() ->
 	Weights = [random:uniform() - 0.5, random:uniform() - 0.5, random:uniform() - 0.5],
   register(neuron, spawn(?MODULE, loop, [Weights])).
 
 
 % *************************************************************************************************
-% The spawned neuron process accepts an input vector, prints it and the weight
-% vector to the screen, calculates the output, and then sends the output to the
-% contacting process. The output is also a vector of length one.
+% The spawned neuron process accepts an input vector, prints it and the weight vector to the
+% screen, calculates the output, and then sends the output to the contacting process.
 %
-loop(Weights) ->
+% The output is also a vector of length one.
+%
+%
+% Erlang >>>
+%
+% The specified 'loop function' contains a 'recieve block' that accepts tuples of the form
+% {From, Input} where 'From' is the PId of the calling process and 'Input' a list of 'input signal'
+% float values (that, in this static case should be 3).
+%
+% Upon recieving a valid input tuple the output is calculated by caculating the 'dot product' of
+% the incoming 'non-extended inputs' with the 'weights and bias'.
+%
+% This result is wrapped in a tuple and sent back to the calling PId, and the loop function
+% recursively called to kepp it alive.
+%
+loop(Weights) ->                          % The input weights + bias.
   receive
 
     {From, Input} ->
       io:format("* * * * Processing * * * * ~n Input:~p~n Using Weights:~p~n", [Input, Weights]),
       Dot_Product = dot(Input, Weights, 0),
-      Output = [math:tanh(Dot_Product)],
-      From ! {result, Output}, 
-      loop(Weights)
+      Output = [math:tanh(Dot_Product)],  % One element output
+      From ! {result, Output},            % Return a tuple response
+      loop(Weights)                       % Stay alive!
 
   end.
 
@@ -63,9 +97,15 @@ loop(Weights) ->
 % will empty out while the weight list will still have the single bias value remaining, which we
 % then add to the accumulator.
 %
-dot([I|Input], [W|Weights], Acc) -> 
-  dot(Input, Weights, I * W + Acc);
-dot([], [Bias], Acc)-> 
+%
+% Erlang >>>
+%
+% Recursively determien the dot-product of the input and weights with the base case handing the
+% bias.
+%
+dot([I|Input], [W|Weights], Acc) ->       % List of Input, List of Weight + Bias, Accumulator
+  dot(Input, Weights, I * W + Acc);       % Recursively determine the dot product.
+dot([], [Bias], Acc)->                    % In the base case simply add the remaining 'bias'.
   Acc + Bias.
 
 
@@ -73,13 +113,19 @@ dot([], [Bias], Acc)->
 % We use the sense function to contact the neuron and send it an input vector. The sense function
 % ensures that the signal we are sending is a vector of length 2.
 %
-sense(Signal) ->
+%
+% Erlang >>>
+%
+%
+%
+sense(Signal) ->                            % List of (2) input values
 
   case is_list(Signal) and (length(Signal) == 2) of
     true ->
-      neuron ! {self(), Signal},
+      neuron ! {self(), Signal},            % If the input signal is valid send it to the registered
+	                                          % 'neuron' process with 'self' as the callback process.
       receive {result, Output} ->
-        io:format("Output:~p~n", [Output])
+        io:format("Output:~p~n", [Output])  % Handle the result by displaying it.
       end;
     false ->
       io:format("The Signal must be a list of length 2~n")

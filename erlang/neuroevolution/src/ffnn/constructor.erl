@@ -24,7 +24,7 @@
 % We have to generate unique Ids for every sensor and actuator. The sensor and actuator names are
 % used  as input to the create_Sensor and create_Actuator functions, which in turn generate the
 % actual Sensor and Actuator representing tuples. We create unique Ids for sensors and actuators so
-% that when in the  future a  NN uses 2 or more sensors or actuators of the same type, we will be
+% that when in the future a NN uses 2 or more sensors or actuators of the same type, we will be
 % able to differentiate between them using their Ids.
 %
 % After the Sensor and Actuator tuples are generated, we extract the NN’s input and output vector
@@ -45,11 +45,20 @@ construct_Genotype(SensorName,ActuatorName,HiddenLayerDensities) ->
 
 construct_Genotype(FileName,SensorName,ActuatorName,HiddenLayerDensities) ->
 
+	% Create Sensor and Actuators
+	%
 	S =create_Sensor(SensorName),
 	A = create_Actuator(ActuatorName),
+
+	% Create Sensor and Actuators
+	%
 	Output_VL = A#actuator.vl,
 	LayerDensities = lists:append(HiddenLayerDensities,[Output_VL]),
+
+
 	Cx_Id = {cortex,generate_id()},
+
+
 	Neurons = create_NeuroLayers(Cx_Id,S,A,LayerDensities),
 	[Input_Layer|_] = Neurons,
 	[Output_Layer|_] = lists:reverse(Neurons),
@@ -60,6 +69,8 @@ construct_Genotype(FileName,SensorName,ActuatorName,HiddenLayerDensities) ->
 	Actuator = A#actuator{cx_id=Cx_Id,fanin_ids = LL_NIds},
 	Cortex = create_Cortex(Cx_Id,[S#sensor.id],[A#actuator.id],NIds),
 	Genotype = lists:flatten([Cortex,Sensor,Actuator|Neurons]),
+
+
 	{ok, File} = file:open(FileName, write),
 	lists:foreach(fun(X) -> io:format(File, "~p.~n",[X]) end, Genotype),
 	file:close(File).
@@ -69,14 +80,20 @@ construct_Genotype(FileName,SensorName,ActuatorName,HiddenLayerDensities) ->
 % *************************************************************************************************
 % Every sensor and actuator uses some kind of function associated with it, a function that either
 % polls the environment for sensory signals (in the case of a sensor) or acts upon the environment
-% (in the case of an actuator). It is the function that we need to define and program before it is
-% used, and the name of the function is the same as the name of the sensor or actuator itself. For
-% example, the create_Sensor/1 has specified only the rng sensor, because that is the only sensor
-% function we’ve finished developing. The rng function has its own vl specification, which will
-% determine the number of weights that a neuron will need to allocate if it is to accept this
-% sensor’s output vector. The same principles apply to the create_Actuator function. Both,
-% create_Sensor and create_Actuator function, given the name of the sensor or actuator, will return
-% a record with all the specifications of that element, each with its own unique Id.
+% (in the case of an actuator).
+%
+% It is the function that we need to define and program before it is used, and the name of the
+% function is the same as the name of the sensor or actuator itself.
+%
+% For example, the create_Sensor/1 has specified only the rng sensor, because that is the only
+% sensor function we’ve finished developing. The rng function has its own vl specification, which
+% will determine the number of weights that a neuron will need to allocate if it is to accept this
+% sensor’s output vector.
+%
+% The same principles apply to the create_Actuator function.
+%
+% Both, create_Sensor and create_Actuator function, given the name of the sensor or actuator, will
+% return a record with all the specifications of that element, each with its own unique Id.
 %
 create_Sensor(SensorName) ->
 
