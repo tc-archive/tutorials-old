@@ -20,7 +20,12 @@
 *.rar
 *.tar
 *.zip
- 
+
+# IDE #
+######################
+.idea
+
+
 # Logs and databases #
 ######################
 *.log
