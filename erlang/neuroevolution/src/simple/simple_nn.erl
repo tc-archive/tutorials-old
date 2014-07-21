@@ -80,6 +80,7 @@ create() ->
 % (actuator). It then has the cabability to manage and orchestrate the use of each process.
 %
 % The 'recieve block' matches on and perform the following messaging functions:
+%
 % 1) sense_think_act: Command the 'sensor' to initiate a 'pulse'.
 % 2) terminate      : Command all manged processes to terminate.
 %
@@ -94,6 +95,22 @@ cortex(Sensor_PId,Neuron_PId,Actuator_PId) ->     % Reference to three managed p
 			Sensor_PId ! terminate,
 			Neuron_PId ! terminate,
 			Actuator_PId ! terminate,
+			ok
+
+	end.
+
+
+% *************************************************************************************************
+sensor(N_PId) ->
+	receive
+
+		sync ->
+			Sensory_Signal = [random:uniform(),random:uniform()],
+			io:format("****Sensing****:~n Signal from the environment ~p~n",[Sensory_Signal]),
+			N_PId ! {forward, self(),Sensory_Signal},
+			sensor(N_PId);
+
+		terminate ->
 			ok
 
 	end.
@@ -136,24 +153,6 @@ dot([I|Input],[W|Weights],Acc)
 dot([],[],Acc)->
 	Acc; dot([],[Bias],Acc)->
 	Acc + Bias.
-
-
-
-% *************************************************************************************************
-sensor(N_PId) ->
-	receive
-
-	  sync ->
-			Sensory_Signal = [random:uniform(),random:uniform()],
-		  io:format("****Sensing****:~n Signal from the environment ~p~n",[Sensory_Signal]),
-			N_PId ! {forward, self(),Sensory_Signal},
-			sensor(N_PId);
-
-		terminate ->
-			ok
-
-	end.
-
 
 
 
