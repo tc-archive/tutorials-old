@@ -4,7 +4,7 @@
 %%% @copyright (C) 2014, http://www.springer.com/computer/swe/book/978-1-4614-4462-6
 %%% @doc
 %%% Modified source code. Originally authored by Gene I Sher.
-%%% "Handbook of Neuroevolution through Erland", ISBN 978-1-4614-4463-3,
+%%% "Handbook of Neuroevolution through Erlang", ISBN 978-1-4614-4463-3,
 %%% @end
 %%% Created : 10. Jul 2014 19:51
 %%%-------------------------------------------------------------------
