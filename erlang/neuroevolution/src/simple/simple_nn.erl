@@ -81,17 +81,17 @@ create() ->
 %
 % The 'recieve block' matches on and perform the following messaging functions:
 %
-% 1) sense_think_act: Command the 'sensor' to initiate a 'pulse'.
-% 2) terminate      : Command all manged processes to terminate.
+% 1) sense_think_act: Message the 'sensor' to initiate a 'pulse'.
+% 2) terminate      : Message all manged processes to terminate.
 %
 cortex(Sensor_PId,Neuron_PId,Actuator_PId) ->     % Reference to three managed processes.
 	receive
 
 		sense_think_act ->
-			Sensor_PId ! sync,                          % Tell the 'sensor' to initiate a pulse event.
+			Sensor_PId ! excite,                        % Message the 'sensor' to initiate a pulse event.
 			cortex(Sensor_PId,Neuron_PId,Actuator_PId); % Keep alive!
 
-		terminate ->                                  % Terminate all processes.
+		terminate ->                                  % Terminate all processes. Return ok.
 			Sensor_PId ! terminate,
 			Neuron_PId ! terminate,
 			Actuator_PId ! terminate,
@@ -101,19 +101,37 @@ cortex(Sensor_PId,Neuron_PId,Actuator_PId) ->     % Reference to three managed p
 
 
 % *************************************************************************************************
+% The 'sensor' process maintains a reference to a single neuron process. It has the capability
+% to message a 'Sensory_Signal' to the the neuron process.
+%
+%
+% --- Erlang ---
+%
+% A 'reciever' method that is bound to the 'sensor' process.
+%
+% After initialisation it has reference  to the N_PId (neuron) process.
+%
+% The 'recieve block' matches on and perform the following messaging functions:
+%
+% 1) excite         : Message the neuron process with a Sensory_Signal.
+% 2) terminate      : Terminate the process. Return ok.
+%
 sensor(N_PId) ->
 	receive
 
-		sync ->
-			Sensory_Signal = [random:uniform(),random:uniform()],
-			io:format("****Sensing****:~n Signal from the environment ~p~n",[Sensory_Signal]),
-			N_PId ! {forward, self(),Sensory_Signal},
-			sensor(N_PId);
+		excite ->
+			Sensory_Signal = [random:uniform(),random:uniform()],   % Generate a random signal.
+			log_signal(Sensory_Signal),
+			N_PId ! {forward, self(), Sensory_Signal},              % Forward the signal to the neuron.
+			sensor(N_PId);                                          % Keep alive!
 
-		terminate ->
+		terminate ->                                              % Terminate this process.
 			ok
 
 	end.
+
+log_signal(Sensory_Signal) ->
+	io:format("****Sensing****:~n Signal from the environment ~p~n",[Sensory_Signal]).
 
 
 % *************************************************************************************************
@@ -123,23 +141,41 @@ sensor(N_PId) ->
 % The neuron expects a vector of length 2 as input, and as soon as the input arrives, the neuron
 % processes the signal and passes the output vector to the outgoing APId.
 %
+%
+% --- Erlang ---
+%
+% A 'reciever' method that is bound to the 'neuron' process.
+%
+% After initialisation it has reference  to the S_PId (sensor) process, A_PId (actuator) process,
+% and a set of weights.
+%
+% The 'recieve block' matches on and perform the following messaging functions:
+%
+% 1) init         : Post initialise SPId and APId process reference
+% 2) forward      : Process the specified input and forward the 'neural output' to the 'actuator'
+%                   process.
+% 3) terminate    : Terminate the process. Return ok.
+%
 neuron(Weights,S_PId,A_PId) ->
 	receive
 
-		{init, New_SPId, New_APId} ->
-			neuron(Weights,New_SPId,New_APId);
+		{init, New_SPId, New_APId} ->                     % Set the updated S_PId and A_PId values.
+			neuron(Weights,New_SPId,New_APId);              % Keep alive!
 
-		{forward, S_PId, Input} ->
-			io:format("****Thinking****~n Input:~p~n with Weights:~p~n", [Input,Weights]),
-			Dot_Product = dot(Input,Weights,0),
-			Output = [math:tanh(Dot_Product)],
-			A_PId ! {forward, self(), Output},
-			neuron(Weights,S_PId,A_PId);
+		{forward, S_PId, Input} ->                        % Process the input signal.
+			log_input([Input,Weights]),
+			Dot_Product = dot(Input,Weights,0),             % Determine the 'dot-product'.
+			Output = [math:tanh(Dot_Product)],              % Determine the neural ouput.
+			A_PId ! {forward, self(), Output},              % Forward the signal to the actuator.
+			neuron(Weights,S_PId,A_PId);                    % Keep alive!
 
-		terminate ->
+		terminate ->                                      % Terminate the process. Return ok.
 			ok
 
 	end.
+
+log_input([Input,Weights]) ->
+	io:format("****Thinking****~n Input:~p~n with Weights:~p~n", [Input,Weights]).
 
 
 % *************************************************************************************************
@@ -160,19 +196,31 @@ dot([],[],Acc)->
 % The Actuator function waits for a control signal coming from a Neuron. As soon as the signal
 % arrives, the actuator executes its function, pts/1, which prints the value to the screen.
 %
+%
+% --- Erlang ---
+%
+% A 'reciever' method that is bound to the 'actuator' process.
+%
+% After initialisation it has reference  to the N_PId (neuron) process.
+%
+% The 'recieve block' matches on and perform the following messaging functions:
+%
+% 1) forward      : Process the specified input and act on the environment,
+% 2) terminate    : Terminate the process. Return ok.
+%
 actuator(N_PId) ->
 	receive
 
-		{forward,N_PId,Control_Signal} ->
-			pts(Control_Signal),
-			actuator(N_PId);
+		{forward,N_PId,Control_Signal} ->                   % Process the input signal.
+			act(Control_Signal),                              % Act on the environment.
+			actuator(N_PId);                                  % Keep alive!
 
-		terminate ->
+		terminate ->                                        % Terminate the process. Return ok.
 			ok
 
   end.
 
-pts(Control_Signal) ->
+act(Control_Signal) ->
 	io:format("****Acting****:~n Using:~p to act on environment.~n",[Control_Signal]).
 
 
