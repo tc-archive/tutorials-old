@@ -124,7 +124,7 @@ sense(Signal) ->                            % List of (2) input values
   case is_list(Signal) and (length(Signal) == 2) of
     true ->
       neuron ! {self(), Signal},            % If the input signal is valid send it to the registered
-																						% 'neuron' process with 'self' as the callback process.
+                                            % 'neuron' process with 'self' as the callback process.
       receive {result, Output} ->
         io:format("Output:~p~n", [Output])  % Handle the result by displaying it.
       end;
