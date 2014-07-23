@@ -22,7 +22,7 @@
 %             ouputs.
 % Actuator  : An element type to perform an action on the enivornment based on it's input.
 %
-%
+
 
 % *************************************************************************************************
 % The 'cortex' record is a direct genotype encoding of a 'cortex' entity that maintains references

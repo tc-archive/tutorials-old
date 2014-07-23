@@ -18,6 +18,24 @@
 
 
 % *************************************************************************************************
+%% Usage
+%%
+%% 1>c(constructor).
+%% {ok,constructor}.
+%% 2>constructor:construct_Genotype(ffnn,rng,pts,[1,3]).
+%% ok
+%%
+%%
+%% Open the file to which the Genotype was written (ffnn in the above example), and peruse the
+%% generated list of tuples to ensure that all the elements are properly interconnected by looking at
+%% their fanin/fanout and input/output ids. This list is a genotype of the NN which is composed of 3
+%% feed forward neural layers, with 1 neuron in the first layer, 3 in the second, and 1 in the third.
+%% The created NN genotype uses the rng sensor and pts actuator.
+%%
+
+
+
+% *************************************************************************************************
 % The construct_Genotype function accepts the name of the file to which we’ll save the 'genotype',
 % 'sensor name', 'actuator name', and the 'hidden layer density' parameters.
 %
