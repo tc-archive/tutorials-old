@@ -54,27 +54,60 @@
 % generate the full LayerDensities list, we use the create_NeuroLayers function to generate the
 % Neuron representing tuples.
 %
+% In this way, the hidden layer density vector list denotes the number neurones in each layer
+% exceot for the final layer which is determines by the size of the vector accepted by the
+% terminating actuator. For example:
+%
+% HLD: [] - Produces a single (output) layer one neuron network.
+%           [S] -------------------------> [N] ----> [A]
+%
+% HLD: [1] - Produces a two layer (one hidden) two neuron network.
+%           [S] ----> [N] ---------------> [N] ----> [A]
+%
+% HLD: [2] - Produces a two layer (one hidden) three neuron network.
+%
+%                /--> [N] -->\
+%           [S] +             + ---------- [N] ----> [A]
+%                \--> [N] -->/
+%
+% HLD: [1, 2] - Produces a three layer (2 hidden) four neuron network.
+%
+%                          /--> [N] --->\
+%           [S] ----> [N] +              + [N] ----> [A]
+%                          \--> [N] --->/
+%
+%
 % We then update the Sensor and Actuator records with proper fanin and fanout ids from the
 % freshly created Neuron tuples, compose the Cortex, and write the genotype to file.
 %
-construct_Genotype(SensorName,ActuatorName,HiddenLayerDensities) ->
-
-	construct_Genotype(ffnn,SensorName,ActuatorName,HiddenLayerDensities).
-
+%
+% --- Params ---
+%
+% FileName              : The name of the output file to which the genotype will be output.
+%
+% SensorName            : The sensor to use for the single sensor.
+%                         NB: The Input_VL of the sensor used to specify how  many weights
+%                             the neurons in the input layer will need.
+%
+% ActuatorName          : The actuator function atom to use for the single actuator.
+%                         NB: Output_VL specifies how many neurons  are in the output layer
+%                             of the NN.
+%
+% HiddenLayerDensities  : The required layer densities of the hidden layer.
+%
 construct_Genotype(FileName,SensorName,ActuatorName,HiddenLayerDensities) ->
 
+	Cx_Id = {cortex,generate_id()},
+
 	% Create Sensor and Actuators
-	%
-	S =create_Sensor(SensorName),
-	A = create_Actuator(ActuatorName),
+	S = create_Sensor(SensorName),       % Currently only 'rng' is supported.
+	A = create_Actuator(ActuatorName),  % Currently only 'pts' is supportd.
 
 	% Create Sensor and Actuators
 	%
 	Output_VL = A#actuator.vl,
 	LayerDensities = lists:append(HiddenLayerDensities,[Output_VL]),
 
-
-	Cx_Id = {cortex,generate_id()},
 
 
 	Neurons = create_NeuroLayers(Cx_Id,S,A,LayerDensities),
@@ -93,6 +126,10 @@ construct_Genotype(FileName,SensorName,ActuatorName,HiddenLayerDensities) ->
 	lists:foreach(fun(X) -> io:format(File, "~p.~n",[X]) end, Genotype),
 	file:close(File).
 
+
+construct_Genotype(SensorName,ActuatorName,HiddenLayerDensities) ->
+
+	construct_Genotype(ffnn,SensorName,ActuatorName,HiddenLayerDensities).
 
 
 % *************************************************************************************************
@@ -121,7 +158,7 @@ create_Sensor(SensorName) ->
 			#sensor{id={sensor,generate_id()},name=rng,vl=2};
 
 		_ ->
-			exit("System does not yet support a sensor by thecname:~p.",[SensorName])
+			exit("System does not yet support a sensor by the name:~p.",[SensorName])
 
 	end.
 
