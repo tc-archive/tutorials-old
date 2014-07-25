@@ -16,16 +16,26 @@
 -compile(export_all).
 -include("records.hrl").
 
+
 % *************************************************************************************************
 %% Cortex
 %%
 %% The cortex module is part of the 'exoself' genotype <---> phenotype mapper.
 %%
+%% The spawned cortex process is responsible for:
+%%
+%% 1) Creating a cortex process phenotype from its genotype representation.
+%% 2) Orchestrating 'pulses' through the feed forward network.
+%% 3) Invoking the sensor processes to gather data and initate a pulse through the network.
+%% 4) Monitoring the actuator processes to determine when a pulse through the network is complete.
+%% 5) Shutting down the network processes as specified.
+%% 6) Persisting a network state to disk.
+%%
 
 % *************************************************************************************************
 %% Usage
 %%
-%% 1>c(constructor).
+%% 1>c(cortex).
 %%
 
 
@@ -66,7 +76,7 @@ gen(ExoSelf_PId,Node) ->
 loop(ExoSelf_PId) ->
 
 	receive
-		% Initialise the Exoself process
+		% Initialise the cortex process from cortex genotype tuple.
 		{ExoSelf_PId,{Id,SPIds,APIds,NPIds},TotSteps} ->
 
 			% Send a 'sync' message to each sensor.
@@ -75,6 +85,7 @@ loop(ExoSelf_PId) ->
 			% Keep alive, with initialised state. Clone APIds to loop over.
 			loop(Id,ExoSelf_PId,SPIds,{APIds,APIds},NPIds,TotSteps)
 	end.
+
 
 
 % *************************************************************************************************
@@ -93,7 +104,6 @@ loop(ExoSelf_PId) ->
 % process.
 %
 %
-
 
 % Actuator Monitoring loop.
 %
@@ -144,7 +154,7 @@ loop(Id,ExoSelf_PId,SPIds,{[],MAPIds},NPIds,Step) ->
 
 	% Send a 'message' to each 'sensor process' to initiate a new pulse through the system.
 	[PId ! {self(),sync} || PId <- SPIds],
-	% Keep alive! and ...
+	% Keep alive! and reinitialise for next pulse...
 	% Reset the APId list (from the stored MAPId list);
 	% Decrement the 'step' (termination) counter.
 	loop(Id,ExoSelf_PId,SPIds,{MAPIds,MAPIds},NPIds,Step-1);

@@ -17,6 +17,33 @@
 
 -include("records.hrl").
 
+
+% *************************************************************************************************
+%% Sensor
+%%
+%% The sensor module is part of the 'exoself' genotype <---> phenotype mapper.
+%%
+%% The spawned sensor process is responsible for:
+%%
+%%
+
+% *************************************************************************************************
+%% Usage
+%%
+%% 1>c(sensor).
+%%
+
+
+% --- Params ---
+%
+% ExoSelf_PId     : The PId of the ExoSelf process,
+% Node            : The Erlang 'Node'
+%
+% --- Return ---
+%
+% Returns the pid of a new process started by the application of Module:Function to Args on Node.
+% If Node does not exists, a useless pid is returned.
+%
 gen(ExoSelf_PId,Node)->
 	spawn(Node,?MODULE,loop,[ExoSelf_PId]).
 
@@ -26,10 +53,9 @@ gen(ExoSelf_PId,Node)->
 %
 loop(ExoSelf_PId) ->
 	receive
-
+		% Initialise the sensor process from sensor genotype tuple.
 		{ExoSelf_PId,{Id,Cx_PId,SensorName,VL,Fanout_PIds}} ->
-			loop(Id,Cx_PId,SensorName,VL,Fanout_PIds)
-
+			loop(Id,Cx_PId,SensorName,VL,Fanout_PIds) % Keep alive.
 	end.
 
 
@@ -38,21 +64,35 @@ loop(ExoSelf_PId) ->
 % be triggered to begin gathering sensory data based on its sensory role, or terminate if the cortex
 % requests so.
 %
+% --- State Params ---
+%
+% Id                : The 'sensor id'.
+% Cx_PId            : The PId of the parent cortex process.
+% SensorName        : The name of the function to invoke to generate a signal (Currently, only 'rng').
+% VL                : The length of the generated sensor vector signal.
+% Fanout_PIds       : The neuron Pid list of the first layer.
+%
 loop(Id,Cx_PId,SensorName,VL,Fanout_PIds) ->
 	receive
 
+		% Receive a 'sync' message from the cortex.
 		{Cx_PId,sync} ->
+			% Invoke the sensor signal generating function.
 			SensoryVector = sensor:SensorName(VL),
+			% Propogate the signal to all neurons in the first layer.
 			[Pid ! {self(),forward,SensoryVector} || Pid <- Fanout_PIds],
+			% Keep alive.
 			loop(Id,Cx_PId,SensorName,VL,Fanout_PIds);
 
+		% Receive a 'terminate' message from the cortex.
 		{Cx_PId,terminate} ->
 			ok
 
 	end.
 
 
-% ’rng’ is a simple random number generator that produces a vector of random values, each be- tween 0
+% *************************************************************************************************
+% ’rng’ is a simple random number generator that produces a vector of random values, each between 0
 % and 1. The length of the vector is defined by the VL, which itself is specified within the sensor
 % record.
 %
