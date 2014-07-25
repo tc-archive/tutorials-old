@@ -102,6 +102,23 @@ defmodule ListIt do
   end
 
 
+  # ***********************************************************************************************
+  @doc """
+ Write a function MyList.span(from, to) that returns a list of the numbers from from up to to.
+  """
+  def span(from, to) when from < to, do: do_span(from, to, [])
+  defp do_span(from, to, accum) when from > to, do: accum
+  defp do_span(from, to, accum) when from <= to, do: do_span(from + 1, to, accum ++ [from])
+
+
+  def span_2(from, to) when from < to, do: do_span(from, to, [])
+  defp do_span_2(from, to, accum) when from > to, do: accum
+  defp do_span_2(from, to, accum) when from <= to, do: do_span_2(from + 1, to, [accum | [from]])
+
+
+  def span_3(from, to) when from < to, do: [from] ++ span_3(from + 1, to)
+  def span_3(from, to) when from == to, do: [to]
+
 
 end
 
