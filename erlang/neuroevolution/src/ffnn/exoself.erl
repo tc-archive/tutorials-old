@@ -17,44 +17,103 @@
 -include("records.hrl").
 
 
+% *************************************************************************************************
+%% Exoself
+%%
+%% The 'exoself' genotype <---> phenotype mapper.
+%%
+%% Now we create the exoself module, which will map the genotype to phenotype, spawning all the
+%% appropriate processes. The exoself module will also provide the algorithm for the Cortex element
+%% to update the genotype with the newly trained weights from the phenotype, and in this manner
+%% saving the trained and learned NNs for future use.
+%%
+%%
+%% The spawned exoself process is responsible for:
+%% 1)
+%%
+%%
+
+% *************************************************************************************************
+%% Usage
+%%
+%% 1>c(exoself).
+%% 2> exoself:map(ffnn).
+%%
+
+
+% Spawn an exoself process Genotype <---> Phenotype mapper from the ff
 map()-> map(ffnn).
 
-map(FileName)->
+% Spawn an exoself process Genotype <---> Phenotype mapper, form the specified file.
+map(FileName) ->
+	% Read the Genotype from the specified file.
+	% 'consult' Reads Erlang terms, separated by '.', from the specified file.
 	{ok,Genotype} = file:consult(FileName),
+	% Spawn a process that maps the genotype into a set of runtime phenotype processes.
 	spawn(exoself,map,[FileName,Genotype]).
 
 
 % *************************************************************************************************
-% The map/1 function maps the tuple encoded genotype into a process based phenotype. The map
-% function expects for the Cx record to be the leading tuple in the tuple list it reads from the
-% FileName. We create an ets table to map Ids to PIds and back again. Since the Cortex element
-% contains all the Sensor, Actuator, and Neuron Ids, we are able to spawn each neuron using its own
-% gen function, and in the process construct a map from Ids to PIds. We then use link_CerebralUnits
-% to link all non Cortex elements to each other by sending each spawned pro- cess the information
-% contained in its record, but with Ids converted to Pids where appropriate. Finally, we provide the
-% Cortex process with all the PIds in the NN system by executing the link_Cortex/2 function. Once the
-% NN is up and running, exoself starts its wait until the NN has finished its job and is ready to
-% backup. When the cortex initiates the backup process it sends exoself the updated Input_PIdPs from
-% its neurons. Exoself uses the update_genotype/3 function to update the old genotype with new weights,
-% and then stores the updated version back to its file.
+% The map/1 function maps the tuple encoded genotype into a process based phenotype.
+%
+% The map function expects for the Cx record to be the leading tuple in the tuple list it reads
+% from the FileName.
+%
+% We create an ets table to map Ids to PIds and back again.
+%
+% Since the Cortex element contains all the Sensor, Actuator, and Neuron Ids, we are able to spawn
+% each neuron using its own gen function, and in the process construct a map from Ids to PIds.
+%
+% We then use link_CerebralUnits to link all non Cortex elements to each other by sending each spawned
+% process the information contained in its record, but with Ids converted to Pids where appropriate.
+%
+% Finally, we provide the  Cortex process with all the PIds in the NN system by executing the
+% link_Cortex/2 function.
+%
+% Once the NN is up and running, exoself starts its wait until the NN has finished its job and is
+% ready to backup.
+%
+% When the cortex initiates the backup process it sends exoself the updated Input_PIdPs from
+% its neurons. Exoself uses the update_genotype/3 function to update the old genotype with new
+% weights, and then stores the updated version back to its file.
+%
+% --- Params ---
+%
+% FileName     : The name of the input/ouput persistent Genotype file.
+% Genotype     : The Genotype tuples read from the input file.
 %
 map(FileName,Genotype) ->
+
+	% Create a new ETS table
 	IdsNPIds = ets:new(idsNpids,[set,private]),
-	[Cx|CerebralUnits] = Genotype,
-	Sensor_Ids = Cx#cortex.sensor_ids,
-	Actuator_Ids = Cx#cortex.actuator_ids,
-	NIds = Cx#cortex.nids,
-	spawn_CerebralUnits(IdsNPIds,cortex,[Cx#cortex.id]),
-	spawn_CerebralUnits(IdsNPIds,sensor,Sensor_Ids),
-	spawn_CerebralUnits(IdsNPIds,actuator,Actuator_Ids),
-	spawn_CerebralUnits(IdsNPIds,neuron,NIds),
+
+	% Extract tuples
+	[Cx|CerebralUnits] = Genotype,          % Extract 'cortex' genotype.
+	Sensor_Ids = Cx#cortex.sensor_ids,      % Extract 'sensor' id list.
+	Actuator_Ids = Cx#cortex.actuator_ids,  % Extract 'actuator' id list.
+	NIds = Cx#cortex.nids,                  % Extract 'neuron' id list.
+
+	% Spawn the phenotype processes from the genotype; and map the identifiers.
+	spawn_CerebralUnits(IdsNPIds,cortex,[Cx#cortex.id]),    % 'cortex' process
+	spawn_CerebralUnits(IdsNPIds,sensor,Sensor_Ids),        % 'sensor' processes
+	spawn_CerebralUnits(IdsNPIds,actuator,Actuator_Ids),    % 'actuator' processes
+	spawn_CerebralUnits(IdsNPIds,neuron,NIds),              % 'neuron' processes
+
+	% Link the neural processes
 	link_CerebralUnits(CerebralUnits,IdsNPIds),
 	link_Cortex(Cx,IdsNPIds),
+
 	Cx_PId = ets:lookup_element(IdsNPIds,Cx#cortex.id,2),
 
 	receive
+		% A 'backup' message from the cortex requesting the persistence of the Neuron_IdsNWeights.
+	  % ([{N_Id,PIdPs}..]).
 		{Cx_PId,backup,Neuron_IdsNWeights} ->
+
+			% Update the Genotype file with the new neural weights.
 			U_Genotype = update_genotype(IdsNPIds,Genotype,Neuron_IdsNWeights),
+
+			% Open and write to file.
 			{ok, File} = file:open(FileName, write),
 			lists:foreach(fun(X) -> io:format(File, "~p.~n",[X]) end, U_Genotype),
 			file:close(File),
@@ -62,16 +121,32 @@ map(FileName,Genotype) ->
 	end.
 
 
+
 % *************************************************************************************************
 % We spawn the process for each element based on its type: CerebralUnitType, and the gen function
-% that belongs to the CerebralUnitType module. We then enter the {Id,PId} tuple into our ETS table
-% for later use.
+% that belongs to the CerebralUnitType module.
+%
+% We then enter the {Id,PId} tuple into our ETS table for later use.
+%
+
+% --- Params ---
+%
+% IdsNPIds             : The name of the ETS table managing the genotpye/phenotype id mapper.
+% CerebralUnitType     : Type atom: [cortex|sensor|actuator|neuron].
+% [Id|Ids]             : The Genotype tuples read from the input file.
 %
 spawn_CerebralUnits(IdsNPIds,CerebralUnitType,[Id|Ids]) ->
-	PId = CerebralUnitType:gen(self(),node()), ets:insert(IdsNPIds,{Id,PId}),
-	ets:insert(IdsNPIds,{PId,Id}),
-	spawn_CerebralUnits(IdsNPIds,CerebralUnitType,Ids);
 
+	% Generate/Spawn a new 'phenotype process'.
+	% NB: Uses the 'CerebralUnitType' atom to dynamically invoke the correct module.
+	PId = CerebralUnitType:gen(self(),node()),
+
+	ets:insert(IdsNPIds,{Id,PId}),  % Add a GenotypeId --> PhenotypeId mapping to the ETS table.
+	ets:insert(IdsNPIds,{PId,Id}),  % Add a PhenotypeId --> GenotypeId mapping to the ETS table.
+
+	% Process remaining Ids...
+	spawn_CerebralUnits(IdsNPIds,CerebralUnitType,Ids);
+% Recursive base case. All done 'ok'.
 spawn_CerebralUnits(_IdsNPIds,_CerebralUnitType,[]) ->
 	true.
 
@@ -140,7 +215,7 @@ link_Cortex(Cx,IdsNPIds) ->
 	SPIds = [ets:lookup_element(IdsNPIds,SId,2) || SId <- SIds],
 	APIds = [ets:lookup_element(IdsNPIds,AId,2) || AId <- AIds],
 	NPIds = [ets:lookup_element(IdsNPIds,NId,2) || NId <- NIds],
-	Cx_PId ! {self(),{Cx_Id,SPIds,APIds,NPIds},1000}.
+	Cx_PId ! {self(),{Cx_Id,SPIds,APIds,NPIds},1000}. % Allow 1000 pulses through the network.
 
 
 

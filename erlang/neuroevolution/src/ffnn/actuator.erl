@@ -83,16 +83,17 @@ loop(ExoSelf_PId) ->
 % Acc               : The accumulator.
 %
 loop(Id,Cx_PId,AName,{[From_PId|Fanin_PIds],MFanin_PIds},Acc) ->
+
 	receive
 
-	% Receive a 'forward' message with the specified Input from a forwarding process.
-	{From_PId,forward,Input} ->
-		loop(Id,Cx_PId,AName,{Fanin_PIds,MFanin_PIds},  % Ready to process next element.
-		lists:append(Input,Acc));                       % Append the input to the result vector.
+		% Receive a 'forward' message with the specified Input from a forwarding process.
+		{From_PId,forward,Input} ->
+			loop(Id,Cx_PId,AName,{Fanin_PIds,MFanin_PIds},  % Ready to process next element.
+			lists:append(Input,Acc));                       % Append the input to the result vector.
 
-	% Receive a 'terminate' message the cortex.
-	{Cx_PId,terminate} ->
-		ok
+		% Receive a 'terminate' message the cortex.
+		{Cx_PId,terminate} ->
+			ok
 
 	end;
 % --- State Params ---

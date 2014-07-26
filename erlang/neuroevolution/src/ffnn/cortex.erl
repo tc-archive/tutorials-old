@@ -84,6 +84,7 @@ loop(ExoSelf_PId) ->
 
 			% Keep alive, with initialised state. Clone APIds to loop over.
 			loop(Id,ExoSelf_PId,SPIds,{APIds,APIds},NPIds,TotSteps)
+			% loop(Id,ExoSelf_PId,SPIds,{APIds,APIds},NPIds,3)
 	end.
 
 
@@ -105,6 +106,36 @@ loop(ExoSelf_PId) ->
 %
 %
 
+% Termination loop - (Step = 0)
+%
+% We have processed that many initiating 'sync' requests / 'pulses' through the network.
+%
+% NB: Once we  implement the learning algorithm, the termination criteria will depend on the
+% fitness of the NN, or some other useful property.
+%
+% --- Params ---
+%
+% Id                : The 'cortex id'.
+% ExoSelf_PId       : The PId of the parent ExoSelf process.
+% SPIds             : A list of 'sensor' process ids.
+% {_APIds,MAPIds}   : A tuple of the acutator PId list, and the (new) memory actuator PId list.
+% NPIds             : The neuron Pid list.
+% Step == 0         : The total step until termination. Here at 0 the process backs-up and terminates.
+%
+loop(Id,ExoSelf_PId,SPIds,{_APIds,MAPIds},NPIds,0) ->
+
+	io:format("Cortex:~p is backing up and terminating.~n",[Id]),
+
+	% Get a list of the {NId,WeightTuples} tuples.
+	Neuron_IdsNWeights = get_backup(NPIds,[]),
+
+	% Send a 'backup' message to the ExoSef process.
+	ExoSelf_PId ! {self(),backup,Neuron_IdsNWeights},
+
+	% Send a 'terminate' message to all processes.
+	[PId ! {self(),terminate} || PId <- SPIds],
+	[PId ! {self(),terminate} || PId <- MAPIds],
+	[PId ! {self(),termiante} || PId <- NPIds];
 % Actuator Monitoring loop.
 %
 % Monitor each APId process. When its {APId,sync} is recieved removed it from the monitored
@@ -121,6 +152,7 @@ loop(ExoSelf_PId) ->
 % Step                  : The total step until termination.
 %
 loop(Id,ExoSelf_PId,SPIds,{[APId|APIds],MAPIds},NPIds,Step) ->
+
 	receive
 
 		% A 'sync' message for the specified APId has been recieved.
@@ -157,37 +189,7 @@ loop(Id,ExoSelf_PId,SPIds,{[],MAPIds},NPIds,Step) ->
 	% Keep alive! and reinitialise for next pulse...
 	% Reset the APId list (from the stored MAPId list);
 	% Decrement the 'step' (termination) counter.
-	loop(Id,ExoSelf_PId,SPIds,{MAPIds,MAPIds},NPIds,Step-1);
-% Termination loop - (Step = 0)
-%
-% We have processed that many initiating 'sync' requests / 'pulses' through the network.
-%
-% NB: Once we  implement the learning algorithm, the termination criteria will depend on the
-% fitness of the NN, or some other useful property.
-%
-% --- Params ---
-%
-% Id                : The 'cortex id'.
-% ExoSelf_PId       : The PId of the parent ExoSelf process.
-% SPIds             : A list of 'sensor' process ids.
-% {_APIds,MAPIds}   : A tuple of the acutator PId list, and the (new) memory actuator PId list.
-% NPIds             : The neuron Pid list.
-% Step == 0         : The total step until termination. Here at 0 the process backs-up and terminates.
-%
-loop(Id,ExoSelf_PId,SPIds,{_APIds,MAPIds},NPIds,0) ->
-
-	io:format("Cortex:~p is backing up and terminating.~n",[Id]),
-
-	% Get a list of the {NId,WeightTuples} tuples.
-	Neuron_IdsNWeights = get_backup(NPIds,[]),
-
-	% Send a 'backup' message to the ExoSef process.
-	ExoSelf_PId ! {self(),backup,Neuron_IdsNWeights},
-
-	% Send a 'terminate' message to all processes.
-	[PId ! {self(),terminate} || PId <- SPIds],
-	[PId ! {self(),terminate} || PId <- MAPIds],
-	[PId ! {self(),termiante} || PId <- NPIds].
+	loop(Id,ExoSelf_PId,SPIds,{MAPIds,MAPIds},NPIds,Step-1).
 
 
 % *************************************************************************************************
