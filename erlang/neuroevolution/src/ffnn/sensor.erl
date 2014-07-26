@@ -24,6 +24,11 @@
 %% The sensor module is part of the 'exoself' genotype <---> phenotype mapper.
 %%
 %% The spawned sensor process is responsible for:
+%% 1) Creating a sensor process phenotype from its genotype representation.
+%% 2) Handling 'sync' messages from the parent cortex process to initiate a pulse.
+%% 3) Initiating a 'pulses' through the feed forward network by sending a vector input to each
+%%    neuron process in the first hidden layer.
+%% 4) Shutting doen the sensor process.
 %%
 %%
 

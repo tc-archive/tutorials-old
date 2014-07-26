@@ -24,6 +24,12 @@
 %% The sensor module is part of the 'exoself' genotype <---> phenotype mapper.
 %%
 %% The spawned actuator process is responsible for:
+%% 1) Creating an acutator process phenotype from its genotype representation.
+%% 2) Collating the output results from the outputlayer into an ordered result vector.
+%% 3) Performing an operation on the environment with the output result.
+%% 4) Updating the cortex process with a 'sync' message when the network has fully processed the
+%%    pulse.
+%% 5) Shutting doen the actuator process.
 %%
 %%
 
