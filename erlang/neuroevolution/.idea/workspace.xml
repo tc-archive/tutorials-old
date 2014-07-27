@@ -96,10 +96,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cortex.erl" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="cortex.erl" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ffnn/cortex.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3210">
+            <state vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="3210">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="99" />
               <folding />
             </state>
@@ -146,11 +146,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="exoself.erl" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="exoself.erl" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ffnn/exoself.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3090" max-vertical-offset="3735">
-              <caret line="217" column="92" selection-start-line="217" selection-start-column="92" selection-end-line="217" selection-end-column="92" />
+            <state vertical-scroll-proportion="9.405242" vertical-offset="0" max-vertical-offset="5145">
+              <caret line="311" column="57" selection-start-line="311" selection-start-column="57" selection-end-line="311" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -177,8 +177,8 @@
         <option value="$PROJECT_DIR$/src/ffnn/sensor.erl" />
         <option value="$PROJECT_DIR$/src/ffnn/neuron.erl" />
         <option value="$PROJECT_DIR$/src/ffnn/actuator.erl" />
-        <option value="$PROJECT_DIR$/src/ffnn/exoself.erl" />
         <option value="$PROJECT_DIR$/src/ffnn/cortex.erl" />
+        <option value="$PROJECT_DIR$/src/ffnn/exoself.erl" />
       </list>
     </option>
   </component>
@@ -635,18 +635,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ffnn/exoself.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3090" max-vertical-offset="3735">
-          <caret line="217" column="92" selection-start-line="217" selection-start-column="92" selection-end-line="217" selection-end-column="92" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ffnn/cortex.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3210">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="99" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ffnn/exoself.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="9.405242" vertical-offset="0" max-vertical-offset="5145">
+          <caret line="311" column="57" selection-start-line="311" selection-start-column="57" selection-end-line="311" selection-end-column="57" />
           <folding />
         </state>
       </provider>

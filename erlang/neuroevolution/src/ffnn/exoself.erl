@@ -131,7 +131,7 @@ map(FileName,Genotype) ->
 
 % --- Params ---
 %
-% IdsNPIds             : The name of the ETS table managing the genotpye/phenotype id mapper.
+% IdsNPIds             : The ETS table managing the genotpye/phenotype id mapper.
 % CerebralUnitType     : Type atom: [cortex|sensor|actuator|neuron].
 % [Id|Ids]             : The Genotype tuples read from the input file.
 %
@@ -152,88 +152,182 @@ spawn_CerebralUnits(_IdsNPIds,_CerebralUnitType,[]) ->
 
 
 % *************************************************************************************************
-% The link_CerebralUnits/2 converts the Ids to PIds using the created IdsNPids ETS table. At this
-% point all the elements are spawned, and the processes are waiting for their initial states.
+% The link_CerebralUnits/2 converts the Ids to PIds using the created IdsNPids ETS table.
+%
+% At this point all the elements are spawned, and the processes are waiting for their initial states.
+%
 % convert_IdPs2PIdPs/3 converts the IdPs tuples into tuples that use PIds instead of Ids, such that
-% the Neuron will know which weights are to be associated with which incoming vector signals. The
-% last element is the bias, which is added to the list in a non tuple form. Afterwards, the list is
-% reversed to take its proper order.
+% the Neuron will know which weights are to be associated with which incoming vector signals.
+%
+% The last element is the bias, which is added to the list in a non tuple form. Afterwards, the list
+% is reversed to take its proper order.
+%
+
+
+% Processes and initialise the sensor process phenotype from the sensor genotype tuples.
+%
+% --- Params ---
+%
+% [R|Records]       : A list of 'sensor' record
+% IdsNPIds          : The ETS table managing the genotype/phenotype id mapper.
 %
 link_CerebralUnits([R|Records],IdsNPIds) when is_record(R,sensor) ->
+
+	% Extract the values from the sensor record.
 	SId = R#sensor.id,
-	SPId = ets:lookup_element(IdsNPIds,SId,2),
-	Cx_PId = ets:lookup_element(IdsNPIds,R#sensor.cx_id,2),
 	SName = R#sensor.name,
 	Fanout_Ids = R#sensor.fanout_ids,
+
+	% Look-up and extract the specified elements from the ETS table.
+	SPId = ets:lookup_element(IdsNPIds,SId,2),
+	Cx_PId = ets:lookup_element(IdsNPIds,R#sensor.cx_id,2),
 	Fanout_PIds = [ets:lookup_element(IdsNPIds,Id,2) || Id <- Fanout_Ids],
+
+	% Send the specified extracted genotype record values to initialise the spawned SPId process.
 	SPId ! {self(),{SId,Cx_PId,SName,R#sensor.vl,Fanout_PIds}},
+
+	% Process the remaining records.
 	link_CerebralUnits(Records,IdsNPIds);
 
+
+% Processes and initialise the actuator process phenotype from the actuator genotype tuples.
+%
+% --- Params ---
+%
+% [R|Records]       : A list of 'actuator' record
+% IdsNPIds          : The ETS table managing the genotype/phenotype id mapper.
+%
 link_CerebralUnits([R|Records],IdsNPIds) when is_record(R,actuator) ->
+
+	% Extract the values from the actuator record.
 	AId = R#actuator.id,
+	Fanin_Ids = R#actuator.fanin_ids,
+
+	% Look-up and extract the specified elements from the ETS table.
 	APId = ets:lookup_element(IdsNPIds,AId,2),
 	Cx_PId = ets:lookup_element(IdsNPIds,R#actuator.cx_id,2), AName = R#actuator.name,
-	Fanin_Ids = R#actuator.fanin_ids,
 	Fanin_PIds = [ets:lookup_element(IdsNPIds,Id,2) || Id <- Fanin_Ids],
+
+	% Send the specified extracted genotype record values to initialise the spawned APId process.
 	APId ! {self(),{AId,Cx_PId,AName,Fanin_PIds}},
+
+	% Process the remaining records.
 	link_CerebralUnits(Records,IdsNPIds);
 
-link_CerebralUnits([R|Records],IdsNPIds) when is_record(R,neuron) -> NId = R#neuron.id,
-	NPId = ets:lookup_element(IdsNPIds,NId,2),
-	Cx_PId = ets:lookup_element(IdsNPIds,R#neuron.cx_id,2),
+% Processes and initialise the neuron process phenotype from the actuator genotype tuples.
+%
+% --- Params ---
+%
+% [R|Records]       : A list of 'actuator' record
+% IdsNPIds          : The ETS table managing the genotype/phenotype id mapper.
+%
+link_CerebralUnits([R|Records],IdsNPIds) when is_record(R,neuron) ->
+
+	% Extract the values from the neuron record.
+	NId = R#neuron.id,
 	AFName = R#neuron.af,
 	Input_IdPs = R#neuron.input_idps,
 	Output_Ids = R#neuron.output_ids,
-	Input_PIdPs = convert_IdPs2PIdPs(IdsNPIds,Input_IdPs,[]),
+
+	% Look-up and extract the specified elements from the ETS table.
+	NPId = ets:lookup_element(IdsNPIds,NId,2),
+	Cx_PId = ets:lookup_element(IdsNPIds,R#neuron.cx_id,2),
+	Input_PIdPs = convert_IdPs2PIdPs(IdsNPIds,Input_IdPs,[]), % Convert GenotypeId to PId PhenotypeId.
 	Output_PIds = [ets:lookup_element(IdsNPIds,Id,2) || Id <- Output_Ids],
+
+	% Send the specified extracted genotype record values to initialise the spawned NPId process.
 	NPId ! {self(),{NId,Cx_PId,AFName,Input_PIdPs,Output_PIds}},
+
+	% Process the remaining records.
 	link_CerebralUnits(Records,IdsNPIds);
 
+% Base case. End linking process. Return ok.
 link_CerebralUnits([],_IdsNPIds) ->
 	ok.
 
+
+% *************************************************************************************************
+% convert_IdPs2PIdPs/3 converts the IdPs tuples into tuples that use PIds instead of Ids, such that
+% the Neuron will know which weights are to be associated with which incoming vector signals.
+%
+
+% Base case. Add 'bias' to acumulated vector weight list; and reverse to preserve ordering.
 convert_IdPs2PIdPs(_IdsNPIds,[{bias,Bias}],Acc) ->
 	lists:reverse([Bias|Acc]);
-
+% --- Params ---
+%
+% IdsNPIds                  : The ETS table managing the genotype/phenotype id mapper.
+% [{Id,Weights}|Fanin_IdPs] : The {Id,Weights}
+% Acc                       : Looping output list accumulator.
+%
 convert_IdPs2PIdPs(IdsNPIds,[{Id,Weights}|Fanin_IdPs],Acc) ->
-	convert_IdPs2PIdPs(IdsNPIds,Fanin_IdPs,
-	[{ets:lookup_element(IdsNPIds,Id,2),Weights}|Acc]).
+	% Loop process the next element.
+	convert_IdPs2PIdPs(IdsNPIds,Fanin_IdPs,[{ets:lookup_element(IdsNPIds,Id,2),Weights}|Acc]).
+
 
 
 % *************************************************************************************************
-% The cortex is initialized to its proper state just as other elements. Because we have not yet
-% implemented a learning algorithm for our NN system, we need to specify when the NN should
-% shutdown. We do this by specifying the total number of cycles the NN should execute before
-% terminating, which is 1000 in this case.
+% The cortex is initialized to its proper state just as other elements.
+%
+% Because we have not yet implemented a learning algorithm for our NN system, we need to specify
+% when the NN should shutdown. We do this by specifying the total number of cycles the NN should
+% execute before terminating, which is 1000 in this case.
 %
 link_Cortex(Cx,IdsNPIds) ->
+
+	% Determine 'cortex' GenoTypeId and PhenoTypeId.
 	Cx_Id = Cx#cortex.id,
 	Cx_PId = ets:lookup_element(IdsNPIds,Cx_Id,2),
+
+	% Determine 'sensor' GenoTypeId list and PhenoTypeId list.
 	SIds = Cx#cortex.sensor_ids,
-	AIds = Cx#cortex.actuator_ids,
-	NIds = Cx#cortex.nids,
 	SPIds = [ets:lookup_element(IdsNPIds,SId,2) || SId <- SIds],
+
+	% Determine 'neuron' GenoTypeId list and PhenoTypeId list.
+	AIds = Cx#cortex.actuator_ids,
 	APIds = [ets:lookup_element(IdsNPIds,AId,2) || AId <- AIds],
+
+	% Determine 'neuron' GenoTypeId list and PhenoTypeId list.
+	NIds = Cx#cortex.nids,
 	NPIds = [ets:lookup_element(IdsNPIds,NId,2) || NId <- NIds],
+
+	% Initialise the cortex (which in turn will initialise the other elements).
 	Cx_PId ! {self(),{Cx_Id,SPIds,APIds,NPIds},1000}. % Allow 1000 pulses through the network.
 
 
 
 % *************************************************************************************************
 % For every {N_Id,PIdPs} tuple the update_genotype/3 function extracts the neuron with the id: N_Id,
-% and updates its weights. The convert_PIdPs2IdPs/3 performs the conversion from PIds to Ids of
-% every {PId,Weights} tuple in the Input_PIdPs list. The updated Genotype is then returned back to
-% the caller.
+% and updates its weights.
+%
+% The convert_PIdPs2IdPs/3 performs the conversion from PIds to Ids of every {PId,Weights} tuple in
+% the Input_PIdPs list.
+%
+% The updated Genotype is then returned back to the caller.
+%
+
+% --- Params ---
+%
+% IdsNPIds                  : The ETS table managing the genotype/phenotype id mapper.
+% GenoType                  : The GenoType being updated.
+% [{N_Id,PIdPs}|WeightPs]   : The {Id,Weights}
 %
 update_genotype(IdsNPIds,Genotype,[{N_Id,PIdPs}|WeightPs]) ->
+
 	N = lists:keyfind(N_Id, 2, Genotype),
 	io:format("PIdPs:~p~n",[PIdPs]),
+
 	Updated_InputIdPs = convert_PIdPs2IdPs(IdsNPIds,PIdPs,[]),
 	U_N = N#neuron{input_idps = Updated_InputIdPs},
 	U_Genotype = lists:keyreplace(N_Id, 2, Genotype, U_N),
 	io:format("N:~p~n U_N:~p~n Genotype:~p~n U_Genotype:~p~n",[N,U_N,Genotype,U_Genotype]),
-	update_genotype(IdsNPIds,U_Genotype,WeightPs);
 
+	update_genotype(IdsNPIds,U_Genotype,WeightPs);
+% Base Case - Return the Genotype
+% --- return ---
+%
+% Genotype                  : The updated GenoType.
+%
 update_genotype(_IdsNPIds,Genotype,[]) ->
 	Genotype.
 
