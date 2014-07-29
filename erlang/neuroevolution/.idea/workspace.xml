@@ -149,7 +149,7 @@
       <file leaf-file-name="exoself.erl" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ffnn/exoself.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3938992" vertical-offset="4368" max-vertical-offset="5145">
+            <state vertical-scroll-proportion="0.3633952" vertical-offset="4391" max-vertical-offset="5145">
               <caret line="311" column="57" selection-start-line="311" selection-start-column="57" selection-end-line="311" selection-end-column="57" />
               <folding />
             </state>
@@ -715,7 +715,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ffnn/exoself.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3938992" vertical-offset="4368" max-vertical-offset="5145">
+        <state vertical-scroll-proportion="0.3633952" vertical-offset="4391" max-vertical-offset="5145">
           <caret line="311" column="57" selection-start-line="311" selection-start-column="57" selection-end-line="311" selection-end-column="57" />
           <folding />
         </state>
