@@ -1,20 +1,23 @@
 # *************************************************************************************************
-# 
-# - Exercise: ListsAndRecursion-5
-#
-# Implement the following Enum functions using no library functions or list comprehensions: 
+# - Implement the following Enum functions using no library functions or list comprehensions: 
 # all?, each, filter, split, and take. 
 # 
-# You may need to use an if statement to implement filter. The syntax 
-#
-# for this is:
+# You may need to use an if statement to implement filter. The syntax for this is:
 #
 # if condition do 
 #   expression(s)
 # else
 #   expression(s)
 # end
+#
 # 
+# - (Harder) Write a function flatten(list) that takes a list that may contain any number of 
+# sublists, and those sublists may contain sublists, to any depth. It returns the elements of these 
+# lists as a flat list.
+# 
+# iex> MyList.flatten([ 1, [ 2, 3, [4] ], 5, [[[6]]]]) [1,2,3,4,5,6]
+#
+# Hint: You may have to use Enum.reverse to get your result in the correct order.
 
 defmodule Cols do 
 
@@ -82,6 +85,14 @@ defmodule Cols do
   defp _split([], _count, [acc1, acc2]), do: [acc1, acc2]
 
 
+  def split_2(list, count),      do: _split_2(list, [], count)
+  defp _split_2([], front, _),   do: [ Enum.reverse(front), [] ]
+  defp _split_2(tail, front, 0), do: [ Enum.reverse(front), tail ]
+  defp _split_2([ head | tail ], front, count)  do
+    _split_2(tail, [head|front], count-1)
+  end
+
+
 
   @doc"""
   Takes the first count items from the collection.
@@ -100,6 +111,15 @@ defmodule Cols do
   defp _take([], _count, acc), do: acc 
 
   def take_2(collection, count), do: split(collection, count) |> hd
+
+
+
+  @doc"""
+  Takes a list that may contain any number of  sublists, and those sublists may contain sublists, 
+  to any depth. It returns the elements of these lists as a flat list.
+  """
+  def flatten(collection) do 
+  end
 
 
 
