@@ -115,12 +115,19 @@ defmodule Cols do
 
 
   @doc"""
-  Takes a list that may contain any number of  sublists, and those sublists may contain sublists, 
+  Takes a list that may contain any number of sublists, and those sublists may contain sublists, 
   to any depth. It returns the elements of these lists as a flat list.
   """
-  def flatten(collection) do 
-  end
+  # iex(52)> Cols.flatten([[1, "a", ["i", "ii", "iii"]], 2, 3])
+  # [1, "a", "i", "ii", "iii", 2, 3]
+  # def flatten(collection), do: _flatten(collection, [])
+  # defp _flatten([head|tail], acc) when is_list(head), do: _flatten(tail, _flatten(head, acc))
+  # defp _flatten([head|tail], acc), do: _flatten(tail, acc ++ [head])
+  # defp _flatten([], acc), do: acc
 
-
+  def flatten(collection), do: _flatten(collection, [])
+  defp _flatten([(@ls[x|xs])|tail], acc) do: _flatten(tail, _flatten(ls, acc))
+  defp _flatten([head|tail], acc), do: _flatten(tail, acc ++ [head])
+  defp _flatten([], acc), do: acc
 
 end
