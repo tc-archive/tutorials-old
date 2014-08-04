@@ -37,3 +37,9 @@ defmodule Countdown do
     )
   end
 end
+
+counter = Countdown.timer
+printer = counter |> Stream.each(&IO.puts/1)
+speaker = printer |> Stream.each(&Countdown.say/1)
+speaker |> Enum.take(5)
+speaker |> Enum.take(5)

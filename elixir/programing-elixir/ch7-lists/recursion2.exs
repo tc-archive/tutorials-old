@@ -21,12 +21,12 @@
 # 
 defmodule ListIt do
 
-  @moduledoc """
+  @moduledoc"""
   Some more recursive listy functions!
   """
 
 # ***********************************************************************************************
-  @doc """
+  @doc"""
   Write a function mapsum that takes a list and a function. It applies the function to each element 
   of the list, and then sums the result, so
  
@@ -41,7 +41,7 @@ defmodule ListIt do
 
 
   # ***********************************************************************************************
-  @doc """
+  @doc"""
   Write max(list) that returns the element with the maximum value in the list. (This is slightly 
   trickier than it sounds.)
  
@@ -60,7 +60,7 @@ defmodule ListIt do
 
 
   # ***********************************************************************************************
-  @doc """
+  @doc"""
   An Elixir single quoted string is actually a list of individual character codes. Write a function 
   caesar(list, n) that adds n to each element of the list, wrapping if the addition results in a 
   character greater than z.
@@ -94,7 +94,7 @@ defmodule ListIt do
   end
 
 
-  @doc """
+  @doc"""
   Create a list of tuples pairing the a character representation with its 
   binary integer representation. 
   """
@@ -104,7 +104,7 @@ defmodule ListIt do
 
 
   # ***********************************************************************************************
-  @doc """
+  @doc"""
  Write a function MyList.span(from, to) that returns a list of the numbers from from up to to.
   """
   def span(from, to) when from < to, do: do_span(from, to, [])
