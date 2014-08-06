@@ -1,6 +1,8 @@
 defmodule Issues.Mixfile do
   use Mix.Project
 
+
+
   def project do
     [app: :issues,
      version: "0.0.1",
@@ -15,6 +17,26 @@ defmodule Issues.Mixfile do
     [applications: []]
   end
 
+
+  # Finding and Adding Modules and Librarys
+  #
+  # 1) Elixir Libs    : http://elixir-lang.org/docs/stable
+  # 2) Erlang Libs    : http://erlang.org/doc (Left-hand sidebar for Application Groups).
+  # 3) Hex Packages   : https://hex.pm
+  # 4) GitHub Repos   : https://github.com/
+  # 5) Expm Packages  : http://expm (DEPRECATED)
+  #
+  # Add to 'deps' function and run 'mix deps'/'mix deps.get'/'mix deps.compile' etc.
+  # If successful, the downloaded modules are stored in the 'deps' folder. 
+  #
+  # The 'mix.lock' file records the Git hash of each library. This means that at any point 
+  # in the future you can get the exact version of the library used now.
+  #
+  # NB: 'rebar' installation may be requested.
+  #
+  #
+
+
   # Dependencies can be hex.pm packages:
   #
   #   {:mydep, "~> 0.3.0"}
@@ -25,6 +47,8 @@ defmodule Issues.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [
+      { :httpotion, github: "myfreeweb/httpotion" } # https://github.com/myfreeweb/httpotion
+    ]
   end
 end

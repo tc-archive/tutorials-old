@@ -9,11 +9,35 @@ defmodule Issues.CLI do
   Handle the command line parsing and the dispatch to
   the various functions that end up generating a 
   table of the last _n_ issues in a github project
+
+  Example Usage:
+  mix run -e 'Issues.CLI.run(["-h"])'
+  mix run -e 'Issues.CLI.run(["elixir-lang", "elixir"])'
   """
   # Default name of 'main' method for Elixir CLI modules.
   def run(argv) do
-    parse_args(argv)
+    argv
+      |> parse_args
+      |> process
   end
+
+  @doc"""
+  Process the 'help' switch.
+  """
+  def process(:help) do
+    IO.puts """
+      usage: issues <user> <project> [ count | #{@default_count} ] 
+      """
+    System.halt(0)
+  end
+
+  @doc"""
+  Process the '{user, project, _count}' paramter tuple.
+  """
+  def process({user, project, _count}) do 
+    Issues.GithubIssues.fetch(user, project)
+  end
+
 
   @doc"""
   `argv` can be -h or --help, which returns :help.
