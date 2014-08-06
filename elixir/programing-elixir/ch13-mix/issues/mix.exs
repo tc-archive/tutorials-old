@@ -64,7 +64,8 @@ defmodule Issues.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      { :httpotion, github: "myfreeweb/httpotion" } # https://github.com/myfreeweb/httpotion
+      { :httpotion, github: "myfreeweb/httpotion" }, # https://github.com/myfreeweb/httpotion
+      { :jsx, github: "talentdeficit/jsx" }
     ]
   end
 end

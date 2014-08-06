@@ -10,6 +10,7 @@ defmodule Issues.GithubIssues do
     issues_url(user, project)
     |> HTTPotion.get(@user_agent)
     |> handle_response
+    |> json_decode
   end
 
   @doc"""
@@ -22,11 +23,18 @@ defmodule Issues.GithubIssues do
   @doc"""
   Handles a successful response.
   """
-  def handle_response(%{status_code: 200, body: body}), do: { :ok, body }
+  def handle_response(%{status_code: 200, body: body}), do: {:ok, body}
 
   @doc"""
   Handles an error response.
   """
-  def handle_response(%{status_code: ___, body: body}), do: { :error, body }
+  def handle_response(%{status_code: ___, body: body}), do: {:error, body}
+
+  @doc"""
+  Convert the 'body' response json string; to an elixir data structure.
+  """
+  def json_decode({status_code, body_str}) do
+    {status_code, :jsx.decode(body_str)}
+  end
 
 end

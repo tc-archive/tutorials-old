@@ -58,7 +58,7 @@ defmodule Issues.CLI do
     #
     parse = OptionParser.parse(argv, switches: [ help: :boolean],
                                      aliases:  [ h:    :help   ])
-    case  parse  do
+    case parse do
 
       {[ help: true ], _, _} -> 
         :help
