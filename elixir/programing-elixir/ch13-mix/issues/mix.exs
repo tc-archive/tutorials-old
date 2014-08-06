@@ -2,7 +2,10 @@ defmodule Issues.Mixfile do
   use Mix.Project
 
 
-
+  # Starting Project 
+  #
+  # Mix:  iex -S mix
+  # 
   def project do
     [app: :issues,
      version: "0.0.1",
@@ -10,11 +13,25 @@ defmodule Issues.Mixfile do
      deps: deps]
   end
 
+
+
+  # Starting OTP Services
+  # 
+  # OTP is the framework that manages suites of running applications. The app function is used 
+  # to configure the contents of these suites.
+  # 
+  # For example, here mix is informed to start 'HTTPotion' (instead of calling 'HTTPotion.start')
+  # from somewhere in the code.
+  #
+  #
+
   # Configuration for the OTP application
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: []]
+    [
+      applications: [:httpotion]
+    ]
   end
 
 
@@ -35,7 +52,6 @@ defmodule Issues.Mixfile do
   # NB: 'rebar' installation may be requested.
   #
   #
-
 
   # Dependencies can be hex.pm packages:
   #
