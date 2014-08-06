@@ -13,6 +13,7 @@ defmodule Issues.CLI do
   Example Usage:
   mix run -e 'Issues.CLI.run(["-h"])'
   mix run -e 'Issues.CLI.run(["elixir-lang", "elixir"])'
+  mix run -e 'Issues.CLI.run(["wibble-wob", "wobble-wib"])'
   """
   # Default name of 'main' method for Elixir CLI modules.
   def run(argv) do
@@ -36,6 +37,34 @@ defmodule Issues.CLI do
   """
   def process({user, project, _count}) do 
     Issues.GithubIssues.fetch(user, project)
+    |> handle_response
+  end
+
+  @doc"""
+  Handle a successful (json struct) response.
+  """
+  def handle_response({:ok, body}), do: body 
+
+  @doc"""
+  Handle a failed (json struct) response.
+  """
+  def handle_response({:error, body}) do
+    {_, message} = List.keyfind(body, "message", 0) 
+    IO.puts "Error fetching from Github: #{message}" 
+    System.halt(2)
+  end
+
+  @doc"""
+  The json that Github returns for a successful response is a list with one ele- ment per 
+  GitHub issue. That element is itself a list of key/value tuples. To make these easier 
+  (and more efficient) to work with, we’ll convert our list of lists into a list of 
+  Elixir HashDicts.
+
+  The HashDict library gives you fast access by key to a list of key/value pairs. 
+  http://elixir- lang.org/docs/stable/HashDict.html
+  """
+  def convert_to_list_of_hashdicts(list) do
+    list |> Enum.map(&Enum.into(&1, HashDict.new))
   end
 
 
@@ -45,7 +74,7 @@ defmodule Issues.CLI do
   Otherwise it is a github user name, project name, and (optionally)
   the number of entries to format.
 
-  Return a tuple of `{ user, project, count }`, or `:help` if help was given.
+  Return a tuple of `{user, project, count}`, or `:help` if help was given.
   """
   def parse_args(argv) do
 

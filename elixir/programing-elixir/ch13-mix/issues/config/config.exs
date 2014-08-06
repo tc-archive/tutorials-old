@@ -20,3 +20,14 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+
+
+# Each config line adds one or more key/value pairs to the given application’s _ environment‘. 
+# If you have multiple lines for the same application they accu- mulate, with duplicate keys 
+# in later lines overriding values from earlier ones.
+#
+# In our code, we use Application.get_env function to return a value from the envi- ronment.
+#
+#
+config :issues, github_url: "https://api.github.com"

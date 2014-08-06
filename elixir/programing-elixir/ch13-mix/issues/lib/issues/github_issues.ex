@@ -1,7 +1,13 @@
 defmodule Issues.GithubIssues do
 
-  # @user_agent  [ {"User-agent", "Elixir dave@pragprog.com"} ]
-  @user_agent  [ {"User-agent", "temple.cloud@gmail.com"} ]
+
+  # A module attribute to fetch the 'github_url' value at compile time.
+  #
+  # Please see:  $/config.config.exs
+  @github_url Application.get_env(:issues, :github_url)
+
+  @user_agent [{"User-agent", "temple.cloud@gmail.com"}]
+
 
   @doc"""
   Fetch the issues of the specified 'github' project.
@@ -17,7 +23,7 @@ defmodule Issues.GithubIssues do
   Determine the gitub url for the specified project issues.
   """
   def issues_url(user, project) do
-    "https://api.github.com/repos/#{user}/#{project}/issues"
+    "#{@github_url}/repos/#{user}/#{project}/issues"
   end
 
   @doc"""
