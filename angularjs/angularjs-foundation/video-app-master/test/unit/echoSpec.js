@@ -1,5 +1,0 @@
-describe('echo', function() {
-  it('should be true', function() {
-    expect(true).toBe(true);
-  });
-});
