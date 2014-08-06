@@ -1,0 +1,13 @@
+<!DOCTYPE html> 
+<html>
+<body ng-app ng-init="items=[0,1,2,3,4,5,6,7,8,9]">
+
+  <input type="text" name="search" ng-model="search" placeholder="search..." />
+
+  <div ng-repeat="item in items | filter:search">
+    {{ item }}
+  </div>
+
+<script type="text/javascript" src="./angular.js"></script>
+</body>
+</html>
