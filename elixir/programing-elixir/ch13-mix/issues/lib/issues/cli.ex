@@ -14,6 +14,8 @@ defmodule Issues.CLI do
   mix run -e 'Issues.CLI.run(["-h"])'
   mix run -e 'Issues.CLI.run(["elixir-lang", "elixir"])'
   mix run -e 'Issues.CLI.run(["wibble-wob", "wobble-wib"])'
+
+  iex -S mix
   """
   # Default name of 'main' method for Elixir CLI modules.
   def run(argv) do

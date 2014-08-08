@@ -23,6 +23,17 @@ use Mix.Config
 
 
 
+# Sometimes you may want to vary the configuration, perhaps depending on your 
+# application’s environment. One way is to use the import_config function, which 
+# reads configuration from a file. If your config.exs contains
+#
+# use Mix.Config
+# import_config "#{Mix.env}.exs"
+#
+# then Elixir will read dev.exs, test.exs, or prod.exs depending on your environment. 
+# You can also pass mix the name of a configuration file using the --config option.
+
+
 # Each config line adds one or more key/value pairs to the given application’s _ environment‘. 
 # If you have multiple lines for the same application they accu- mulate, with duplicate keys 
 # in later lines overriding values from earlier ones.

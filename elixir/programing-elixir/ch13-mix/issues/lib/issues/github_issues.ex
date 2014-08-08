@@ -17,6 +17,8 @@ defmodule Issues.GithubIssues do
     |> HTTPotion.get(@user_agent)
     |> handle_response
     |> json_decode
+    |> convert_to_list_of_hashdicts
+    |> sort_into_ascending_order
   end
 
   @doc"""
@@ -42,5 +44,23 @@ defmodule Issues.GithubIssues do
   def json_decode({status_code, body_str}) do
     {status_code, :jsx.decode(body_str)}
   end
+
+
+  @doc"""
+  The json that Github returns for a successful response is a list with one element 
+  per GitHub issue. That element is itself a list of key/value tuples. To make these 
+  easier (and more efficient) to work with, we’ll convert our list of lists into a 
+  list of Elixir HashDicts.
+  """
+  def convert_to_list_of_hashdicts(list) do
+    list |> Enum.map(&Enum.into(&1, HashDict.new))
+  end
+
+  @doc"""
+  """
+  def sort_into_ascending_order(list_of_issues) do 
+    Enum.sort list_of_issues, fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
+  end
+  
 
 end
