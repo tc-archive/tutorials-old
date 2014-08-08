@@ -12,13 +12,14 @@ defmodule Issues.GithubIssues do
   @doc"""
   Fetch the issues of the specified 'github' project.
   """
-  def fetch(user, project) do
+  def fetch(user, project, count \\ 5) do
     issues_url(user, project)
     |> HTTPotion.get(@user_agent)
     |> handle_response
     |> json_decode
     |> convert_to_list_of_hashdicts
     |> sort_into_ascending_order
+    |> Enum.take(count)
   end
 
   @doc"""

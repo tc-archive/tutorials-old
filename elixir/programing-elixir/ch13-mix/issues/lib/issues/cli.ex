@@ -3,7 +3,7 @@
 defmodule Issues.CLI do
 
   # Module Attribute - Static
-  @default_count 4
+  @default_count 5
 
   @moduledoc"""
   Handle the command line parsing and the dispatch to
@@ -37,8 +37,8 @@ defmodule Issues.CLI do
   @doc"""
   Process the '{user, project, _count}' paramter tuple.
   """
-  def process({user, project, _count}) do 
-    Issues.GithubIssues.fetch(user, project)
+  def process({user, project, count}) do 
+    Issues.GithubIssues.fetch(user, project, count)
     |> handle_response
   end
 
