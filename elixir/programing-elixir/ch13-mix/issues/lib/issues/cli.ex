@@ -56,19 +56,6 @@ defmodule Issues.CLI do
     System.halt(2)
   end
 
-  @doc"""
-  The json that Github returns for a successful response is a list with one ele- ment per 
-  GitHub issue. That element is itself a list of key/value tuples. To make these easier 
-  (and more efficient) to work with, we’ll convert our list of lists into a list of 
-  Elixir HashDicts.
-
-  The HashDict library gives you fast access by key to a list of key/value pairs. 
-  http://elixir- lang.org/docs/stable/HashDict.html
-  """
-  def convert_to_list_of_hashdicts(list) do
-    list |> Enum.map(&Enum.into(&1, HashDict.new))
-  end
-
 
   @doc"""
   `argv` can be -h or --help, which returns :help.

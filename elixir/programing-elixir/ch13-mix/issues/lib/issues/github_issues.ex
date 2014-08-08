@@ -45,22 +45,26 @@ defmodule Issues.GithubIssues do
     {status_code, :jsx.decode(body_str)}
   end
 
-
   @doc"""
-  The json that Github returns for a successful response is a list with one element 
-  per GitHub issue. That element is itself a list of key/value tuples. To make these 
-  easier (and more efficient) to work with, we’ll convert our list of lists into a 
-  list of Elixir HashDicts.
+  The json that Github returns for a successful response is a list with one element per 
+  GitHub issue. That element is itself a list of key/value tuples. To make these easier 
+  (and more efficient) to work with, we’ll convert our list of lists into a list of 
+  Elixir HashDicts.
+
+  The HashDict library gives you fast access by key to a list of key/value pairs. 
+  http://elixir- lang.org/docs/stable/HashDict.html
   """
   def convert_to_list_of_hashdicts(list) do
     list |> Enum.map(&Enum.into(&1, HashDict.new))
   end
 
+
   @doc"""
+  Takes an input list of hashdicts and orders them by the 'created_at' key value.
   """
   def sort_into_ascending_order(list_of_issues) do 
     Enum.sort list_of_issues, fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
   end
-  
+
 
 end
