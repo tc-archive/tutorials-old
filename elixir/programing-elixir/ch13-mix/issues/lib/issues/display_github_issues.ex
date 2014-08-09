@@ -16,23 +16,20 @@ defmodule Issues.DisplayGithubIssues do
 
     fmtr = build_fmtr(list_of_hash_dicts)
 
-    IO.puts display_header(fmtr)
+    # IO.puts display_header(fmtr)
     IO.puts display_row({"#", "created_at", "title"}, fmtr)
     IO.puts display_header(fmtr)
-
-    Enum.each(list_of_hash_dicts, fn hash_dict -> display_hash_dict(hash_dict) end)
-    # Enum.each(list_of_hash_dicts, fn (hash_dict, fmtr) -> display_row(hash_dict, fmtr) end)
-
+    Enum.each(list_of_hash_dicts, fn (hash_dict) -> IO.puts display_row(extract(hash_dict), fmtr) end)
 
   end
 
 
-#  #  | created_at           | title
-# ----+----------------------+-----------------------------------------
-# 889 | 2013-03-16T22:03:13Z | MIX_PATH environment variable (of sorts)
-# 892 | 2013-03-20T19:22:07Z | Enhanced mix test --cover
-# 893 | 2013-03-21T06:23:00Z | mix test time reports
-# 898 | 2013-03-23T19:19:08Z | Add mix compile --warnings-as-errors
+  #  #  | created_at           | title
+  # ----+----------------------+-----------------------------------------
+  # 889 | 2013-03-16T22:03:13Z | MIX_PATH environment variable (of sorts)
+  # 892 | 2013-03-20T19:22:07Z | Enhanced mix test --cover
+  # 893 | 2013-03-21T06:23:00Z | mix test time reports
+  # 898 | 2013-03-23T19:19:08Z | Add mix compile --warnings-as-errors
 
   # ***************************************************************************
 
@@ -48,13 +45,14 @@ defmodule Issues.DisplayGithubIssues do
   def display_header([col1, col2, col3]) do 
 
     line = <<>>
-    line = for x <- 0..col1, into: line, do: "-" 
+    line = for _ <- 0..col1, into: line, do: "-" 
     line = line <> "+" 
-    line = for x <- 0..col2, into: line, do: "-" 
+    line = for _ <- 0..col2, into: line, do: "-" 
     line = line <> "+" 
-    line = for x <- 0..col3, into: line, do: "-" 
+    line = for _ <- 0..col3, into: line, do: "-" 
 
   end
+
 
   defp display_row({rec_num, crtd_at, title}, [col1w, col2w, col3w]) do 
 
@@ -67,7 +65,8 @@ defmodule Issues.DisplayGithubIssues do
     line = line <> "|"
 
     line = line <> " " <> title
-    line = for _ <- 0..col3w - String.length(crtd_at) - 1, into: line, do: " "
+    line = for _ <- 0..col3w - String.length(title) - 1, into: line, do: " "
+    # line = line <> "|"
 
   end  
 
