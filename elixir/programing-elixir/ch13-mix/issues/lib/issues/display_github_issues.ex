@@ -14,10 +14,15 @@ defmodule Issues.DisplayGithubIssues do
   """
   def display(list_of_hash_dicts) do 
 
-    fmtr = Enum.reduce(list_of_hash_dicts, {0, 0, 0}, &build_fmtr(&1, &2))
-    display_header(fmtr)
+    fmtr = build_fmtr(list_of_hash_dicts)
+
+    IO.puts display_header(fmtr)
+    IO.puts display_row({"#", "created_at", "title"}, fmtr)
+    IO.puts display_header(fmtr)
 
     Enum.each(list_of_hash_dicts, fn hash_dict -> display_hash_dict(hash_dict) end)
+    # Enum.each(list_of_hash_dicts, fn (hash_dict, fmtr) -> display_row(hash_dict, fmtr) end)
+
 
   end
 
@@ -40,7 +45,7 @@ defmodule Issues.DisplayGithubIssues do
   end
 
 
-  def display_header({col1, col2, col3}) do 
+  def display_header([col1, col2, col3]) do 
 
     line = <<>>
     line = for x <- 0..col1, into: line, do: "-" 
@@ -49,9 +54,22 @@ defmodule Issues.DisplayGithubIssues do
     line = line <> "+" 
     line = for x <- 0..col3, into: line, do: "-" 
 
-    # IO.puts line
-
   end
+
+  defp display_row({rec_num, crtd_at, title}, [col1w, col2w, col3w]) do 
+
+    line = " " <> rec_num
+    line = for _ <- 0..col1w - String.length(rec_num) - 1, into: line, do: " "
+    line = line <> "|"
+
+    line = line <> " " <> crtd_at
+    line = for _ <- 0..col2w - String.length(crtd_at) - 1, into: line, do: " "
+    line = line <> "|"
+
+    line = line <> " " <> title
+    line = for _ <- 0..col3w - String.length(crtd_at) - 1, into: line, do: " "
+
+  end  
 
   defp display_rec({rec_num, crtd_at, title}) do 
     IO.puts "#{rec_num}, #{crtd_at}, #{title}"
@@ -61,10 +79,16 @@ defmodule Issues.DisplayGithubIssues do
   # ***************************************************************************
   
   def build_fmtr(list_of_hash_dicts) do 
-    Enum.reduce(list_of_hash_dicts, {0, 0, 0}, &build_fmtr(&1, &2))
+    {col1_mx, col2_mx, col3_mx} = get_max_cols_widths(list_of_hash_dicts)
+    [col1_mx + 2, col2_mx + 2, col3_mx + 2]
   end
 
-  def build_fmtr(hash_dict, {col1_mx, col2_mx, col3_mx}) do 
+
+  def get_max_cols_widths(list_of_hash_dicts) do 
+    Enum.reduce(list_of_hash_dicts, {0, 0, 0}, &get_max_cols_widths(&1, &2))
+  end
+
+  def get_max_cols_widths(hash_dict, {col1_mx, col2_mx, col3_mx}) do 
 
     {rec_num, crtd_at, title} = extract(hash_dict)
 
