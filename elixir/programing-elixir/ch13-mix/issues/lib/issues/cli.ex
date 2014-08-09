@@ -25,39 +25,6 @@ defmodule Issues.CLI do
   end
 
   @doc"""
-  Process the 'help' switch.
-  """
-  def process(:help) do
-    IO.puts """
-      usage: issues <user> <project> [ count | #{@default_count} ] 
-      """
-    System.halt(0)
-  end
-
-  @doc"""
-  Process the '{user, project, _count}' paramter tuple.
-  """
-  def process({user, project, count}) do 
-    Issues.GithubIssues.fetch(user, project, count)
-    |> handle_response
-  end
-
-  @doc"""
-  Handle a successful (json struct) response.
-  """
-  def handle_response({:ok, body}), do: body 
-
-  @doc"""
-  Handle a failed (json struct) response.
-  """
-  def handle_response({:error, body}) do
-    {_, message} = List.keyfind(body, "message", 0) 
-    IO.puts "Error fetching from Github: #{message}" 
-    System.halt(2)
-  end
-
-
-  @doc"""
   `argv` can be -h or --help, which returns :help.
 
   Otherwise it is a github user name, project name, and (optionally)
@@ -91,4 +58,62 @@ defmodule Issues.CLI do
 
     end
   end
+
+  @doc"""
+  Process the 'help' switch.
+  """
+  def process(:help) do
+    IO.puts """
+      usage: issues <user> <project> [ count | #{@default_count} ] 
+      """
+    System.halt(0)
+  end
+  @doc"""
+  Process the '{user, project, _count}' paramter tuple.
+  """
+  def process({user, project, count}) do 
+    Issues.GithubIssues.fetch(user, project)
+    |> handle_response
+    |> convert_to_list_of_hashdicts
+    |> sort_into_ascending_order
+    |> Enum.take(count)
+    # |> Issues.DisplayGithubIssues.display
+  end
+
+  @doc"""
+  Handle a successful (json struct) response.
+  """
+  def handle_response({:ok, body}), do: body 
+
+  @doc"""
+  Handle a failed (json struct) response.
+  """
+  def handle_response({:error, body}) do
+    {_, message} = List.keyfind(body, "message", 0) 
+    IO.puts "Error fetching from Github: #{message}" 
+    System.halt(2)
+  end
+
+
+  @doc"""
+  The json that Github returns for a successful response is a list with one element per 
+  GitHub issue. That element is itself a list of key/value tuples. To make these easier 
+  (and more efficient) to work with, we’ll convert our list of lists into a list of 
+  Elixir HashDicts.
+
+  The HashDict library gives you fast access by key to a list of key/value pairs. 
+  http://elixir- lang.org/docs/stable/HashDict.html
+  """
+  def convert_to_list_of_hashdicts(list) do
+    list |> Enum.map(&Enum.into(&1, HashDict.new))
+  end
+
+
+  @doc"""
+  Takes an input list of hashdicts and orders them by the 'created_at' key value.
+  """
+  def sort_into_ascending_order(list_of_issues) do 
+    Enum.sort list_of_issues, fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
+  end
+
 end

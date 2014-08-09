@@ -18,10 +18,10 @@ defmodule CliTest do
   # In this case just the specified functions.
   # 
   #
-  import Issues.CLI, only: [parse_args: 1]
-  import Issues.GithubIssues, only: [
-    sort_into_ascending_order: 1, convert_to_list_of_hashdicts: 1
+  import Issues.CLI, only: [
+    parse_args: 1, sort_into_ascending_order: 1, convert_to_list_of_hashdicts: 1
     ]
+
 
   # Tests!
   
