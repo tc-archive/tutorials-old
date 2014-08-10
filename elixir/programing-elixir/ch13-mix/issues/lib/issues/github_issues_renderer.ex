@@ -3,7 +3,7 @@ defmodule Issues.GithubIssuesRenderer do
   @moduledoc"""
   """
 
-  import Issues.ConsoleDisplay, only: [
+  import Issues.TabularDataGenerator, only: [
     tbl_row_border: 1,
     tbl_row_data: 2,
     ]

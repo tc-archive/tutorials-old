@@ -1,4 +1,4 @@
-defmodule Issues.ConsoleDisplay do
+defmodule Issues.TabularDataGenerator do
 
   @moduledesc """
   """
