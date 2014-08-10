@@ -72,12 +72,12 @@ defmodule Issues.CLI do
   Process the '{user, project, _count}' paramter tuple.
   """
   def process({user, project, count}) do 
-    Issues.GithubIssues.fetch(user, project)
+    Issues.GithubIssuesFetcher.fetch(user, project)
     |> handle_response
     |> convert_to_list_of_hashdicts
     |> sort_into_ascending_order
     |> Enum.take(count)
-    |> Issues.DisplayGithubIssues.display
+    |> Issues.GithubIssuesRenderer.display
   end
 
   @doc"""
