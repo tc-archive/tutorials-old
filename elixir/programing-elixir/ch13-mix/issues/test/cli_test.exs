@@ -38,6 +38,12 @@ defmodule CliTest do
     assert parse_args(["user", "project"]) == {"user", "project", 5}
   end
 
+  test "sort ascending orders the correct way" do
+    fixture = created_at_list_fixture(["c", "a", "b"])
+    result = sort_into_ascending_order(fixture)
+    issues = for issue <- result, do: issue["created_at"]
+    assert issues == ~w{a b c}
+  end
 
   @def"""
   Create a list of json-like datastructure to test the sort_into_ascending_order
@@ -47,13 +53,5 @@ defmodule CliTest do
     data = for value <- values, do: [{"created_at", value}, {"data", "somedata"} ]
     convert_to_list_of_hashdicts data
   end
-
-  test "sort ascending orders the correct way" do
-    fixture = created_at_list_fixture(["c", "a", "b"])
-    result = sort_into_ascending_order(fixture)
-    issues = for issue <- result, do: issue["created_at"]
-    assert issues == ~w{a b c}
-  end
-
 
 end
