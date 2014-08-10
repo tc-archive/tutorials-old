@@ -7,8 +7,13 @@ defmodule GithubIssuesRendererTest do
     ]
 
   # ***************************************************************************
+  # Doc Tests!
+
+  doctest Issues.GithubIssuesRenderer
   
-  # Tests!
+
+  # ***************************************************************************
+  # Unit Tests!
   
   test "Correct data extracted from github issue HashDict." do
     # Mocks the input and compares with the expected result.

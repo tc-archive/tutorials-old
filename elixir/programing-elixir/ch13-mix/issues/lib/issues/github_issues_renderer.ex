@@ -31,14 +31,14 @@ defmodule Issues.GithubIssuesRenderer do
   898 | 2013-03-23T19:19:08Z | Add mix compile --warnings-as-errors
 
   """
-  def display(list_of_hash_dicts) do 
+  def display(issues) do 
 
-    fmtr = build_fmtr(list_of_hash_dicts)
+    fmtr = create_fmtr(issues)
 
     IO.puts tbl_row_data(@table_header, fmtr)
     IO.puts tbl_row_border(fmtr)
-    Enum.each(list_of_hash_dicts, 
-      fn (hash_dict) -> IO.puts tbl_row_data(extract(hash_dict), fmtr) end
+    Enum.each(issues, 
+      fn (issue) -> IO.puts tbl_row_data(extract(issue), fmtr) end
       )
 
   end
@@ -60,25 +60,25 @@ defmodule Issues.GithubIssuesRenderer do
   # ***************************************************************************
 
   @doc"""
-  Builds a special 'cloumn formater' for the specified input data.
+  Creates a special 'cloumn formater' with respect to the specified input data.
 
   It scan trhough the data and determines the 'maximum width' of each column 
   w.r.t to the largest sized data item in each column of the input set.
   """
-  def build_fmtr(list_of_hash_dicts) do 
-    {col1_mx, col2_mx, col3_mx} = get_max_cols_widths(list_of_hash_dicts)
+  def create_fmtr(issues) do 
+    {col1_mx, col2_mx, col3_mx} = get_max_cols_widths(issues)
     [col1_mx + 2, col2_mx + 2, col3_mx + 2]
   end
 
   # Finds the maximum column width of each column w.r.t the input data.
-  defp get_max_cols_widths(list_of_hash_dicts) do 
-    Enum.reduce(list_of_hash_dicts, {0, 0, 0}, &get_max_cols_widths(&1, &2))
+  defp get_max_cols_widths(issues) do 
+    Enum.reduce(issues, {0, 0, 0}, &get_max_cols_widths(&1, &2))
   end
 
   # Finds the maximum column width of each column w.r.t the input data.
-  defp get_max_cols_widths(hash_dict, {col1_mx, col2_mx, col3_mx}) do 
+  defp get_max_cols_widths(issue, {col1_mx, col2_mx, col3_mx}) do 
 
-    [rec_num, crtd_at, title] = extract(hash_dict)
+    [rec_num, crtd_at, title] = extract(issue)
 
     new_col1_mx = max(col1_mx, String.length(rec_num))
     new_col2_mx = max(col2_mx, String.length(crtd_at))

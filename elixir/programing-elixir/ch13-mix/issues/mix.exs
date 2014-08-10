@@ -8,9 +8,13 @@ defmodule Issues.Mixfile do
   # 
   def project do
     [app: :issues,
-     version: "0.0.1",
-     elixir: "~> 0.14.3",
-     deps: deps]
+      version: "0.0.1",
+      name: "Issues",
+      source_url: "https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues",
+      # elixir: "~> 0.14.3",
+      elixir: "~>0.15.0-dev",
+      escript: escript_config,
+      deps: deps]
   end
 
 
@@ -64,8 +68,25 @@ defmodule Issues.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      { :httpotion, github: "myfreeweb/httpotion" }, # https://github.com/myfreeweb/httpotion
-      { :jsx, github: "talentdeficit/jsx" }
+      {:httpotion, github: "myfreeweb/httpotion"},  # https://github.com/myfreeweb/httpotion
+      {:jsx, github: "talentdeficit/jsx"},
+      {:ex_doc, github: "elixir-lang/ex_doc"},       # ExDoc dependency
+      {:earmark, ">= 0.1.9"}
     ]
   end
+
+
+  # Mix can package our code, along with its dependencies, into a single file that can be 
+  # run on any Unix-based platform. This makes use of Erlang’s escript utility, which can run 
+  # precompiled programs stored as a zip archive. In our case, the program will be run as 
+  # issues.
+  #
+  # > mix escript.build (mix escriptize)
+  #
+  # Ensure main() method in Issues.CLI
+  #
+  defp escript_config do 
+    [ main_module: Issues.CLI ]
+  end
+
 end

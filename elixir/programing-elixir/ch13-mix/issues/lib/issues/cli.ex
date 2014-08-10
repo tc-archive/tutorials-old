@@ -17,12 +17,21 @@ defmodule Issues.CLI do
 
   iex -S mix
   """
+
+
+  # Default name of 'main' method for 'mix.exs - escript_config'.
+  def main(argv) do
+    run argv
+  end
+
+
   # Default name of 'main' method for Elixir CLI modules.
   def run(argv) do
     argv
       |> parse_args
       |> process
   end
+
 
   @doc"""
   `argv` can be -h or --help, which returns :help.

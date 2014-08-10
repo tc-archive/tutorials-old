@@ -7,9 +7,16 @@ defmodule TabularDataGeneratorTest do
     tbl_row_data: 2,
     ]
 
+
+
   # ***************************************************************************
+  # Doc Tests!
+
+  doctest Issues.TabularDataGenerator
   
-  # Tests!
+
+  # ***************************************************************************
+  # Unit Tests!
   
   test "Correct table row border returned for column formatter. Good input" do
     assert tbl_row_border([1,1,1]) == "-+-+-"
@@ -26,5 +33,10 @@ defmodule TabularDataGeneratorTest do
     assert tbl_row_border([0,5,0]) == "+-----"
 
   end
+
+  test "Correct table row data returned for column formatter." do
+    assert tbl_row_data(["A", "B", "C"], [5,8,5]) == " A   | B      | C   "
+  end
+
 
 end

@@ -31,6 +31,13 @@ defmodule Issues.GithubIssuesFetcher do
 
   @doc"""
   Determine the gitub url for the specified project issues.
+
+  ## Example
+      iex> user = "foo"
+      iex> project = "bar"    
+      iex> Issues.GithubIssuesFetcher.issues_url(user, project)
+      "https://api.github.com/repos/foo/bar/issues"
+
   """
   def issues_url(user, project) do
     "#{@github_url}/repos/#{user}/#{project}/issues"
