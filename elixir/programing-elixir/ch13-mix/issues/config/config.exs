@@ -42,3 +42,9 @@ use Mix.Config
 #
 #
 config :issues, github_url: "https://api.github.com"
+
+config :display, 
+          # border_row: "=",
+          border_col: "|",
+          border_intersect: "+",
+          cell_pad: " "

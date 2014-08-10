@@ -77,7 +77,7 @@ defmodule Issues.CLI do
     |> convert_to_list_of_hashdicts
     |> sort_into_ascending_order
     |> Enum.take(count)
-    # |> Issues.DisplayGithubIssues.display
+    |> Issues.DisplayGithubIssues.display
   end
 
   @doc"""

@@ -1,5 +1,8 @@
 defmodule Issues.GithubIssues do
 
+  @moduledoc"""
+  """
+
 
   # A module attribute to fetch the 'github_url' value at compile time.
   #

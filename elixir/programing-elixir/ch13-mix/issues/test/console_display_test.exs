@@ -1,15 +1,15 @@
-defmodule DisplayGithubIssuesTest do
+defmodule ConsoleDisplayTest do
 
   use ExUnit.Case
 
-  import Issues.DisplayGithubIssues, only: [
+  import Issues.ConsoleDisplay, only: [
     tbl_row_border: 1,
     ]
 
 
   # Tests!
   
-  test "Correct table row line returned for column formatter. Good input" do
+  test "Correct table row border returned for column formatter. Good input" do
     assert tbl_row_border([1,1,1]) == "-+-+-"
     assert tbl_row_border([1,1,1,1,1]) == "-+-+-+-+-"
     assert tbl_row_border([5,8,5]) == "-----+--------+-----"
@@ -17,7 +17,7 @@ defmodule DisplayGithubIssuesTest do
   end
 
 
-  test "Correct table row line returned for column formatter. Bad input" do
+  test "Correct table row border returned for column formatter. Bad input" do
     assert tbl_row_border([0]) == ""
     assert tbl_row_border([-1]) == ""
     assert tbl_row_border([0,0,0]) == ""
