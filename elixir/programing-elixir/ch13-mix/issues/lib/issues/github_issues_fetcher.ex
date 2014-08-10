@@ -5,7 +5,6 @@ defmodule Issues.GithubIssuesFetcher do
   repository for a specified 'user' and 'project'.
   """
 
-
   # A module attribute to fetch the 'github_url' value at compile time.
   #
   # Please see:  $/config.config.exs
@@ -13,6 +12,8 @@ defmodule Issues.GithubIssuesFetcher do
 
   @user_agent [{"User-agent", "temple.cloud@gmail.com"}]
 
+
+  # ***************************************************************************
 
   @doc"""
   Fetch the issues of the specified 'github' project. 
@@ -26,12 +27,16 @@ defmodule Issues.GithubIssuesFetcher do
     |> json_decode
   end
 
+  # ***************************************************************************
+
   @doc"""
   Determine the gitub url for the specified project issues.
   """
   def issues_url(user, project) do
     "#{@github_url}/repos/#{user}/#{project}/issues"
   end
+
+  # ***************************************************************************
 
   @doc"""
   Handles a successful response.
@@ -42,6 +47,9 @@ defmodule Issues.GithubIssuesFetcher do
   Handles an error response.
   """
   def handle_response(%{status_code: ___, body: body}), do: {:error, body}
+
+
+  # ***************************************************************************
 
   @doc"""
   Convert the 'body' response json string; to an elixir data structure.
