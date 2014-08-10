@@ -1,12 +1,18 @@
 defmodule Issues.GithubIssuesRenderer do
 
   @moduledoc"""
+  A module to render the output of github issues to the console in tabular 
+  form.
   """
 
   import Issues.TabularDataGenerator, only: [
     tbl_row_border: 1,
     tbl_row_data: 2,
     ]
+
+
+  # The default 'table header' for the 'github issue' data.
+  @table_header ["#", "created_at", "title"]
 
 
   # ***************************************************************************
@@ -29,7 +35,7 @@ defmodule Issues.GithubIssuesRenderer do
 
     fmtr = build_fmtr(list_of_hash_dicts)
 
-    IO.puts tbl_row_data(["#", "created_at", "title"], fmtr)
+    IO.puts tbl_row_data(@table_header, fmtr)
     IO.puts tbl_row_border(fmtr)
     Enum.each(list_of_hash_dicts, 
       fn (hash_dict) -> IO.puts tbl_row_data(extract(hash_dict), fmtr) end
