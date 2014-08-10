@@ -1,4 +1,4 @@
-defmodule ConsoleDisplayTest do
+defmodule TabularDataGeneratorTest do
 
   use ExUnit.Case
 
@@ -7,7 +7,8 @@ defmodule ConsoleDisplayTest do
     tbl_row_data: 2,
     ]
 
-
+  # ***************************************************************************
+  
   # Tests!
   
   test "Correct table row border returned for column formatter. Good input" do
@@ -25,7 +26,5 @@ defmodule ConsoleDisplayTest do
     assert tbl_row_border([0,5,0]) == "+-----"
 
   end
-
-
 
 end
