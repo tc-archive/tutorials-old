@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Issues.TabularDataGenerator</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      relpath = '';
+      if (relpath != '') relpath += '/';
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+
+    <div id="content">
+      <div class="breadcrumbs">Issues v0.0.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Issues.html">Issues</a> &rarr; <a href="Issues.TabularDataGenerator.html">TabularDataGenerator</a></div>
+
+      <h1>
+        Issues.TabularDataGenerator
+        
+      </h1>
+
+      <ul class="summary_links">
+        
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
+        
+        
+        
+        
+      </ul>
+
+      
+
+      
+        <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/tabular_data_generator.ex#L1" class="view_source">Source</a>
+      
+
+      
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="#tbl_row_border/1">tbl_row_border(col_fmtrs)</a></td>
+  
+    <td class="summary_synopsis"><p>Return a string denoting a ‘table border row’ w.r.t the specified columns 
+formatter</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#tbl_row_data/2">tbl_row_data(row_col_data, col_fmtrs)</a></td>
+  
+    <td class="summary_synopsis"><p>Return a string denoting a ‘table border row’ w.r.t the specified column 
+formatter and the data</p>
+</td>
+  
+</tr>
+
+        </table>
+      
+
+      
+
+      
+        <div id="functions_details" class="details_list">
+          <h2>Functions</h2>
+          <div class="detail">
+  <div class="detail_header" id="tbl_row_border/1">
+    <span class="signature"><strong>tbl_row_border(col_fmtrs)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#tbl_row_border/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Return a string denoting a ‘table border row’ w.r.t the specified columns 
+formatter.</p>
+<h2>Example</h2>
+<pre><code>iex&gt; col_fmtrs = [5,8,5]
+iex&gt; output = Issues.TabularDataGenerator.tbl_row_border(col_fmtrs)
+&quot;-----+--------+-----&quot;</code></pre>
+<h2>Example</h2>
+<pre><code>iex&gt; col_fmtrs = [1,2,3,4,5,4,3,2,1]
+iex&gt; output = Issues.TabularDataGenerator.tbl_row_border(col_fmtrs)
+&quot;-+--+---+----+-----+----+---+--+-&quot;</code></pre>
+</div>
+  
+    <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/tabular_data_generator.ex#L33" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="tbl_row_data/2">
+    <span class="signature"><strong>tbl_row_data(row_col_data, col_fmtrs)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#tbl_row_data/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Return a string denoting a ‘table border row’ w.r.t the specified column 
+formatter and the data.</p>
+<h2>Example</h2>
+<pre><code>iex&gt; row_col_data = [&quot;A&quot;, &quot;BC&quot;, &quot;D&quot;]
+iex&gt; col_fmtrs = [5,8,5]
+iex&gt; output = Issues.TabularDataGenerator.tbl_row_data(row_col_data, col_fmtrs)
+&quot; A   | BC     | D   &quot;</code></pre>
+</div>
+  
+    <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/tabular_data_generator.ex#L71" class="view_source">Source</a>
+  
+</div>
+
+        </div>
+      
+
+      
+
+      
+    </div>
+  </body>
+</html>

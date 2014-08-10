@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Issues.GithubIssuesRenderer</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      relpath = '';
+      if (relpath != '') relpath += '/';
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+
+    <div id="content">
+      <div class="breadcrumbs">Issues v0.0.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Issues.html">Issues</a> &rarr; <a href="Issues.GithubIssuesRenderer.html">GithubIssuesRenderer</a></div>
+
+      <h1>
+        Issues.GithubIssuesRenderer
+        
+      </h1>
+
+      <ul class="summary_links">
+        
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
+        
+        
+        
+        
+      </ul>
+
+      
+        <div id="moduledoc" class="docstring">
+          <p>A module to render the output of github issues to the console in tabular 
+form.</p>
+
+        </div>
+      
+
+      
+        <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/github_issues_renderer.ex#L1" class="view_source">Source</a>
+      
+
+      
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="#create_fmtr/1">create_fmtr(issues)</a></td>
+  
+    <td class="summary_synopsis"><p>Creates a special ‘cloumn formater’ with respect to the specified input data</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#display/1">display(issues)</a></td>
+  
+    <td class="summary_synopsis"><p>Takes a list of HashDicts where each Hashdict is an ‘issue’ from a 
+specified github repository</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#extract/1">extract(record_dict)</a></td>
+  
+    <td class="summary_synopsis"><p>Extract the ‘number’, ‘created_at’ and ‘title’ fields of the specified 
+HashDict input and converts it to a list of strings</p>
+</td>
+  
+</tr>
+
+        </table>
+      
+
+      
+
+      
+        <div id="functions_details" class="details_list">
+          <h2>Functions</h2>
+          <div class="detail">
+  <div class="detail_header" id="create_fmtr/1">
+    <span class="signature"><strong>create_fmtr(issues)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#create_fmtr/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Creates a special ‘cloumn formater’ with respect to the specified input data.</p>
+<p>It scan trhough the data and determines the ‘maximum width’ of each column 
+w.r.t to the largest sized data item in each column of the input set.</p>
+</div>
+  
+    <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/github_issues_renderer.ex#L68" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="display/1">
+    <span class="signature"><strong>display(issues)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#display/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Takes a list of HashDicts where each Hashdict is an ‘issue’ from a 
+specified github repository.</p>
+<p>It then displays each issue in a tabular from to the ouput console.</p>
+<p> #  | created_at           | title
+——+———————————+————————————————————-
+889 | 2013-03-16T22:03:13Z | MIX_PATH environment variable (of sorts)
+892 | 2013-03-20T19:22:07Z | Enhanced mix test —cover
+893 | 2013-03-21T06:23:00Z | mix test time reports
+898 | 2013-03-23T19:19:08Z | Add mix compile —warnings-as-errors</p>
+</div>
+  
+    <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/github_issues_renderer.ex#L34" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="extract/1">
+    <span class="signature"><strong>extract(record_dict)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#extract/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Extract the ‘number’, ‘created_at’ and ‘title’ fields of the specified 
+HashDict input and converts it to a list of strings.</p>
+</div>
+  
+    <a href="https://github.com/TempleCloud/tutorials/tree/master/elixir/programing-elixir/ch13-mix/issues/blob/master/lib/issues/github_issues_renderer.ex#L52" class="view_source">Source</a>
+  
+</div>
+
+        </div>
+      
+
+      
+
+      
+    </div>
+  </body>
+</html>
