@@ -69,6 +69,8 @@ send pid, {self, "I am still alive!"}
 receive do
   {:ok, message} ->
     IO.puts message
+  after 500 ->
+    IO.puts "No response from echo process."
 end
 
 # Send a message to the echo process.
