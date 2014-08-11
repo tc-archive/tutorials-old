@@ -70,7 +70,7 @@ defmodule Issues.Mixfile do
     [
       {:httpotion, github: "myfreeweb/httpotion"},  # https://github.com/myfreeweb/httpotion
       {:jsx, github: "talentdeficit/jsx"},
-      {:ex_doc, github: "elixir-lang/ex_doc"},       # ExDoc dependency
+      {:ex_doc, github: "elixir-lang/ex_doc"},       # ExDoc dependency: > mix docs
       {:earmark, ">= 0.1.9"}
     ]
   end
