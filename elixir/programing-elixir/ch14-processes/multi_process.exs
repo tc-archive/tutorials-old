@@ -33,6 +33,7 @@ defmodule MultiProcess do
         wait = rnd(1000)
         IO.puts "Process '#{id}' waiting for (#{wait})."
         :timer.sleep(wait)
+        # sleep(wait)
 
         IO.puts "(#{wait}) Replying from Process '#{id}'..."
         send sender_pid, {id, msg}
