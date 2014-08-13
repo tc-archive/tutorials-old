@@ -4,7 +4,7 @@
 import :timer, only: [ sleep: 1 ]       # Import the Erlang Timer
 
 
-defmodule ProcessTrapExit do
+defmodule NonLinkedProcess do
 
   @doc"""
   Waits for 500ms then exits the process unceremoniously.
@@ -23,10 +23,11 @@ defmodule ProcessTrapExit do
   def run do
 
     # Set the 'trap_exit' process flag to true.
+    # NB: This is to ensure the child process is not linked in any way!
     Process.flag(:trap_exit, true)
 
     # Spawn up and instance of the 'sad_function' process.
-    spawn(ProcessTrapExit, :sad_function, [])
+    spawn(NonLinkedProcess, :sad_function, [])
 
     receive do
 
@@ -43,3 +44,5 @@ defmodule ProcessTrapExit do
   end
 
 end
+
+NonLinkedProcess.run
