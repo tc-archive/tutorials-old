@@ -1,8 +1,10 @@
 # ***************************************************************************
 # 
+# elixir -r linked_process.exs  -e LinkedProcess.run
+#
 import :timer, only: [ sleep: 1 ]       # Import the Erlang Timer
 
-defmodule LinkProcess do
+defmodule LinkedProcess do
 
   @doc"""
   Waits for 500ms then exits the process unceremoniously.
@@ -13,25 +15,27 @@ defmodule LinkProcess do
   end
 
   @doc"""
-  Runs 'sad_function', but, with 'trap_exit' process flag set to true.
+  Runs 'sad_function' as a LINKED child process.
 
-  Because of this no message will be recieved.
+  Because of this the :EXIT code of the terminating child process will be 
+  trapped.
   """
   def run do
 
-    # Spawn up and instance of the 'sad_function' process - WITH A LINK!
+    # Spawn and LINK an instance of the 'sad_function' child process.
     # This will cause an exit message to be sent back to this process when 
     # the child process terminates...
-    spawn_link(LinkProcess, :sad_function, [])
+    spawn_link(LinkedProcess, :sad_function, [])
 
     receive do
 
-      # Receive a message... as a link has been specified we should 
-      # receive this when the child process exits... :boom!
+      # An :EXIT message is received when the spawned child process  
+      # terminates (as the child process is 'linked' to this parent 
+      # process).
       msg -> 
         IO.puts "MESSAGE RECEIVED: #{inspect msg}"
 
-      # ... Nah! We will time out first!
+      # ... Nah! We will ':boom' first.
       after 1000 ->
         IO.puts "Nothing happened as far as I am concerned"
 
@@ -41,4 +45,4 @@ defmodule LinkProcess do
 
 end
 
-LinkProcess.run
+LinkedProcess.run

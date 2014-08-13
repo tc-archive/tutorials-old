@@ -27,7 +27,7 @@
 #
 #     iex> :observer.start
 #
-defmodule MultiProcess do
+defmodule SyncMultiProcess do
 
   @doc"""
   A simple 'process' method identifiable by an id.
@@ -43,8 +43,7 @@ defmodule MultiProcess do
 
         wait = rnd(1000)
         IO.puts "Process '#{id}' waiting for (#{wait})."
-        :timer.sleep(wait)
-        # sleep(wait)
+        :timer.sleep(wait)  # Could also import and use 'sleep(wait)'
 
         IO.puts "(#{wait}) Replying from Process '#{id}'..."
         send sender_pid, {id, msg}
@@ -71,8 +70,8 @@ end
 # ***************************************************************************
 # Spawn two processes with special identifiers
 #
-fred_pid = spawn(MultiProcess, :process ,[:fred])
-betty_pid = spawn(MultiProcess, :process ,[:betty])
+fred_pid = spawn(SyncMultiProcess, :process, [:fred])
+betty_pid = spawn(SyncMultiProcess, :process, [:betty])
 
 
 # ***************************************************************************

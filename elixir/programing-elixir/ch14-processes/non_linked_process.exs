@@ -16,9 +16,10 @@ defmodule NonLinkedProcess do
 
 
   @doc"""
-  Runs 'sad_function', but, with 'trap_exit' process flag set to true.
+  Runs 'sad_function' as a UNLINKED and UNTRAPPED child process.
 
-  Because of this no message will be recieved.
+  Because of this the :EXIT code of the terminating child process will not  
+  be trapped and the 'timeout' message displayed.
   """
   def run do
 
@@ -26,17 +27,19 @@ defmodule NonLinkedProcess do
     # NB: This is to ensure the child process is not linked in any way!
     Process.flag(:trap_exit, true)
 
-    # Spawn up and instance of the 'sad_function' process.
+    # Spawn an instance of the 'sad_function' child process.
     spawn(NonLinkedProcess, :sad_function, [])
 
     receive do
 
-      # Receive a message... No message should be received from the spawned 
-      # process on exit as it is 'unlinked' (and ':trap_exit' is false).
+      # No :EXIT message when the spawned child process terminates (as the   
+      # parent process is not 'linked' or 'monitored' and does not trap 
+      # exits).
       msg -> 
         IO.puts "MESSAGE RECEIVED: #{inspect msg}"
       
-      # ... or time-out after 1000ms. this should be received.
+      # ... or time-out after 1000ms. This should occur as we will not trap 
+      # the ':boom' :EXIT signal.
       after 1000 ->
         IO.puts "Nothing happened as far as I am concerned"
    
