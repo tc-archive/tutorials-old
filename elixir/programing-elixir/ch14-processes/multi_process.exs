@@ -14,7 +14,18 @@
 #     A way to oder the responses might be to identify each process 
 #
 #
-# NB: iex> :pman.start
+# NB: To start the Erlang process manager try the following...
+#
+#     iex> :pman.start 
+#
+#     !!! Oh noes! That dont exit in RC17!
+# 
+#     >> "The Pman application has been superseded by the Observer application.
+#     >> Pman will be removed in R16." - http://www.erlang.org/doc/man/pman.html
+#
+#     Try the Erlang observer instead! Loads better!
+#
+#     iex> :observer.start
 #
 defmodule MultiProcess do
 
