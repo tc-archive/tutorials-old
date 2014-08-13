@@ -4,7 +4,7 @@
 import :timer, only: [ sleep: 1 ]       # Import the Erlang Timer
 
 
-defmodule Link1 do
+defmodule ProcessTrapExit do
 
   @doc"""
   Waits for 500ms then exits the process unceremoniously.
@@ -26,7 +26,7 @@ defmodule Link1 do
     Process.flag(:trap_exit, true)
 
     # Spawn up and instance of the 'sad_function' process.
-    spawn(Link1, :sad_function, [])
+    spawn(ProcessTrapExit, :sad_function, [])
 
     receive do
 
