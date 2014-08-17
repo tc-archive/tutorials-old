@@ -90,7 +90,7 @@ stop() ->
 %%% GenServer Callbacks
 %%%============================================================================
 
-%%% init ----------------------------------------------------------------------
+%% init -----------------------------------------------------------------------
 init([Port]) ->
     % Use the 'gen_tcp' library to open a port.
     % 
@@ -99,6 +99,10 @@ init([Port]) ->
     % active socket from which you can receive TCP datagrams. You pass the 
     % option {active, true}, which tells gen_tcp to send any incoming TCP data 
     % directly to your process as messages.
+    %
+    % TCP sockets: an active socket like this forwards all incoming data as 
+    % messages to the process that created it. (With a passive socket, you’d have 
+    % to keep asking it if there is more data available.)
     %
     {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
 
@@ -109,11 +113,23 @@ init([Port]) ->
     % init/1 has finished, a timeout should be triggered that forces you to 
     % handle a timeout message (in handle_info/2) as the first thing you do 
     % after initialization.
+    %
+    % When a gen_server has set a timeout, and that timeout triggers, an 
+    % 'out-of-band' message with the single atom 'timeout' is generated, and the 
+    % handle_info/2 callback is invoked to handle it. This mechanism is usually 
+    % used to make servers wake up and take some action if they have received no 
+    % requests within the timeout period.
+    %
+    % This code is abusing this timeout mechanism slightly (it’s a well-known 
+    % trick) to allow  the init/1 function to finish quickly so that the caller 
+    % of start_link(...) isn’t left hanging; but at the same time, you’re making 
+    % sure the server immediately jumps to a specific piece of code (the timeout 
+    % clause of handle_info/2).
     % 
     {ok, #state{port = Port, lsock = LSock}, 0}.
 
 
-%%% handle_call ----------------------------------------------------------------
+%% handle_call ----------------------------------------------------------------
 handle_call(get_count, _From, State) ->
     % Handles the 'get_count' message.
     %
@@ -122,7 +138,7 @@ handle_call(get_count, _From, State) ->
     {reply, {ok, State#state.request_count}, State}.
 
 
-%%% handle_cast ----------------------------------------------------------------
+%% handle_cast ----------------------------------------------------------------
 handle_cast(stop, State) ->
     % Handles the 'stop' message.
     %
@@ -138,22 +154,51 @@ handle_cast(stop, State) ->
     {stop, normal, State}.
 
 
-%%% handle_info ----------------------------------------------------------------
+%% handle_info ----------------------------------------------------------------
+
+%% These are considered out-of-band messages and can happen when your server 
+%% needs to communicate with some other component that relies on direct messages 
+%% rather than on OTP library calls—for example, a socket or a port driver. 
+%% But you should avoid sending out-of- band messages to a gen_server if you can 
+%% help it.
+
+% 'tcp' message handling clause.
+%
+% This is the kind of message that an active socket sends to its owner when it 
+% has pulled data off the TCP buffer. The RawData field contains the data.
+%
 handle_info({tcp, Socket, RawData}, State) ->
+
+    % Process the TCP data as an RPC call.
     do_rpc(Socket, RawData),
+    % Calculate the new 'request count'.
     RequestCount = State#state.request_count,
+    % Async Return - the new updated State.
     {noreply, State#state{request_count = RequestCount + 1}};
+
+% 'timeout' message handling clause.
 handle_info(timeout, #state{lsock = LSock} = State) ->
+
+    % Set the socket to 'accept' - NB: Invoked by immediate 'timeout' event on 
+    % 'init'.
+    %
+    % Use gen_tcp:accept/1 to wait for a TCP connection on your listening socket 
+    % (and the server will be stuck here until that happens). 
+    % 
     {ok, _Sock} = gen_tcp:accept(LSock),
+    % After a connection is made, the timeout clause returns and signals to the 
+    % gen_server container that you want to continue as normal with an unchanged 
+    % state.
     {noreply, State}.
 
-%%% terminate ------------------------------------------------------------------
+%% terminate ------------------------------------------------------------------
 terminate(_Reason, _State) ->
     ok.
 
-%%% code_change ----------------------------------------------------------------
+%% code_change ----------------------------------------------------------------
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
+
 
 
 %%%============================================================================
