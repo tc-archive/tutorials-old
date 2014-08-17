@@ -2,6 +2,9 @@
 %%% @author Martin & Eric <erlware-dev@googlegroups.com>
 %%%  [http://www.erlware.org]
 %%% @copyright 2008-2010 Erlware
+%%%
+%%% @author TRJL - Modifications.
+%%%
 %%% @doc RPC over TCP server. This module defines a server process that
 %%%      listens for incoming TCP connections and allows the user to
 %%%      execute RPC commands via that TCP stream.
@@ -48,8 +51,8 @@
 start_link(Port) ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
 
-%% @spec start_link() -> {ok, Pid}
 %% @doc Calls `start_link(Port)' using the default port.
+%% @spec start_link() -> {ok, Pid}
 start_link() ->
     start_link(?DEFAULT_PORT).
 
