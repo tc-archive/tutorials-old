@@ -67,8 +67,6 @@
          terminate/2, code_change/3]).
 
 
-%% ----------------------------------------------------------------------------
-
 %% State (Tuple)
 %%
 %% A record defining the encapsulted state of the 'gen server'.
@@ -76,13 +74,16 @@
 %%
 -record(state, {}).
 
+
+%% ----------------------------------------------------------------------------
+
 %% Init
 %%
 %% Handle a 'asynchronous' message call to initialise the server.
 %%
 init([]) ->
     {ok, #state{}}.
-    
+
 
 %% Handle Call
 %%
@@ -93,6 +94,7 @@ handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
 
+
 %% Handle Cast
 %%
 %% Handle a 'asynchronous' message call to perform a function.
@@ -100,12 +102,31 @@ handle_call(_Request, _From, State) ->
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
+
 %% Handler Info
 %%
+%% Handles messages sent to a gen_server container that were not 
+%% sent using one of the call or cast functions. 
 %%
+%% This is for out-of-band messages.
+%%
+%% -----
+%% 
+%% This callback is an important special case. It’s called to handle 
+%% any messages that arrive in the mailbox of a gen_server that 
+%% weren’t sent using one of the call or cast library functions 
+%% (typically, naked messages sent with the plain old ! operator). 
+%% There can be various reasons for such messages to find their way 
+%% to the mailbox of a gen_server container—for example, that the 
+%% callback code requested some data from a third party. 
+%% 
+%% In the case of your RPC server, you’ll receive data over TCP, 
+%% which will be pulled off the socket and sent to your server 
+%% process as plain messages.
 %%
 handle_info(_Info, State) ->
     {noreply, State}.
+
 
 %% Terminate 
 %%
@@ -114,7 +135,8 @@ handle_info(_Info, State) ->
 terminate(_Reason, _State) ->
     ok.
 
-%% Code Chane
+
+%% Code Change
 %%
 %%
 %%
