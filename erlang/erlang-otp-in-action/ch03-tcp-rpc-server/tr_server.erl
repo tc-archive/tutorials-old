@@ -11,6 +11,43 @@
 %%% @end
 %%%----------------------------------------------------------------------------
 
+
+%%%----------------------------------------------------------------------------
+%%%  1. Compile --------
+%%%  erlc tr_server.erl
+%%% 
+%%%  2. Run ------------
+%%%  Eshell V5.6.2  (abort with ^G)
+%%%  1> tr_server:start_link(1055).
+%%%  {ok,<0.33.0>}
+%%% 
+%%%  3. Invoke ---------
+%%%  $ telnet localhost 1055
+%%%  Trying 127.0.0.1...
+%%%  Connected to localhost.
+%%%  Escape character is '^]'.
+%%%  init:stop().
+%%%  ok
+%%%  Connection closed by foreign host.
+%%%----------------------------------------------------------------------------
+
+
+%%%----------------------------------------------------------------------------
+%%% A server should not call itself!
+%%%----------------------------------------------------------------------------
+%%%
+%%% With your RPC server, you can try calling any function exported from any 
+%%% module available on the server side, except one: your own 
+%%% 'tr_server:get_count/0'. 
+%%% 
+%%% In general, a server can’t call its own API functions. Suppose you make a 
+%%% synchronous call to the same server from within one of the callback 
+%%% functions: for example, if handle_info/2 tries to use the get_count/0 API 
+%%% function. It will then perform a gen_server:call(...) to itself. But that 
+%%% request will be queued up until after the current call to handle_info/2 has 
+%%% finished, resulting in a circular wait—the server is deadlocked.
+%%%----------------------------------------------------------------------------
+
 -module(tr_server).
 
 -behaviour(gen_server).
@@ -211,7 +248,8 @@ do_rpc(Socket, RawData) ->
     try
         % Convert RawData to: {M, F, A} ( Module:Function(Arg1,...,ArgN) )
         {M, F, A} = split_out_mfa(RawData),
-        % Execute the {M, F, A} command with the 'apply' method.
+        % Execute the {M, F, A} command with the 'apply' method. 
+        % (meta-call operator).
         Result = apply(M, F, A),
         % Write the captured 'Result' back to the 'Socket'.
         gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Result]))
@@ -247,5 +285,20 @@ args_to_terms(RawArgs) ->
 %%%============================================================================
 
 %% test
+
+%%% The Erlang/OTP standard distribution includes two testing frameworks: EUnit 
+%%% and Common Test. 
+%%% 
+%%% EUnit is mainly for unit testing and focuses on making it as  simple as 
+%%% possible to write and run tests during development. 
+%%% 
+%%% Common Test is  based on the so-called OTP Test Server and is a more 
+%%% heavy-duty framework that  can run tests on one or several machines while the 
+%%% results are being logged to the machine that is running the framework; it’s 
+%%% something you might use for large-scale testing like nightly integration tests. 
+%%% 
+%%% You can find more details about both these frameworks in the Tools section of 
+%%% the Erlang/OTP documentation.
+
 start_test() ->
     {ok, _} = tr_server:start_link(1055).
