@@ -205,31 +205,47 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%============================================================================
 
+% Handle the TCP RawData by parsing it into the Module:Function(Arg1,...,ArgN) 
+% form; executing it; and writing the result back to the 'Socket'.
 do_rpc(Socket, RawData) ->
     try
+        % Convert RawData to: {M, F, A} ( Module:Function(Arg1,...,ArgN) )
         {M, F, A} = split_out_mfa(RawData),
+        % Execute the {M, F, A} command with the 'apply' method.
         Result = apply(M, F, A),
+        % Write the captured 'Result' back to the 'Socket'.
         gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Result]))
     catch
+        % Handles malformed input by writing the 'Err' back to the 'Socket'.
         _Class:Err ->
             gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Err]))
     end.
 
+% Extract the 'Module:Function(Arg1,...,ArgN)' definition from the raw input.
 split_out_mfa(RawData) ->
+    % Use the RegEx module to strip '\r\n' chars...
     MFA = re:replace(RawData, "\r\n$", "", [{return, list}]),
+    % Use the RegEx module to extract '[M, F, A]' form...
     {match, [M, F, A]} =
         re:run(MFA,
                "(.*):(.*)\s*\\((.*)\s*\\)\s*.\s*$",
                    [{capture, [1,2,3], list}, ungreedy]),
+    % Convert the '[M, F, A]' to the {M::atom(), F::atom{}, A::Term} tuple.
     {list_to_atom(M), list_to_atom(F), args_to_terms(A)}.
 
+% Extract the 'Arg1,...,ArgN' definitions from the raw input.
 args_to_terms(RawArgs) ->
+    % Use the ErlScan module to extract the 'Toks'...
     {ok, Toks, _Line} = erl_scan:string("[" ++ RawArgs ++ "]. ", 1),
+    % Use the ErlParse module to convert the 'Toks' to 'Terms'.
     {ok, Args} = erl_parse:parse_term(Toks),
     Args.
 
 
-%% test
+%%%============================================================================
+%%% Tests
+%%%============================================================================
 
+%% test
 start_test() ->
     {ok, _} = tr_server:start_link(1055).
