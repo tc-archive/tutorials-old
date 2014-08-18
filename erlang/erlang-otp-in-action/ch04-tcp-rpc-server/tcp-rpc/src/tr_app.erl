@@ -42,20 +42,20 @@
 %%
 start(_Type, _StartArgs) ->
 
-    %% Call the 'tr_sup' OTP 'root superviser' module to init the system and 
-    %% (if successfull) return the PId of the created root superviser process.
-    %%
-    case tr_sup:start_link() of
+  %% Call the 'tr_sup' OTP 'root superviser' module to init the system and 
+  %% (if successfull) return the PId of the created root superviser process.
+  %%
+  case tr_sup:start_link() of
 
-      %% Success! Return the PId of the created root superviser process.
-      %%
-      {ok, RootSuperviserPid} ->
+    %% Success! Return the PId of the created root superviser process.
+    %%
+    {ok, RootSuperviserPid} ->
           {ok, RootSuperviserPid};
       
-      %% Error!
-      %%
-      Other ->
-          {error, Other}
+    %% Error!
+    %%
+    Other ->
+      {error, Other}
 end.
 
 
@@ -65,4 +65,4 @@ end.
 %% _State :: The app state.
 %%
 stop(_State) ->
-    ok.
+  ok.
