@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Compile the source.
+# Compile the OTP App..
 #
 erlc -o ebin  src/*.erl
+
 
 # Run the OTP App.
 #
@@ -18,7 +19,8 @@ erlc -o ebin  src/*.erl
 # 1> application:start(tcp_rpc).
 # ok
 
-# Test the OTP App.
+
+# Use the OTP App.
 #
 # $ telnet localhost 1055
 #
@@ -26,6 +28,14 @@ erlc -o ebin  src/*.erl
 # e.g.: io:format("Hello!").
 #       observer:start().
 #       init:stop().
-#       
+# 
+
+
+# Generate the OTP App EDoc.
 #
+# $ erl –pa ebin
 #
+# Eshell V5.5.5  (abort with ^G)
+# 1> edoc:application(tcp_rpc, ".", []).
+# ok
+
