@@ -9,6 +9,12 @@
 %%% The application behaviour module may also do other things depending on the 
 %%% needs of your system.
 %%%
+%%% A running application is essentially a tree of processes, both supervisors 
+%%% and workers, where the root of the tree is the root supervisor. 
+%%%
+%%% Using the name <application-name>_app is a common convention for the 
+%%% module that implements the application behaviour.
+%%%
 %%% @doc The OTP App for the TCP-RPC Server
 %%% @end
 %%%----------------------------------------------------------------------------
