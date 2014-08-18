@@ -73,7 +73,32 @@ init([]) ->
   %% have one only...
   Children = [Server],
 
+  %% The 'restart-strategy' is of the form:
+  %%
+  %% RestartStrategy = {How, Max, Within}
+  %%
+  %% Where:
+  %%
+  %% How      - Defines how a child process is restarted if it dies. The 
+  %%            'one_for_one' strategy means if a child process dies, that a  
+  %%            single process is spawned to replace it.
+  %% Max      - The maximum number of restarts.
+  %% Within   - The restart timeframe in seconds.
+  %%
+  %% Together New and Within defined the allowed 'restart frequency'.
+  %%
+  %% For instance, if Max=10 and Within=30, you allow at most 10 restarts within 
+  %% any period of 30 seconds. If this limit is exceeded, the supervisor 
+  %% terminates itself and all its child processes and propagates the failure up 
+  %% the supervision tree.
+  %%
+  %% It is hard to recommend good all-round defaults, but 4 restarts per hour 
+  %% (3600 seconds) is often used in production systems
+  %%
   RestartStrategy = {one_for_one, 0, 1},
 
   %% Return the 'superviser specification'...
   {ok, {RestartStrategy, Children}}.
+
+
+
