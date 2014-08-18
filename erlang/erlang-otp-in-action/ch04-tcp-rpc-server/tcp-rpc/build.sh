@@ -38,4 +38,18 @@ erlc -o ebin  src/*.erl
 # Eshell V5.5.5  (abort with ^G)
 # 1> edoc:application(tcp_rpc, ".", []).
 # ok
+#
+# NB: The empty list [] is for additional options to EDoc (none right now), and the period (.) 
+#     means the application is supposed to be found in the current directory.
+#
+# 
+# OR
+#
+# $ cd ${PARENT_DIR}
+# $ erl –pa tcp_rpc/ebin
+#
+# Eshell V5.5.5  (abort with ^G)
+# 1> edoc:application(tcp_rpc).
+# ok
+
 
