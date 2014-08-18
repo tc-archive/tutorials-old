@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Compile the source.
+#
+erlc -o ebin  src/*.erl
+
+# Run the OTP App.
+#
+# $ erl –pa ebin
+# 
+# NB: '-pa' stands for 'path add', adding a directory to the beginning of the code path.)
+#
+# With the Erlang shell up and running, you have to do only one thing to launch the 
+# application: call the standard library function application:start/1, passing it the 
+# application name tcp_rpc, like this:
+# 
+# Eshell V5.5.5  (abort with ^G)
+# 1> application:start(tcp_rpc).
+# ok
+
+# Test the OTP App.
+#
+# $ telnet localhost 1055
+#
+# >>> Enter some Erlang Module:function:[Params] tests...
+# e.g.: io:format("Hello!").
+#       observer:start().
+#       init:stop().
+#       
+#
+#

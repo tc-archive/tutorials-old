@@ -66,7 +66,7 @@ init([]) ->
     permanent, 
     2000, 
     worker, 
-    tr_server]
+    [tr_server]
     },
 
   %% A list of 'child-specs'. One for each child process to be created. Here we 
