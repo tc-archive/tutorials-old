@@ -32,9 +32,8 @@
   stop/1
   ]).
 
+
 %%%----------------------------------------------------------------------------
-
-
 %% This is called when the OTP system wants to start your application, and it 
 %% must perform the actual startup and return the process ID of the root 
 %% supervisor as {ok, Pid}. 
