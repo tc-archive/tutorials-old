@@ -46,7 +46,9 @@ start_link() ->
 %% using the start_link function in sc_element with the extra arguments 'Value'
 %% and LeaseTime.
 %%
-%% The following tuple in the child spec: '{sc_element, start_link, []}''
+%% The following tuple in the child spec (defined in the 'init' method) :
+%%   '{sc_element, start_link, []}''
+%%
 %% which indicates the module name, function name, and arguments of the start 
 %% function for the child process, gets the list [Value, LeaseTime] appended to 
 %% the argument list [] before the call is made, resulting in a call to 
