@@ -22,6 +22,7 @@
   code_change/3
 ]).
 
+
 %%%============================================================================
 %%% Public Interface
 %%%============================================================================
@@ -50,3 +51,46 @@
 %% timestamp   - The timestamp from  when the process was started.
 %%
 -record(state, {value, lease_time, start_time}).
+
+
+%%%============================================================================
+%%% Public Interface Implementation
+%%%============================================================================
+
+start_link(Value, LeaseTime) ->
+    gen_server:start_link(?MODULE, [Value, LeaseTime], []).
+
+
+create(Value, LeaseTime) ->
+    sc_sup:start_child(Value, LeaseTime).
+
+
+create(Value) ->
+    create(Value, ?DEFAULT_LEASE_TIME).
+
+%% Fetch the state Value of the specified storage process. 
+fetch(Pid) ->
+  % Synchronously calls the specified GenServer process with a 'fetch' message  
+  % to return the GenServer process 'state' (the stored 'Value').
+  gen_server:call(Pid, fetch).
+
+%% Replace the state Value of the specified storage process. 
+replace(Pid, Value) ->
+  % Asynchronously calls the specified GenServer process with a 'replace'   
+  % message to replace the specified Value.
+  gen_server:cast(Pid, {replace, Value}).
+
+%% Delete the state Value of the specified storage process. 
+delete(Pid) ->
+  % Asynchronously calls the specified GenServer process with a 'delete'   
+  % message to delete the specified Value.
+  gen_server:cast(Pid, delete).
+
+
+%%%============================================================================
+%%% OTP Supervisor Callbacks
+%%%============================================================================
+
+
+
+
