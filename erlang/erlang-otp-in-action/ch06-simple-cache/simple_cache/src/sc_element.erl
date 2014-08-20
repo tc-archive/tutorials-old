@@ -105,6 +105,60 @@ delete(Pid) ->
 %%% OTP Supervisor Callbacks
 %%%============================================================================
 
+init([Value, LeaseTime]) ->
+  Now = calendar:local_time(),
+  StartTime = calendar:datetime_to_gregorian_seconds(Now),
+  {ok, 
+    #state{
+      value = Value, 
+      lease_time = LeaseTime, 
+      start_time = StartTime
+    }, 
+    time_left(StartTime, LeaseTime)
+  }.
 
+
+time_left(_StartTime, infinity) ->
+    infinity;
+
+time_left(StartTime, LeaseTime) ->
+    Now = calendar:local_time(),
+    CurrentTime =  calendar:datetime_to_gregorian_seconds(Now),
+    TimeElapsed = CurrentTime - StartTime,
+    case LeaseTime - TimeElapsed of
+        Time when Time =< 0 -> 0;
+        Time                -> Time * 1000
+    end.
+
+
+handle_call(fetch, _From,  State) ->
+    #state{value = Value,
+           lease_time = LeaseTime,
+           start_time = StartTime} = State,
+    TimeLeft = time_left(StartTime, LeaseTime),
+    {reply, {ok, Value}, State, TimeLeft}.
+
+
+handle_cast({replace, Value}, State) ->
+    #state{lease_time = LeaseTime,
+           start_time = StartTime} = State,
+    TimeLeft = time_left(StartTime, LeaseTime),
+    {noreply, State#state{value = Value}, TimeLeft};
+
+
+handle_cast(delete, State) ->
+    {stop, normal, State}.
+
+
+handle_info(timeout, State) ->
+    {stop, normal, State}.
+
+
+terminate(_Reason, _State) ->
+    sc_store:delete(self()),
+    ok.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
 
 
