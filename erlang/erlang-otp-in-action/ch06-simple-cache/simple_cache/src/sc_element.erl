@@ -105,55 +105,80 @@ delete(Pid) ->
 %%% OTP GenServer Callbacks
 %%%============================================================================
 
+%%% Setting server timeouts
+%%%
+%%% Remember that if you forget to return a new timeout value in one of the 
+%%% callback functions, the timeout will revert to infinity. When you’re using 
+%%% server timeouts, it’s important to remember to set them in every clause of 
+%%% every callback function.
+%%%
+
 init([Value, LeaseTime]) ->
   Now = calendar:local_time(),
+  % Gregorian seconds: a useful uniform representation of time as the number 
+  % of seconds since year 0 (year 1 BC) according to the normal 
+  % Western/International Gregorian calendar.
   StartTime = calendar:datetime_to_gregorian_seconds(Now),
-  {ok, 
-    #state{
+
+  % If the server process isn’t accessed within the lease period, a timeout 
+  % message is sent to the server and passed to the handle_info/2 function, 
+  % which shuts down the process.
+
+  {ok,                              % ok
+    #state{                         % State
       value = Value, 
       lease_time = LeaseTime, 
       start_time = StartTime
     }, 
-    time_left(StartTime, LeaseTime)
+    time_left(StartTime, LeaseTime) % The server timeout after initialization
   }.
 
-
+% Handle 'fetch' message.
 handle_call(fetch, _From,  State) ->
+  % Get State.
   #state{value = Value, lease_time = LeaseTime, start_time = StartTime} = State,
+  % Compute timeout..
   TimeLeft = time_left(StartTime, LeaseTime),
   {reply, {ok, Value}, State, TimeLeft}.
 
 
+% Handle 'replace' message.
 handle_cast({replace, Value}, State) ->
   #state{lease_time = LeaseTime, start_time = StartTime} = State,
   TimeLeft = time_left(StartTime, LeaseTime),
+  % Returns 'noreply', meaning that the server doesn’t reply, but, stays alive.
   {noreply, State#state{value = Value}, TimeLeft};
 
 
+% Terminate this sc_element process, removing it from the cache.
 handle_cast(delete, State) ->
-    {stop, normal, State}.
+  % Returns 'stop', meaning that the server doesn’t reply and terminates..
+  {stop, normal, State}.
 
-
+% Kill/Stop the process.
 handle_info(timeout, State) ->
-    {stop, normal, State}.
+  {stop, normal, State}.
 
 
+% Delete from store
 terminate(_Reason, _State) ->
-    sc_store:delete(self()),
-    ok.
+  sc_store:delete(self()),
+  ok.
 
-
+% Code change.
 code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+  {ok, State}.
 
 
 %%%============================================================================
 %%% Private Functions 
 %%%============================================================================
 
+%% Computes the number of milliseconds left of the lease.
+%% NB: System uses time in milliseconds, not, seconds.
+%%
 time_left(_StartTime, infinity) ->
   infinity;
-
 time_left(StartTime, LeaseTime) ->
   
   Now = calendar:local_time(),
