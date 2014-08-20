@@ -40,6 +40,17 @@ start_link() ->
 %%
 %% The function asks the running supervisor (identified by ?SERVER) to start a 
 %% new child, passing it the extra arguments 'Value' and 'LeaseTime'
+%%
+%% When someone calls the start_child/2 API function, it results in a message 
+%% being sent to the supervisor process, asking it to start a new child process 
+%% using the start_link function in sc_element with the extra arguments 'Value'
+%% and LeaseTime.
+%%
+%% The following tuple in the child spec: '{sc_element, start_link, []}''
+%% which indicates the module name, function name, and arguments of the start 
+%% function for the child process, gets the list [Value, LeaseTime] appended to 
+%% the argument list [] before the call is made, resulting in a call to 
+%% 'sc_element:start_link(Value, LeaseTime)'.
 %% @end
 %%-----------------------------------------------------------------------------
 start_child(Value, LeaseTime) ->
@@ -61,11 +72,17 @@ start_child(Value, LeaseTime) ->
 %%-----------------------------------------------------------------------------
 init([]) ->
 
+  % Defines the new child processes to be created by the supervisor encapsulate 
+  % the 'sc_element' module 'start_link' function (with initially empty params).
+  %
+  % These are 'temporary' 'worker' processes that terminate when the 
+  % 'supervisor' terminates.
   Element = {sc_element, {sc_element, start_link, []},
              temporary, brutal_kill, worker, [sc_element]},
 
   Children = [Element],
-    
+  
+  % Can dynamically create new child processes dynamically at runtime.
   RestartStrategy = {simple_one_for_one, 0, 1},
 
   {ok, {RestartStrategy, Children}}.
