@@ -57,14 +57,28 @@
 %%% Public Interface Implementation
 %%%============================================================================
 
+%% Create a new 'tc_element' GenServer process.
+%%
+%% NB: This method is called from the 'sc_sup' supervisor to allow the  
+%%     management/supervision of created processes.
+%%
 start_link(Value, LeaseTime) ->
     gen_server:start_link(?MODULE, [Value, LeaseTime], []).
 
-
+%% Create (store) a new Value with the specified LeaseTime.
+%%
+%% NB: This method calls the 'sc_sup' supervisor to allow the  
+%%     management/supervision of created processes. 
+%%
+%%     The supervisor will use the 'sc_element:start_link(Value, LeaseTime)' 
+%%     (configured in the 'sc_sup:init' method) to actually create the  
+%%     supervised process. This method in turn call the GenServer behviour 
+%%     'start_link' message. Simples! 
+%% 
 create(Value, LeaseTime) ->
     sc_sup:start_child(Value, LeaseTime).
 
-
+%% Create (store) a new Value with the default LeaseTime. 
 create(Value) ->
     create(Value, ?DEFAULT_LEASE_TIME).
 
