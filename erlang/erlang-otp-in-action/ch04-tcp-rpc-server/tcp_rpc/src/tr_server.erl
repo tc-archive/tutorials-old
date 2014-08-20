@@ -77,7 +77,7 @@
 %%%============================================================================
 
 
-%%%----------------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 %% @doc Starts the server.
 %%
 %% @spec start_link(Port::integer()) -> {ok, Pid}
@@ -94,7 +94,7 @@
 %% listed at the end of the specification as with the 'where' noatation 
 %% (as with Pid = pid() ...)
 %%
-%%%----------------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 start_link(Port) ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
 
@@ -103,21 +103,21 @@ start_link(Port) ->
 start_link() ->
     start_link(?DEFAULT_PORT).
 
-%%%----------------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 %% @doc Fetches the number of requests made to this server.
 %% @spec get_count() -> {ok, Count}
 %% where
 %%  Count = integer()
 %% @end
-%%%----------------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 get_count() ->
     gen_server:call(?SERVER, get_count).
 
-%%%----------------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 %% @doc Stops the server.
 %% @spec stop() -> ok
 %% @end
-%%%----------------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 stop() ->
     gen_server:cast(?SERVER, stop).
 
@@ -127,7 +127,7 @@ stop() ->
 %%% GenServer Callbacks
 %%%============================================================================
 
-%% init -----------------------------------------------------------------------
+%%-----------------------------------------------------------------------------
 init([Port]) ->
     % Use the 'gen_tcp' library to open a port.
     % 
@@ -199,11 +199,11 @@ handle_cast(stop, State) ->
 %% But you should avoid sending out-of- band messages to a gen_server if you can 
 %% help it.
 
-% 'tcp' message handling clause.
-%
-% This is the kind of message that an active socket sends to its owner when it 
-% has pulled data off the TCP buffer. The RawData field contains the data.
-%
+%% 'tcp' message handling clause.
+%%
+%% This is the kind of message that an active socket sends to its owner when it 
+%% has pulled data off the TCP buffer. The RawData field contains the data.
+%%
 handle_info({tcp, Socket, RawData}, State) ->
 
     % Process the TCP data as an RPC call.
@@ -213,7 +213,7 @@ handle_info({tcp, Socket, RawData}, State) ->
     % Async Return - the new updated State.
     {noreply, State#state{request_count = RequestCount + 1}};
 
-% 'timeout' message handling clause.
+%% 'timeout' message handling clause.
 handle_info(timeout, #state{lsock = LSock} = State) ->
 
     % Set the socket to 'accept' - NB: Invoked by immediate 'timeout' event on 
@@ -242,8 +242,9 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%============================================================================
 
-% Handle the TCP RawData by parsing it into the Module:Function(Arg1,...,ArgN) 
-% form; executing it; and writing the result back to the 'Socket'.
+
+%% Handle the TCP RawData by parsing it into the Module:Function(Arg1,...,ArgN) 
+%% form; executing it; and writing the result back to the 'Socket'.
 do_rpc(Socket, RawData) ->
     try
         % Convert RawData to: {M, F, A} ( Module:Function(Arg1,...,ArgN) )
@@ -259,7 +260,7 @@ do_rpc(Socket, RawData) ->
             gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Err]))
     end.
 
-% Extract the 'Module:Function(Arg1,...,ArgN)' definition from the raw input.
+%% Extract the 'Module:Function(Arg1,...,ArgN)' definition from the raw input.
 split_out_mfa(RawData) ->
     % Use the RegEx module to strip '\r\n' chars...
     MFA = re:replace(RawData, "\r\n$", "", [{return, list}]),
@@ -271,7 +272,7 @@ split_out_mfa(RawData) ->
     % Convert the '[M, F, A]' to the {M::atom(), F::atom{}, A::Term} tuple.
     {list_to_atom(M), list_to_atom(F), args_to_terms(A)}.
 
-% Extract the 'Arg1,...,ArgN' definitions from the raw input.
+%% Extract the 'Arg1,...,ArgN' definitions from the raw input.
 args_to_terms(RawArgs) ->
     % Use the ErlScan module to extract the 'Toks'...
     {ok, Toks, _Line} = erl_scan:string("[" ++ RawArgs ++ "]. ", 1),
