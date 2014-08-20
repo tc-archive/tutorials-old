@@ -20,29 +20,32 @@
 
 
 %%-----------------------------------------------------------------------------
-%% @doc Fetches the number of requests made to this server.
+%% @doc Start the 'simple cache' application.
 %%
-%% @spec get_count() -> {ok, Count}
+%% @spec start(_StartType::any(), _StartArgs::any()) -> {ok, Other}
 %% where
-%%  Count = integer()
+%%  ok = atom()
 %%
 %% @end
 %%-----------------------------------------------------------------------------
 start(_StartType, _StartArgs) ->
 
+  % Start the 'application root superviser'
   case sc_sup:start_link() of
-    {ok, Pid} ->
-      {ok, Pid};
+
+    {ok, RootSupervisorPid} ->
+      {ok, RootSupervisorPid};
+
     Other ->
       {error, Other}
 end.
 
 %%-----------------------------------------------------------------------------
-%% @doc Fetches the number of requests made to this server.
+%% @doc Stop the 'simple cache' application.
 %%
-%% @spec get_count() -> {ok, Count}
+%% @spec stop() -> ok
 %% where
-%%  Count = integer()
+%%  ok = atom()
 %%
 %% @end
 %%-----------------------------------------------------------------------------

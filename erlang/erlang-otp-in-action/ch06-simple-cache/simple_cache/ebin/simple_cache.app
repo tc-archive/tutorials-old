@@ -25,8 +25,8 @@
 %%                  application can start. (Dependencies).
 %% 
 %% 'mod'          - Tells the OTP system how to start your application. The 
-%%                  value is a tuple containing the module name along with some 
-%%                  optional startup arguments.
+%%                  value is a tuple containing the module name along with  
+%%                  some optional startup arguments.
 %%
 
 {application, simple_cache,
