@@ -87,31 +87,31 @@ init([]) ->
 %%
 
 handle_event({error, _Gleader, {Pid,Format,Data}}, State) ->
-  io:fwrite("?MODULE ERROR <~p> ~s~n", [Pid, io_lib:format(Format, Data)]),
+  io:fwrite("Custom Log - ERROR <~p> ~s~n", [Pid, io_lib:format(Format, Data)]),
   {ok, State};
 handle_event({error_report, _Gleader, {Pid, std_error, Report}}, State) ->
-  io:fwrite("?MODULE ERROR <~p> ~p~n", [Pid, Report]),
+  io:fwrite("Custom Log - ERROR <~p> ~p~n", [Pid, Report]),
   {ok, State};
 handle_event({error_report, _Gleader, {Pid, Type, Report}}, State) ->
-  io:fwrite("?MODULE ERROR <~p> ~p ~p~n", [Pid, Type, Report]),
+  io:fwrite("Custom Log - ERROR <~p> ~p ~p~n", [Pid, Type, Report]),
   {ok, State};
 handle_event({warning_msg, _Gleader, {Pid, Format, Data}}, State) ->
-  io:fwrite("?MODULE WARNING <~p> ~s~n", [Pid, io_lib:format(Format, Data)]),
+  io:fwrite("Custom Log -  WARNING <~p> ~s~n", [Pid, io_lib:format(Format, Data)]),
   {ok, State};
 handle_event({warning_report,_Gleader,{Pid,std_warning,Report}}, State) -> 
-  io:fwrite("?MODULE WARNING <~p> ~p~n", [Pid, Report]),
+  io:fwrite("Custom Log -  WARNING <~p> ~p~n", [Pid, Report]),
   {ok, State};
 handle_event({warning_report,_Gleader,{Pid, Type, Report}}, State) -> 
-  io:fwrite("?MODULE WARNING <~p> ~p ~p~n", [Pid, Type, Report]),
+  io:fwrite("Custom Log -  WARNING <~p> ~p ~p~n", [Pid, Type, Report]),
   {ok, State};
 handle_event({info_msg, _Gleader, {Pid, Format, Data}}, State) ->
-  io:fwrite("?MODULE INFO <~p> ~s~n", [Pid, io_lib:format(Format, Data)]),
+  io:fwrite("Custom Log -  <~p> ~s~n", [Pid, io_lib:format(Format, Data)]),
   {ok, State};
 handle_event({info_report, _Gleader, {Pid, std_info, Report}}, State) ->
-  io:fwrite("?MODULE INFO <~p> ~p~n", [Pid, Report]),
+  io:fwrite("Custom Log - INFO <~p> ~p~n", [Pid, Report]),
   {ok, State};
 handle_event({info_report, _Gleader, {Pid, Type, Report}}, State) ->
-  io:fwrite("?MODULE INFO <~p> ~p ~p~n", [Pid, Type, Report]),
+  io:fwrite("Custom Log - INFO <~p> ~p ~p~n", [Pid, Type, Report]),
   {ok, State};
 %% Catch any system events (that dont match the handled type syntax).
 handle_event(_Event, State) ->
@@ -194,13 +194,13 @@ code_change(_OldVsn, State, _Extra) ->
 % 3> custom_error_report:register_with_logger().
 % ok
 % 4> error_logger:error_msg("Hello custom event event logger!").
-% custom_event_report ERROR <<0.32.0>> Hello custom event event logger!
+% Custom Log - ERROR <<0.32.0>> Hello custom event event logger!
 %
 % =ERROR REPORT==== 21-Aug-2014::19:06:29 ===
 % Hello custom event event logger!ok
 %
 % 5> error_logger:info_msg("Hello custom event event logger!").
-% custom_event_report INFO <<0.32.0>> Hello custom event event logger!
+% Custom Log - INFO <<0.32.0>> Hello custom event event logger!
 %
 % =INFO REPORT==== 21-Aug-2014::19:06:58 ===
 % Hello custom event event logger!ok
