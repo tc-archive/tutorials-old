@@ -17,6 +17,11 @@
 %% function as a last favor.
 %%
 
+%% Compile the module as normal and then call its API function 
+%% 'custom_error_report:register_with_logger()'' to make it hook itself into 
+%% the 'error-logger' event stream.
+%%
+
 %%%============================================================================
 %%% OTP GenEvent Behaviour
 %%%============================================================================
