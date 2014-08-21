@@ -4,11 +4,14 @@
 %%% An API to the simple_cache appli- cation. This module is a set of interface 
 %%% functions for clients of the  'simple_cache':
 %%%
-%%% - insert/2—Stores a key and corresponding value in the cache
+%%% - insert/2—Stores a key and corresponding value in the cache.
 %%%
-%%% - lookup/1—Uses a key to retrieve a value
+%%% - insert/3—Stores a key and corresponding value in the cache with the 
+%%%   specified LeaseTime,.
 %%%
-%%% - delete/1—Uses a key to delete the key/value pair from the cache
+%%% - lookup/1—Uses a key to retrieve a value.
+%%%
+%%% - delete/1—Uses a key to delete the key/value pair from the cache.
 %%%
 %%% NB: This API doesn’t include any functions for starting or stopping the 
 %%% simple_cache; that is handled via OTP system functions such as 
@@ -23,13 +26,25 @@ The convention for application-level API modules is to give them the same name a
 
 -export([insert/2, lookup/1, delete/1]).
 
-
+%% Takes a key and a value and stores the pair in the cache with the 
+%% default LeaseTime.
 insert(Key, Value) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
       sc_element:replace(Pid, Value);
     {error, _} ->
       {ok, Pid} = sc_element:create(Value),
+      sc_store:insert(Key, Pid)
+  end.
+
+%% Takes a key and a value and stores the pair in the cache with the 
+%% specified LeaseTime.
+insert(Key, Value, LeaseTime) ->
+  case sc_store:lookup(Key) of
+    {ok, Pid} ->
+      sc_element:replace(Pid, Value);
+    {error, _} ->
+      {ok, Pid} = sc_element:create(Value, LeaseTime),
       sc_store:insert(Key, Pid)
   end.
 
