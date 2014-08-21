@@ -66,7 +66,10 @@
 %% }
 %%
 %% After it’s started, the process can be referenced by the name 'my_logger' 
-%% in order to add handlers.
+%% in order to add handlers. Although, this is letting an implementation 
+%% details (the name of the process 'my_logger') leak into the code. It is far 
+%% better to mange such details within the API. This makes the user interface 
+%% completely independent of the registered name.
 %%
 start_link() ->
   % Hide gen_event start function.
@@ -85,20 +88,50 @@ delete_handler(Handler, Args) ->
 %%% Public Cient API Implementation
 %%%============================================================================
 
+%% For event handlers, the encapsulation isn’t as complete as for gen_servers:  
+%% the protocol defined in this API module must be understood by every callback 
+%% module you want to add, and so it should be documented (possibly as internal 
+%% documentation. The terms used in the protocol shouldn’t be allowed to leak 
+%% into any other part of the system.
+%%
+%% The protocol for the 'sc_event' custom event stream: 
+%%
+%% +---------------------------------------+---------------------+
+%% | Event Tuple                           | Posted By           |
+%% +---------------------------------------+---------------------+
+%% |{lookup, Key}                          | sc_event:lookup/1   |
+%% |{create, {Key, Value}}                 | sc_event:create/2   |
+%% |{replace, {Key, Value}}                | sc_event:replace/2  |
+%% |{delete, Key} | warning_report()       | sc_event:delete/1   |
+%% +---------------------------------------+---------------------+
+%%
+%% With this API in place, when you want to do something like post a lookup 
+%% event, all you need to do is call sc_event:lookup(Key). If you need to change 
+%% the event protocol or any other detail of the implementation, you won’t have 
+%% to go back and modify every line that posts such an event throughout your code 
+%% base.
+%%
+
+
+
 lookup(Key) ->
-  % API function.
+  % The gen_event module provides the function notify/2 for posting events 
+  % asynchronously, similar to the cast/2 function in gen_server.
   gen_event:notify(?SERVER, {lookup, Key}).
 
 create(Key, Value) ->
-  % API function
+  % The gen_event module provides the function notify/2 for posting events 
+  % asynchronously, similar to the cast/2 function in gen_server.
   gen_event:notify(?SERVER, {create, {Key, Value}}).
 
 replace(Key, Value) ->
-  % API function.
+  % The gen_event module provides the function notify/2 for posting events 
+  % asynchronously, similar to the cast/2 function in gen_server.
   gen_event:notify(?SERVER, {replace, {Key, Value}}).
 
 delete(Key) ->
-  % API function.
+  % The gen_event module provides the function notify/2 for posting events 
+  % asynchronously, similar to the cast/2 function in gen_server.
   gen_event:notify(?SERVER, {delete, Key}).
 
 

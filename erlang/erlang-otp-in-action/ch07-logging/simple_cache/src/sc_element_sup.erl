@@ -6,7 +6,7 @@
 %%% This supervisor is in many ways just a factory for 'sc_element' processes.
 %%% @end
 %%%============================================================================
--module(sc_sup).
+-module(sc_element_sup).
 
 %%%============================================================================
 %%% OTP Supervisor Behaviour
