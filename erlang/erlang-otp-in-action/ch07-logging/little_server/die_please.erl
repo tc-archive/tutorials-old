@@ -6,6 +6,21 @@
 
 -module(die_please).
 
+%% The standard log messages (the ones you can write using the basic functions) 
+%% are always available in any Erlang system.
+%%
+%% Applications can also define their own report types, which the system 
+%% ignores unless an 'event handler' has been added to act on them. 
+%%
+%% SASL adds such a handler, which listens for reports sent by the standard OTP 
+%% behaviours when supervisors start or restart a child process, if a child 
+%% process dies unexpectedly, or if a behaviour-based process like a gen_server 
+%% crashes. When you started SASL, you saw the main SASL supervisor starting 
+%% some worker processes.
+%%
+%% OTP is great!
+%%
+
 %%%============================================================================
 %%% OTP GenServer Behaviour
 %%%============================================================================
@@ -227,6 +242,11 @@ code_change(_OldVsn, State, _Extra) ->
 %      in call from gen_server:handle_msg/5 (gen_server.erl, line 599)
 %      in call from proc_lib:init_p_do_apply/3 (proc_lib.erl, line 239)
 % 5>
+
+%% You get the same error report as before, but you also get a crash report 
+%% from SASL with a lot of additional information about the process that 
+%% failed. This kind of information is useful when you’re debugging a crash 
+%% in a live system.
 
 
 
