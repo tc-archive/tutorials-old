@@ -35,10 +35,11 @@
 %%% Public Management API Implementation
 %%%============================================================================
 
+%% Convenience functions that make it easy to start the logging.
 add_handler() ->
   sc_event:add_handler(?MODULE, []).
 
-
+%% Convenience functions that make it easy to stop the logging.
 delete_handler() ->
   sc_event:delete_handler(?MODULE, []).
 
@@ -47,23 +48,38 @@ delete_handler() ->
 %%% OTP GenServer Callbacks
 %%%============================================================================
 
+% Log 'create' events.
 handle_event({create, {Key, Value}}, State) ->
   error_logger:info_msg("create(~w, ~w)~n", [Key, Value]),
   {ok, State};
 
-
+% Log 'lookup' events.
 handle_event({lookup, Key}, State) ->
   error_logger:info_msg("lookup(~w)~n", [Key]),
   {ok, State};
 
-
+% Log 'delete' events.
 handle_event({delete, Key}, State) ->
   error_logger:info_msg("delete(~w)~n", [Key]),
   {ok, State};
 
-
+% Log 'replace' events.
 handle_event({replace, {Key, Value}}, State) ->
   error_logger:info_msg("replace(~w, ~w)~n", [Key, Value]),
+  {ok, State}.
+
+
+handle_call(_Request, State) ->
+  Reply = ok,
+  {ok, Reply, State}.
+
+handle_info(_Info, State) ->
+  {ok, State}.
+
+terminate(_Reason, _State) ->
+  ok.
+
+code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
 
 
