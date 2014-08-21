@@ -22,6 +22,14 @@
 %% the 'error-logger' event stream.
 %%
 
+%% http://www.erlang.org/doc/man/error_logger.html
+%% 
+%% Warning events was introduced in Erlang/OTP R9C. To retain backwards 
+%% compatibility, these are by default tagged as errors, thus showing up as 
+%% error reports in the logs. By using the command line flag +W <w | i>, they 
+%% can instead be tagged as warnings or info. Tagging them as warnings may 
+%% require rewriting existing user defined event handlers.
+
 %%%============================================================================
 %%% OTP GenEvent Behaviour
 %%%============================================================================
