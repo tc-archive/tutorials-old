@@ -20,11 +20,23 @@
 %%% @end
 %%%============================================================================
 
-The convention for application-level API modules is to give them the same name as the application.
-
+%% NB: The convention for application-level API modules is to give them the same 
+%% name as the application.
 -module(simple_cache).
 
--export([insert/2, lookup/1, delete/1]).
+
+%%%============================================================================
+%%% Public Interface
+%%%============================================================================
+
+
+-export([insert/2, insert/3, lookup/1, delete/1]).
+
+
+
+%%%============================================================================
+%%% Public Interface Implementation
+%%%============================================================================
 
 %% @doc
 %% Takes a key and a value and stores the pair in the cache with the 
