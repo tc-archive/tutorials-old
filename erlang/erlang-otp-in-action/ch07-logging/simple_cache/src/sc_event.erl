@@ -1,6 +1,6 @@
 %%%============================================================================
 %%% @doc 
-%%% A barebones implementation of a gen_event behaviour for the error logger.
+%%% An 'event stream generator' for the 'simple_cache' module.
 %%% @end
 %%%============================================================================
 
@@ -111,8 +111,6 @@ delete_handler(Handler, Args) ->
 %% to go back and modify every line that posts such an event throughout your code 
 %% base.
 %%
-
-
 
 lookup(Key) ->
   % The gen_event module provides the function notify/2 for posting events 

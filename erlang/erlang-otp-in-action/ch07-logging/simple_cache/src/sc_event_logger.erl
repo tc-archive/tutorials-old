@@ -1,28 +1,71 @@
+%%%============================================================================
+%%% @doc 
+%%% An 'event stream listener' for the 'simple_cache' module.
+%%% @end
+%%%============================================================================
 -module(sc_event_logger).
+
+%%%============================================================================
+%%% OTP GenEvent Behaviour
+%%%============================================================================
 
 -behaviour(gen_event).
 
--export([add_handler/0, delete_handler/0]).
+-export([
+  init/1, 
+  handle_event/2, 
+  handle_call/2,
+  handle_info/2, 
+  code_change/3, 
+  terminate/2
+  ]).
 
--export([init/1, handle_event/2, handle_call/2,
-         handle_info/2, code_change/3, terminate/2]).
 
+%%%============================================================================
+%%% Public Management API
+%%%============================================================================
+
+-export([
+  add_handler/0, 
+  delete_handler/0
+  ]).
+
+
+%%%============================================================================
+%%% Public Management API Implementation
+%%%============================================================================
 
 add_handler() ->
-    sc_event:add_handler(?MODULE, []).
+  sc_event:add_handler(?MODULE, []).
+
+
 delete_handler() ->
-    sc_event:delete_handler(?MODULE, []).
+  sc_event:delete_handler(?MODULE, []).
+
+
+%%%============================================================================
+%%% OTP GenServer Callbacks
+%%%============================================================================
 
 handle_event({create, {Key, Value}}, State) ->
-    error_logger:info_msg("create(~w, ~w)~n", [Key, Value]),
-    {ok, State};
+  error_logger:info_msg("create(~w, ~w)~n", [Key, Value]),
+  {ok, State};
+
+
 handle_event({lookup, Key}, State) ->
-    error_logger:info_msg("lookup(~w)~n", [Key]),
-    {ok, State};
+  error_logger:info_msg("lookup(~w)~n", [Key]),
+  {ok, State};
+
+
 handle_event({delete, Key}, State) ->
-    error_logger:info_msg("delete(~w)~n", [Key]),
-    {ok, State};
+  error_logger:info_msg("delete(~w)~n", [Key]),
+  {ok, State};
+
 
 handle_event({replace, {Key, Value}}, State) ->
-    error_logger:info_msg("replace(~w, ~w)~n", [Key, Value]),
-    {ok, State}.
+  error_logger:info_msg("replace(~w, ~w)~n", [Key, Value]),
+  {ok, State}.
+
+
+
+
