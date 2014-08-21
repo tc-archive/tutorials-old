@@ -169,8 +169,64 @@ code_change(_OldVsn, State, _Extra) ->
 %          application: sasl
 %           started_at: nonode@nohost
 % ok
-% 4>
 
+%% *** Invoke a stack trace with SASL running ***
+%% 
+
+% 4> die_please:start_link().
+% {ok,<0.52.0>}
+% 5>
+% =ERROR REPORT==== 21-Aug-2014::17:15:09 ===
+% ** Generic server die_please terminating
+% ** Last message in was timeout
+% ** When Server state == {state}
+% ** Reason for termination ==
+% ** {{badmatch,right_now},
+%     [{die_please,handle_info,2,[{file,"die_please.erl"},{line,75}]},
+%      {gen_server,handle_msg,5,[{file,"gen_server.erl"},{line,599}]},
+%      {proc_lib,init_p_do_apply,3,[{file,"proc_lib.erl"},{line,239}]}]}
+%
+% =CRASH REPORT==== 21-Aug-2014::17:15:09 ===
+%   crasher:
+%     initial call: die_please:init/1
+%     pid: <0.52.0>
+%     registered_name: die_please
+%     exception exit: {{badmatch,right_now},
+%                      [{die_please,handle_info,2,
+%                                   [{file,"die_please.erl"},{line,75}]},
+%                       {gen_server,handle_msg,5,
+%                                   [{file,"gen_server.erl"},{line,599}]},
+%                       {proc_lib,init_p_do_apply,3,
+%                                 [{file,"proc_lib.erl"},{line,239}]}]}
+%       in function  gen_server:terminate/6 (gen_server.erl, line 746)
+%     ancestors: [<0.41.0>]
+%     messages: []
+%     links: [<0.41.0>]
+%     dictionary: []
+%     trap_exit: false
+%     status: running
+%     heap_size: 376
+%     stack_size: 27
+%     reductions: 133
+%   neighbours:
+%     neighbour: [{pid,<0.41.0>},
+%                   {registered_name,[]},
+%                   {initial_call,{erlang,apply,2}},
+%                   {current_function,{shell,eval_loop,3}},
+%                   {ancestors,[]},
+%                   {messages,[]},
+%                   {links,[<0.26.0>,<0.52.0>]},
+%                   {dictionary,[]},
+%                   {trap_exit,false},
+%                   {status,waiting},
+%                   {heap_size,987},
+%                   {stack_size,7},
+%                   {reductions,1175}]
+% ** exception error: no match of right hand side value right_now
+%      in function  die_please:handle_info/2 (die_please.erl, line 75)
+%      in call from gen_server:handle_msg/5 (gen_server.erl, line 599)
+%      in call from proc_lib:init_p_do_apply/3 (proc_lib.erl, line 239)
+% 5>
 
 
 
