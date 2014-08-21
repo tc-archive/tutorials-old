@@ -35,9 +35,7 @@
 %%% Public Interface
 %%%============================================================================
 
-
 -export([insert/2, insert/3, lookup/1, delete/1]).
-
 
 
 %%%============================================================================
@@ -55,16 +53,18 @@ insert(Key, Value) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
       % sc_event:lookup(Key, Value); % Dont count these!
-      sc_element:replace(Pid, Value),
-      sc_event:replace(Key, Value);
+      Res = sc_element:replace(Pid, Value),
+      sc_event:replace(Key, Value),
+      Res;
     {error, _} ->
       % sc_event:lookup(Key, Value); % Dont count these!
       % Create
       {ok, Pid} = sc_element:create(Value),
       sc_event:create(Key, Value),
       % Insert
-      sc_store:insert(Key, Pid),
-      sc_event:insert(Key, Value)
+      Res = sc_store:insert(Key, Pid),
+      sc_event:insert(Key, Value),
+      Res
   end.
 
 
@@ -79,8 +79,9 @@ insert(Key, Value, LeaseTime) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
       % sc_event:lookup(Key, Value); % Dont count these!
-      sc_element:replace(Pid, Value),
-      sc_event:replace(Key, Value);
+      Res = sc_element:replace(Pid, Value),
+      sc_event:replace(Key, Value),
+      Res;
     {error, _} ->
       % sc_event:lookup(Key, Value); % Dont count these!
       % Create
@@ -88,8 +89,9 @@ insert(Key, Value, LeaseTime) ->
       sc_event:create(Key, Value),
       % sc_event:create(Key, Value, LeaseTime),
       % Insert
-      sc_store:insert(Key, Pid),
-      sc_event:insert(Key, Value)
+      Res = sc_store:insert(Key, Pid),
+      sc_event:insert(Key, Value),
+      Res
   end.
 
 
@@ -112,6 +114,7 @@ lookup(Key) ->
     {error, not_found}
   end.
 
+
 %% @doc
 %% Takes a key and terminates the associated process holding the Value state.
 %%
@@ -122,8 +125,12 @@ delete(Key) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
       % sc_event:lookup(Key, Value);
-      sc_element:delete(Pid),
-      sc_event:delete(Key, Value);
+      Res = sc_element:delete(Pid),
+      sc_event:delete(Key, Value),
+      Res;
     {error, _Reason} ->
       ok
   end.
+
+
+
