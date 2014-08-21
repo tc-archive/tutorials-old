@@ -17,6 +17,12 @@
 %%% simple_cache; that is handled via OTP system functions such as 
 %%% application:start/1.
 %%%
+%%% NB: This module has been augmented with the 'sc_event' GenEvent emitter.
+%%% Bu putting the event emitter here we don't couple it tightly to the 
+%%% 'sc_element' and 'sc_store' modules... (I wonder how you could wire this
+%%% this stuff in though... sort of Aspect-Oriented...).
+%%%
+%%%
 %%% @end
 %%%============================================================================
 
@@ -48,11 +54,15 @@
 insert(Key, Value) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
+      % sc_event:lookup(Key, Value); % Dont count these!
       sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value);
     {error, _} ->
+      % sc_event:lookup(Key, Value); % Dont count these!
+      % Create
       {ok, Pid} = sc_element:create(Value),
       sc_event:create(Key, Value),
+      % Insert
       sc_store:insert(Key, Pid),
       sc_event:insert(Key, Value)
   end.
@@ -68,12 +78,16 @@ insert(Key, Value) ->
 insert(Key, Value, LeaseTime) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
+      % sc_event:lookup(Key, Value); % Dont count these!
       sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value);
     {error, _} ->
+      % sc_event:lookup(Key, Value); % Dont count these!
+      % Create
       {ok, Pid} = sc_element:create(Value, LeaseTime),
       sc_event:create(Key, Value),
       % sc_event:create(Key, Value, LeaseTime),
+      % Insert
       sc_store:insert(Key, Pid),
       sc_event:insert(Key, Value)
   end.
@@ -107,8 +121,9 @@ lookup(Key) ->
 delete(Key) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
+      % sc_event:lookup(Key, Value);
       sc_element:delete(Pid),
-      sc_event:lookup(Key, Value);
+      sc_event:delete(Key, Value);
     {error, _Reason} ->
       ok
   end.
