@@ -36,23 +36,6 @@
   delete/1
 ]).
 
-
-%%%============================================================================
-%%% Records
-%%%============================================================================
-
-%% Record  - Holds the cached value.
-%% value       - The value the process is holding on to, 
-%% lease_time  - The lease time
-%% timestamp   - The timestamp from  when the process was started.
-%%
--record(state, {value, lease_time, start_time}).
-
-
-%%%============================================================================
-%%% Macros
-%%%============================================================================
-
 %% Constant
 %%
 -define(SERVER, ?MODULE).
@@ -61,6 +44,13 @@
 %% the cahce.
 %%
 -define(DEFAULT_LEASE_TIME, (60 * 60 * 24)).
+
+%% Record  - Holds the cached value.
+%% value       - The value the process is holding on to, 
+%% lease_time  - The lease time
+%% timestamp   - The timestamp from  when the process was started.
+%%
+-record(state, {value, lease_time, start_time}).
 
 
 %%%============================================================================
@@ -73,7 +63,7 @@
 %%     management/supervision of created processes.
 %%
 start_link(Value, LeaseTime) ->
-  gen_server:start_link(?MODULE, [Value, LeaseTime], []).
+    gen_server:start_link(?MODULE, [Value, LeaseTime], []).
 
 %% Create (store) a new Value with the specified LeaseTime.
 %%
@@ -86,11 +76,11 @@ start_link(Value, LeaseTime) ->
 %%     'start_link' message. Simples! 
 %% 
 create(Value, LeaseTime) ->
-  sc_sup:start_child(Value, LeaseTime).
+    sc_sup:start_child(Value, LeaseTime).
 
 %% Create (store) a new Value with the default LeaseTime. 
 create(Value) ->
-  create(Value, ?DEFAULT_LEASE_TIME).
+    create(Value, ?DEFAULT_LEASE_TIME).
 
 %% Fetch the state Value of the specified storage process. 
 fetch(Pid) ->
