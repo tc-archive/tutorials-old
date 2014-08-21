@@ -45,6 +45,11 @@
 %%
 -define(DEFAULT_LEASE_TIME, (60 * 60 * 24)).
 
+
+%%%============================================================================
+%%% Private State
+%%%============================================================================
+
 %% Record  - Holds the cached value.
 %% value       - The value the process is holding on to, 
 %% lease_time  - The lease time

@@ -52,19 +52,14 @@
 insert(Key, Value) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
-      % sc_event:lookup(Key, Value); % Dont count these!
       Res = sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value),
       Res;
     {error, _} ->
-      % sc_event:lookup(Key, Value); % Dont count these!
       % Create
       {ok, Pid} = sc_element:create(Value),
       sc_event:create(Key, Value),
-      % Insert
-      Res = sc_store:insert(Key, Pid),
-      sc_event:insert(Key, Value),
-      Res
+      sc_store:insert(Key, Pid)
   end.
 
 
@@ -78,20 +73,15 @@ insert(Key, Value) ->
 insert(Key, Value, LeaseTime) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
-      % sc_event:lookup(Key, Value); % Dont count these!
       Res = sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value),
       Res;
     {error, _} ->
-      % sc_event:lookup(Key, Value); % Dont count these!
       % Create
       {ok, Pid} = sc_element:create(Value, LeaseTime),
       sc_event:create(Key, Value),
       % sc_event:create(Key, Value, LeaseTime),
-      % Insert
-      Res = sc_store:insert(Key, Pid),
-      sc_event:insert(Key, Value),
-      Res
+      sc_store:insert(Key, Pid)
   end.
 
 
@@ -105,7 +95,7 @@ lookup(Key) ->
   % be the same if any of the steps fails.
   try
     {ok, Pid} = sc_store:lookup(Key),
-    sc_event:lookup(Key, Value),
+    sc_event:lookup(Key),
     {ok, Value} = sc_element:fetch(Pid),
     % sc_event:fetch(Pid), % Could add this?
     {ok, Value}
@@ -124,9 +114,9 @@ lookup(Key) ->
 delete(Key) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
-      % sc_event:lookup(Key, Value);
+      % sc_event:lookup(Key);
       Res = sc_element:delete(Pid),
-      sc_event:delete(Key, Value),
+      sc_event:delete(Key),
       Res;
     {error, _Reason} ->
       ok
