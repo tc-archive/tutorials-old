@@ -1,7 +1,7 @@
 %%%============================================================================
 %%%
 %%% @doc 
-%%% The OTP 'Root Supervisor' for the 'simple_cache' application.
+%%% The OTP 'Cache Supervisor' for the 'simple_cache' application.
 %%%
 %%% This supervisor is in many ways just a factory for 'sc_element' processes.
 %%% @end
@@ -18,17 +18,22 @@
 
 
 %%%============================================================================
-%%% Public Interface
+%%% Public API
 %%%============================================================================
 
 -export([start_link/0, start_child/2]).
+
+
+%%%============================================================================
+%%% Macros
+%%%============================================================================
 
 -define(SERVER, ?MODULE).
 
 
 
 %%%============================================================================
-%%% Public Interface Implementation
+%%% Public API Implementation
 %%%============================================================================
 
 %%-----------------------------------------------------------------------------
@@ -90,8 +95,14 @@ init([]) ->
   %
   % These are 'temporary' 'worker' processes that terminate when the 
   % 'supervisor' terminates.
-  Element = {sc_element, {sc_element, start_link, []},
-             temporary, brutal_kill, worker, [sc_element]},
+  Element = {
+    sc_element, 
+    {sc_element, start_link, []},
+    temporary, 
+    brutal_kill, 
+    worker, 
+    [sc_element]
+  },
 
   Children = [Element],
   
