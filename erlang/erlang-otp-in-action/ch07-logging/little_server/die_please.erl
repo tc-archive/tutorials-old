@@ -68,8 +68,10 @@ handle_call(_Request, _From, State) ->
 handle_cast(_Msg, State) ->
   {noreply, State}.
 
-% Timeout handler.
+% Timeout handler. Proivder no requests are issues to the server this should 
+% be invoked after SLEEP_TIME ms form init.
 handle_info(timeout, State) ->
+  % This is illegal and will cause an error! Atomcs can never match!
   i_want_to_die = right_now,
   {noreply, State}.
 
