@@ -1,0 +1,15 @@
+# *** Compile ***
+#
+# $ cd ${PROJECT_ROOT}
+# $ erlc -o ebin src/*.erl
+
+
+# *** Run ***
+#
+# cd ${PROJECT_ROOT}
+# $ erl –pa ebin
+#
+# Eshell V5.5.5  (abort with ^G)
+# 1> application:start(simple_cache).
+# ok
+# 2>
