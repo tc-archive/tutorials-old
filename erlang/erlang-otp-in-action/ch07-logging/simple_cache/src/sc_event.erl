@@ -124,6 +124,11 @@ create(Key, Value) ->
   % asynchronously, similar to the cast/2 function in gen_server.
   gen_event:notify(?SERVER, {create, {Key, Value}}).
 
+% create(Key, Value, LeaseTime) ->
+%   % The gen_event module provides the function notify/2 for posting events 
+%   % asynchronously, similar to the cast/2 function in gen_server.
+%   gen_event:notify(?SERVER, {create, {Key, Value}, LeaseTime}).
+
 replace(Key, Value) ->
   % The gen_event module provides the function notify/2 for posting events 
   % asynchronously, similar to the cast/2 function in gen_server.
