@@ -29,6 +29,7 @@
 -export([
   lookup/1,
   create/2,
+  create/3,
   replace/2,
   delete/1
 ]).
@@ -101,6 +102,7 @@ delete_handler(Handler, Args) ->
 %% +---------------------------------------+---------------------+
 %% |{lookup, Key}                          | sc_event:lookup/1   |
 %% |{create, {Key, Value}}                 | sc_event:create/2   |
+%% |{create, {Key, Value, LeaseTime}}      | sc_event:create/3   |
 %% |{replace, {Key, Value}}                | sc_event:replace/2  |
 %% |{delete, Key} | warning_report()       | sc_event:delete/1   |
 %% +---------------------------------------+---------------------+
@@ -122,10 +124,10 @@ create(Key, Value) ->
   % asynchronously, similar to the cast/2 function in gen_server.
   gen_event:notify(?SERVER, {create, {Key, Value}}).
 
-% create(Key, Value, LeaseTime) ->
-%   % The gen_event module provides the function notify/2 for posting events 
-%   % asynchronously, similar to the cast/2 function in gen_server.
-%   gen_event:notify(?SERVER, {create, {Key, Value}, LeaseTime}).
+create(Key, Value, LeaseTime) ->
+  % The gen_event module provides the function notify/2 for posting events 
+  % asynchronously, similar to the cast/2 function in gen_server.
+  gen_event:notify(?SERVER, {create, {Key, Value, LeaseTime}}).
 
 replace(Key, Value) ->
   % The gen_event module provides the function notify/2 for posting events 

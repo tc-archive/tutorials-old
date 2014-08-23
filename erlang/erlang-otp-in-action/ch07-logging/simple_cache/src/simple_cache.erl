@@ -79,8 +79,7 @@ insert(Key, Value, LeaseTime) ->
     {error, _} ->
       % Create
       {ok, Pid} = sc_element:create(Value, LeaseTime),
-      sc_event:create(Key, Value),
-      % sc_event:create(Key, Value, LeaseTime),
+      sc_event:create(Key, Value, LeaseTime),
       sc_store:insert(Key, Pid)
   end.
 
@@ -97,7 +96,6 @@ lookup(Key) ->
     {ok, Pid} = sc_store:lookup(Key),
     sc_event:lookup(Key),
     {ok, Value} = sc_element:fetch(Pid),
-    % sc_event:fetch(Pid), % Could add this?
     {ok, Value}
   catch
     _Class:_Exception ->
@@ -114,7 +112,6 @@ lookup(Key) ->
 delete(Key) ->
   case sc_store:lookup(Key) of
     {ok, Pid} ->
-      % sc_event:lookup(Key);
       Res = sc_element:delete(Pid),
       sc_event:delete(Key),
       Res;

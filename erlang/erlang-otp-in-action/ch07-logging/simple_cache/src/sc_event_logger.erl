@@ -63,6 +63,11 @@ handle_event({create, {Key, Value}}, State) ->
   error_logger:info_msg("create(~w, ~w)~n", [Key, Value]),
   {ok, State};
 
+% Log 'create' events.
+handle_event({create, {Key, Value, LeaseTime}}, State) ->
+  error_logger:info_msg("create(~w, ~w, ~w)~n", [Key, Value, LeaseTime]),
+  {ok, State};
+
 % Log 'lookup' events.
 handle_event({lookup, Key}, State) ->
   error_logger:info_msg("lookup(~w)~n", [Key]),
