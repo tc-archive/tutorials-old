@@ -128,6 +128,16 @@ init([]) ->
   }.
 
 
+%% Call dict:find/2 to look up Type in the current resources. This yields either 
+%% {ok, Value} or error, which happens to be what you want the fetch_resources/1 
+%% function to return, so there’s no need to massage the result — you can pass 
+%% it straight back.
+%%
+handle_call({fetch_resources, Type}, _From, State) ->
+  {reply, dict:find(Type, State#state.found_resource_tuples), State};
+
+
+
 %% Prepend the new Type to the current list, first performing a delete so that 
 %% you avoid duplicate entries.
 %%
@@ -163,7 +173,10 @@ handle_cast(trade_resources, State) ->
     fun(Node) ->
       % See below for {trade_resources, {ReplyTo, Resources}}... handling
       % function..
-      gen_server:cast({?SERVER, Node},
+      gen_server:cast(
+        {?SERVER, Node},
+        {trade_resources, {node(), ResourceTuples}}
+        )
     end,
     AllNodes
   ),
@@ -202,17 +215,19 @@ handle_cast(
       {trade_resources, {noreply, Locals}})
   end.
 
-  {noreply, State#state{found_resource_tuples = NewFound}};
+  {noreply, State#state{found_resource_tuples = NewFound}}.
 
 
-%% Call dict:find/2 to look up Type in the current resources. This yields either 
-%% {ok, Value} or error, which happens to be what you want the fetch_resources/1 
-%% function to return, so there’s no need to massage the result — you can pass 
-%% it straight back.
-%%
-handle_call({fetch_resources, Type}, _From, State) ->
-  {reply, dict:find(Type, State#state.found_resource_tuples), State};
+handle_info(ok = _Info, State) ->
+  {noreply, State}.
 
+
+terminate(_Reason, _State) ->
+  ok.
+
+
+code_change(_OldVsn, State, _Extra) ->
+  {ok, State}.
 
 
 
