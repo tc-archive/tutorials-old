@@ -227,6 +227,61 @@ erl -pa /ebin -sname simple_cache
 # (a@plato.config)8>
 
 
+# ***** Working with remote shells ********************************************
+#
+
+# Erlang’s location transparency is nicely demonstrated by its rather remarkable 
+# ability to run shells remotely. After all, when you start a normal Erlang shell, 
+# you get an Erlang process that talks to the input and output streams of your 
+# console window. This communication is also built on message passing, and the 
+# shell process doesn’t care much whether it’s running on the same node as the
+# console it’s connected to. As a consequence, it’s easy to start a shell process 
+# that runs on the remote node and does all its work there, but that is connected 
+# to the console of your local node.
+
+
+# <Ctrl+G>
+# User switch command
+#  --> h
+#   c [nn]            - connect to job
+#   i [nn]            - interrupt job
+#   k [nn]            - kill job
+#   j                 - list all jobs
+#   s [shell]         - start local shell
+#   r [node [shell]]  - start remote shell
+#   q                 - quit erlang
+#   ? | h             - this message
+
+
+# The 'r' command takes a node name as an argument and starts a remote shell job on that 
+# node, like the s command starts a new local job.
+#
+#  --> r 'b@mybox.home.net'
+#  -->
+
+# The 'j' command inspects the list of currently running jobs.
+#
+#  --> j
+#   1  {shell,start,[init]}
+#   2* {'b@mybox.home.net',shell,start,[]}
+#  -->
+#
+# The 'c(id)'' command connects to the specfied job (default is *).
+
+
+# ***** Quit with care when leaving a remote shell ****************************
+#
+
+# When you’re finished with your remote shell session and ready to quit, your 
+# fingers may find themselves typing the shell shortcut q(). Stop! Don’t press 
+# Enter! That command is short for init:stop(), which shuts down the node where t
+# he com- mand is executed: that is, the remote node. Probably every Erlang 
+# programmer has been burned by this at one time or another. The Ctrl-G and 
+# Ctrl-C (Ctrl-Break) escapes are safe to use, because they always work within 
+# the context of your local node. Use Ctrl-G followed by Q, or Ctrl-C (Ctrl-Break 
+# on Windows) followed by A, to shut down the local node and leave the remote 
+# node running.
+
 
 
 
