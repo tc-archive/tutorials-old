@@ -86,3 +86,28 @@ erl -mnesia dir '"/tmp/mnesia_store"' -name mynode
 
 
 
+# =============================================================================
+# Create Datbase Tables
+#
+# Mnesia tables store Erlang terms and record.
+#
+# record(user, {id, name }).
+# mnesia:create_table(
+#   user, [{attributes, record_info(fields, user)}]
+#   ),
+#
+# record(project, {title, description}).
+# mnesia:create_table(
+#   project,[{attributes, record_info(fields, project)}]
+#   ),
+#
+# record(contributor, {user_id, project_title}).
+# mnesia:create_table(
+#   contributor, [{type, bag}, {attributes, record_info(fields, contributor)}]
+#   ).
+#
+
+
+
+
+
