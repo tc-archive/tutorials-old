@@ -134,7 +134,7 @@ init([]) ->
 %% it straight back.
 %%
 handle_call({fetch_resources, Type}, _From, State) ->
-  {reply, dict:find(Type, State#state.found_resource_tuples), State};
+  {reply, dict:find(Type, State#state.found_resource_tuples), State}.
 
 
 
@@ -213,7 +213,7 @@ handle_cast(
       % to complete the 'trade'...
       gen_server:cast({?SERVER, ReplyTo},
       {trade_resources, {noreply, Locals}})
-  end.
+  end,
 
   {noreply, State#state{found_resource_tuples = NewFound}}.
 
@@ -270,7 +270,7 @@ resources_for_types(Types, ResourceTuples) ->
                 % Creates list of pairs...
                 [{Type, Instance} || Instance <- List] ++ Acc;
               error -> Acc
-￼￼￼         end 
+            end
         end,
 
   lists:foldl(Fun, [], Types).
