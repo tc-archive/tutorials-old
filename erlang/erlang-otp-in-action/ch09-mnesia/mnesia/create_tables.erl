@@ -20,6 +20,8 @@
 
 -export([init_tables/0]).
 
+-export([insert_user/3, insert_project/2]).
+
 
 %%%============================================================================
 %%% Records
@@ -79,3 +81,59 @@ init_tables() ->
   mnesia:create_table(
     contributor, [{type, bag}, {attributes, record_info(fields, contributor)}]
     ).
+
+
+
+
+%% To make it straightforward for others to insert data without knowing too 
+%% much about the actual tables, you’ll hide these details behind a couple of 
+%% API functions. This also makes it possible to do some consistency checks 
+%% on the data before it gets inserted in the database. For example, you’ll 
+%% only add users if they’re contributors to some project, and you won’t 
+%% allow adding a user for a project that doesn’t exist. 
+
+%% Insert a new User and their associated Contributions to Projects.
+%%
+insert_user(Id, Name, ProjectTitles) when ProjectTitles =/= [] ->
+  
+  % Create a new User record
+  User = #user{id = Id, name = Name},
+  
+  % Create an anonymous data insert function.
+  Fun = fun() ->
+    % Save the new User record to Mnesia.
+    mnesia:write(User),
+    % For each ProjectTitle...
+    lists:foreach(
+      fun(Title) ->
+        % Look-up the Project record from the Title
+        [#project{title = Title}] = mnesia:read(project, Title),
+        % Sace a new Contributor record to Mnesia.
+        mnesia:write(#contributor{user_id = Id, project_title = Title})
+      end,
+      ProjectTitles)
+    end,
+  
+  % Perform all User/Contribution writes in an (ACID) transaction.
+  mnesia:transaction(Fun).
+
+
+%% Insert a new Project
+%%
+insert_project(Title, Description) ->
+  % Create a new Project record and (dirty) write it to Mnesia.
+  %
+  % Any Mnesia function with the prefix 'dirty_' is a dirty operation that 
+  % doesn’t respect transactions or database locks. This means it must be used 
+  % with great care. Generally, using a dirty operation is significantly 
+  % faster than setting up a transaction and performing normal database 
+  % operations, and judicious use of dirty operations can speed up your 
+  % application a lot. Be warned, though, you may end up with inconsistent 
+  % data. Dirty reads are usu- ally less problematic than dirty writes; 
+  % but whenever you’re in doubt, use transactions!
+  %
+  mnesia:dirty_write(#project{title=Title, description = Description}).
+
+
+
+

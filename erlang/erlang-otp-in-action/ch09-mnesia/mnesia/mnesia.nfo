@@ -147,6 +147,80 @@ erl -mnesia dir '"/tmp/mnesia_store"' -name mynode
 #
 
 
+# =============================================================================
+# Inserting Database Tables
+#
+
+# With a transaction
+#
+# User = #user{id = Id, name = Name}.
+# Fun = fun() -> mnesia:write(User) end.
+# mnesia:transaction(Fun).
+
+
+# With no transaciton
+#
+# mnesia:dirty_write(#project{title=Title, description = Description}).
+
+
+# =============================================================================
+# Querying Database Tables
+#
+
+# Read table by primary key
+#
+# [#project{title = Title}] = mnesia:read(project, Title),
+
+
+# Select with Match Specification
+#
+# The first argument to select/2 is the table to search, and the second argument 
+# is a list of so-called match specifications. These can be complicated beasts, 
+# but for simple cases they’re fairly straightforward. 
+# 
+# Each match specification is a 3-tuple {Head, Conditions, Results}. 
+#
+# Head is an Erlang term representing  a pattern, where atoms (single-quoted) of 
+# the form '$1', '$2', ..., are used to represent variables. In the example, 
+# you’re searching for #user records whose name field is the atom martin and 
+# whose id field can be anything ('$1'). 
+#
+# The Conditions part lets you specify additional constraints for a match, but 
+# often it’s just left as an empty list, as in this case. 
+#
+# The Results part, finally, lets you express what kind of terms you want 
+# generated for each match; here, you can use the corresponding '$1' and so on, 
+# and they will be replaced by the actual values from the match.
+#
+# In addition to these numbered variables, the following atoms also have special 
+# meaning:
+#
+# - '_'  : [in Head part only] — Doesn’t matter; any value
+# - '$_' : [in Result and Conditions only] — The entire matching record
+# - '$$' : [in Result and Conditions only] — Same as '$1', '$2', '$3', ... 
+#          (for all of those variables that are bound in the Head part)
+#
+#
+# mnesia:transaction(
+#   fun() ->
+#     mnesia:select(user, [{#user{id = '$1', name = martin}, [], ['$1']}])
+#   end
+# ).
+
+
+# =============================================================================
+# Using 'Records' in the shell... type h(). for more info.
+#
+# rd(R,D)    -- define a record
+# rf()       -- remove all record information
+# rf(R)      -- remove record information about R
+# rl()       -- display all record information
+# rl(R)      -- display record information about R
+# rp(Term)   -- display Term using the shell's record information
+# rr(File)   -- read record information from File (wildcards allowed)
+# rr(F,R)    -- read selected record information from file(s)
+# rr(F,R,O)  -- read selected record information with options
+
 
 # Example
 #
@@ -188,7 +262,31 @@ erl -mnesia dir '"/tmp/mnesia_store"' -name mynode
 # 0 held locks, 0 in queue; 0 local transactions, 0 remote
 # 0 transactions waits for other nodes: []
 # ok
-# (mynode@plato.config)5>
+# (mynode@plato.config)5> ...
+# (mynode@plato.config)7> c(create_tables).
+# {ok,create_tables}
+# (mynode@plato.config)8> create_tables:insert_project(simple_cache, "a simple-cache application").
+# ok
+# (mynode@plato.config)9> create_tables:insert_user(1,martin,[simple_cache]).
+# {atomic,ok}
+# (mynode@plato.config)10> % Outside a transaction dirty operaitons must be used...
+# (mynode@plato.config)10> mnesia:dirty_read(contributor, 1).
+# [{contributor,1,simple_cache}]
+# (mynode@plato.config)11> % Query using transaction and matching spec.
+# (mynode@plato.config)16> mnesia:transaction(
+# (mynode@plato.config)16>   fun() ->
+# (mynode@plato.config)16>     mnesia:select(user, [{#user{id = '$1', name = martin}, [], ['$1']}])
+# (mynode@plato.config)16>   end
+# (mynode@plato.config)16> ).
+# * 3: record user undefined
+# (mynode@plato.config)7> rr(create_tables).
+# [contributor,project,user]
+# (mynode@plato.config)8> mnesia:transaction(
+# (mynode@plato.config)8> fun() ->
+# (mynode@plato.config)8> mnesia:select(user, [{#user{id = '$1', name = martin}, [], ['$1']}])
+# (mynode@plato.config)8> end).
+# {atomic,[1]}
+# (mynode@plato.config)9>
 
 
 
