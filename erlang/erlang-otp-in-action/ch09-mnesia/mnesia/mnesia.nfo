@@ -106,6 +106,92 @@ erl -mnesia dir '"/tmp/mnesia_store"' -name mynode
 #   contributor, [{type, bag}, {attributes, record_info(fields, contributor)}]
 #   ).
 #
+#
+#
+# Default 'attributes'
+#
+# Only specifying the attributes option means that the table will get the default 
+# settings for all other options. These are as follows:
+#
+# - The table is both readable and writeable.
+# - The table is stored in RAM only (the storage type is ram_copies).
+# - The records stored in the table must have the same name as the table.
+# - The table type is set, which means there can be no more than one entry
+#   per key.
+# - The load priority is 0 (the lowest).
+# - The local_content flag is set to false.
+#
+#
+# Mnesia Table Types
+#
+# - 'set'         : Treats keys as unique—  if you insert a record with the same 
+#                   primary key as an existing entry, the new record overwrites
+#                   the old.
+#
+# - 'ordered_set' : Behaves the same as a set; but whereas sets and bags are 
+#                   implemented using hash tables, an ordered_set keeps all the 
+#                   records stored in the order of their primary keys.
+#
+# - 'bag'         : Can contain multiple records with the same key, as long as 
+#                   they differ in at least one field—inserting the exact same 
+#                   record twice has no effect.
+#
+# 
+# Mnesia Storage Types
+#
+# 'ram_copies'        : Data stored in memory only.
+#
+# 'disc_copies'       : Data stored in memory with a copay on disk.
+#
+# 'disc_only_copies'  : Data is store don disk only.
+#
+
+
+
+# Example
+#
+# $> rm -Rf /tmp/mnesia_store
+# $> erl -mnesia dir '"/tmp/mnesia_store"' -name mynode
+# Erlang/OTP 17 [erts-6.1] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+#
+# Eshell V6.1  (abort with ^G)
+# (mynode@plato.config)1> mnesia:create_schema([node()]).
+# ok
+# (mynode@plato.config)2> mnesia:start().
+# ok
+# (mynode@plato.config)3> create_tables:init_tables().
+# {atomic,ok}
+# (mynode@plato.config)4> mnesia:info().
+# ---> Processes holding locks <---
+# ---> Processes waiting for locks <---
+# ---> Participant transactions <---
+# ---> Coordinator transactions <---
+# ---> Uncertain transactions <---
+# ---> Active tables <---
+# contributor    : with 0        records occupying 305      words of mem
+# project        : with 0        records occupying 305      words of mem
+# user           : with 0        records occupying 305      words of mem
+# schema         : with 4        records occupying 763      words of mem
+# ===> System info in version "4.12.1", debug level = none <===
+# opt_disc. Directory "/tmp/mnesia_store" is used.
+# use fallback at restart = false
+# running db nodes   = ['mynode@plato.config']
+# stopped db nodes   = []
+# master node tables = []
+# remote             = []
+# ram_copies         = [contributor,project,user]
+# disc_copies        = [schema]
+# disc_only_copies   = []
+# [{'mynode@plato.config',disc_copies}] = [schema]
+# [{'mynode@plato.config',ram_copies}] = [user,project,contributor]
+# 5 transactions committed, 0 aborted, 0 restarted, 6 logged to disc
+# 0 held locks, 0 in queue; 0 local transactions, 0 remote
+# 0 transactions waits for other nodes: []
+# ok
+# (mynode@plato.config)5>
+
+
+
 
 
 
