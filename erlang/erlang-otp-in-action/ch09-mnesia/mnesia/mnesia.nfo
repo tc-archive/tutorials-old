@@ -206,10 +206,55 @@ erl -mnesia dir '"/tmp/mnesia_store"' -name mynode
 #     mnesia:select(user, [{#user{id = '$1', name = martin}, [], ['$1']}])
 #   end
 # ).
+#
+# When a transaction succeeds, the result has the form {atomic, Data}, where Data 
+# is the actual result of the code inside the transaction fun.
+#
+# You can find many more details about match specifications in the ERTS User’s 
+# Guide in the Erlang/OTP documentation.
 
+
+# Select with QLC (Query List Comprehensions)
+#
+# Superficially, they look like normal list comprehensions, but they’re wrapped 
+# in what looks like a call to 'qlc:q(...)'. This is just a marker that tells 
+# the compiler to handle these expressions specially. For this to work, the  
+# source code for the module must also contain the following line, which triggers
+# the special QLC compilation:
+#
+# -include_lib("stdlib/include/qlc.hrl").
+#
+# NB: (As a special case, the Erlang shell lets you use qlc:q(...) straight away; 
+# there’s no concept of include files in the shell.)
+#
+# The value produced by qlc:q(...) is a query handle, whose results can be 
+# fetched through qlc:eval(Handle). QLC is explained in detail in the stdlib 
+# section of the Erlang/OTP documentation (the qlc module).
+#
+# QLC is a generic query interface to anything that is table-like, such as ETS 
+# tables, Mnesia tables, and even your own special table implementations if 
+# you make a QLC adapter for them. The function mnesia:table(TableName) creates 
+# a handle that represents the Mnesia table in a form that QLC can use as input. 
+# From that point on, normal list-comprehension syntax for filtering and 
+# aggregation is used. Example:
+#
+# mnesia:transaction(
+#   fun() ->
+#     Table = mnesia:table(user),
+#     QueryHandle = qlc:q([U#user.id || U <- Table, U#user.name =:= martin]),
+#     qlc:eval(QueryHandle)
+#   end).
+#
+# QLC is a considerably more elegant way to perform queries than using select 
+# and match specifications. This code is much more readable: basically, it says 
+# that you want a list containing the #user.id fields for each record 'U' from 
+# the Mnesia table 'user' such that 'U#user.name' is equal to 'martin'. You can  
+# also use QLC within transactions where reading may not be the only thing going 
+# on — QLC can be mixed with any other type of Mnesia function that belongs in
+# a transaction.
 
 # =============================================================================
-# Using 'Records' in the shell... type h(). for more info.
+# NB: Using 'Records' in the shell... type h(). for more info.
 #
 # rd(R,D)    -- define a record
 # rf()       -- remove all record information
