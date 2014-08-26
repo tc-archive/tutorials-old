@@ -50,7 +50,9 @@
 %% true (if 'inserting' a new Value).
 %% @end
 insert(Key, Value) ->
-  case sc_store:lookup(Key) of
+  % NB: How to make this configurable? IoC like / Protocol like?
+  % case sc_store:lookup(Key) of
+  case sc_store_mnesia:lookup(Key) of
     {ok, Pid} ->
       Res = sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value),
@@ -59,7 +61,8 @@ insert(Key, Value) ->
       % Create
       {ok, Pid} = sc_element:create(Value),
       sc_event:create(Key, Value),
-      sc_store:insert(Key, Pid)
+      % sc_store:insert(Key, Pid)
+      sc_store_mnesia:insert(Key, Pid)
   end.
 
 
@@ -71,7 +74,9 @@ insert(Key, Value) ->
 %% true (if 'inserting' a new Value).
 %% @end
 insert(Key, Value, LeaseTime) ->
-  case sc_store:lookup(Key) of
+
+  % case sc_store:lookup(Key) of
+  case sc_store_mnesia:lookup(Key) of
     {ok, Pid} ->
       Res = sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value),
@@ -80,7 +85,8 @@ insert(Key, Value, LeaseTime) ->
       % Create
       {ok, Pid} = sc_element:create(Value, LeaseTime),
       sc_event:create(Key, Value, LeaseTime),
-      sc_store:insert(Key, Pid)
+      % sc_store:insert(Key, Pid)
+      sc_store_mnesia:insert(Key, Pid)
   end.
 
 
@@ -93,9 +99,10 @@ lookup(Key) ->
   % sequence of things that must be done in order and the result should 
   % be the same if any of the steps fails.
   try
+    % {ok, Pid} = sc_store:lookup(Key),
     {ok, Pid} = sc_store:lookup(Key),
     sc_event:lookup(Key),
-    {ok, Value} = sc_element:fetch(Pid),
+    {ok, Value} = sc_store_mnesia:fetch(Pid),
     {ok, Value}
   catch
     _Class:_Exception ->
@@ -110,8 +117,10 @@ lookup(Key) ->
 %% terminated; or the atom ok if it did not exists.
 %% @end
 delete(Key) ->
-  case sc_store:lookup(Key) of
+  % case sc_store:lookup(Key) of
+  case sc_store_mnesia:lookup(Key) of
     {ok, Pid} ->
+      % sc_store_mnesia:delete(Pid),
       Res = sc_element:delete(Pid),
       sc_event:delete(Key),
       Res;

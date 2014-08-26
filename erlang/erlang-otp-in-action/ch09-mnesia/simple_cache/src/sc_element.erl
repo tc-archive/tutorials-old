@@ -167,7 +167,8 @@ handle_info(timeout, State) ->
 
 % Delete from store
 terminate(_Reason, _State) ->
-  sc_store:delete(self()),
+  % sc_store:delete(self()),
+  sc_store_mnesia:delete(self()),
   ok.
 
 % Code change.
