@@ -31,8 +31,7 @@
 start(_StartType, _StartArgs) ->
 
   % Initialise the 'sc_store' module (currently an ETS table.)
-  % sc_store:init(),
-  sc_store_mnesia:init(),
+  sc_store:init(),
 
   % Start the 'application root superviser'
   case sc_sup:start_link() of
@@ -42,6 +41,7 @@ start(_StartType, _StartArgs) ->
 
     Other ->
       {error, Other}
+      
   end.
 
 %%-----------------------------------------------------------------------------
