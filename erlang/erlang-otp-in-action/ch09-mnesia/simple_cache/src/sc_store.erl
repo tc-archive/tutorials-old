@@ -79,6 +79,9 @@ insert(Key, Pid) ->
 %% down (in )
 %%
 lookup(Key) ->
+
+  io:format("sc_store:lookup~n"),
+
   % Look up the tuple referenced by the key in the Mnesia table.
   %
   % The table is a set, you can only get zero or one records as result, and a 
@@ -89,10 +92,14 @@ lookup(Key) ->
       % Check the Pid in the Mnesia database still refers to a process is 
       % alive (on this or reote node).
       case is_pid_alive(Pid) of
-        true -> {ok, Pid};
-        false -> {error, not_found}
+        true -> 
+          {ok, Pid};
+        false ->
+          io:format("sc_store:lookup - Pid dead ~p.~n", [Pid]),
+          {error, not_found}
       end;
     [] -> 
+      io:format("sc_store:lookup - []~n"),
       {error, not_found}
   end.
 

@@ -74,8 +74,7 @@ insert(Key, Value) ->
 %% @end
 insert(Key, Value, LeaseTime) ->
 
-  % case sc_store:lookup(Key) of
-  case sc_store_mnesia:lookup(Key) of
+  case sc_store:lookup(Key) of
     {ok, Pid} ->
       Res = sc_element:replace(Pid, Value),
       sc_event:replace(Key, Value),
@@ -98,12 +97,15 @@ lookup(Key) ->
   % be the same if any of the steps fails.
   try
     {ok, Pid} = sc_store:lookup(Key),
+    io:format("Found Pid:~p~n", [Pid]),
     sc_event:lookup(Key),
-    {ok, Value} = sc_store:fetch(Pid),
+    {ok, Value} = sc_element:fetch(Pid),
+    io:format("Fetched Value:~p~n", [Value]),
     {ok, Value}
   catch
     _Class:_Exception ->
-    {error, not_found}
+      io:format("Exception:~p:~p~n", [_Class, _Exception]),
+      {error, not_found}
   end.
 
 
