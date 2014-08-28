@@ -155,6 +155,8 @@ wait_for_nodes(NumReachableNodes, SliceTime, Iterations) ->
     true -> 
       % If the number of nodes known by this node is greater than the number 
       % of reachable nodes; then finish.
+      %
+      % NB: Lets hope they are the nodes we expect!
       ok;
     false ->
       % Otherwise wait for the specified amont of time for the 'reachable nodes' 
@@ -169,6 +171,20 @@ wait_for_nodes(NumReachableNodes, SliceTime, Iterations) ->
 %% Return the environment configuration specified by the key; or return the 
 %% default.
 %% @end
+%%
+%%
+%% Use configuration with care
+%%
+%% Reading configuration settings creates functions that aren’t referentially 
+%% transparent: what you pass as parameters to the function isn’t the only thing 
+%% that decides what it will return. It’s good functional programming practice 
+%% not to bury such things deep in your code. Keep them at the top of the 
+%% program (in the initialization part), and make them easily visible. (In this 
+%% case, you only read configuration during the start/2 function.) Following this 
+%% practice will make your code more man- ageable and more easily refactored. 
+%% The more referentially transparent functions you have, the easier it is to 
+%% reason about what your code does and how it will be affected if you rearrange 
+%% things.
 %%
 get_env(AppName, Key, Default) ->
   case application:get_env(AppName, Key) of
