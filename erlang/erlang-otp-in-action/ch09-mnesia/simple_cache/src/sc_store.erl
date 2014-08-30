@@ -44,18 +44,25 @@
 
 %% Creates a new Mnesia table named 'key_to_pid'.
 init() ->
-  % The table is a normal set with unique keys, kept in RAM only. As always, 
-  % Table entity field defined by 'key_to_pid' record.
+  % ensure that Mnesia is started and delete any existing data- base schema on 
+  % the local node. This incarnation of the cache takes a cavalier attitude 
+  % toward data and doesn’t hesitate to overwrite previously used schemas or 
+  % tables. This is a cache, after all.
+  % Mnesia must not be running. (Calling mnesia:stop() is harmless if Mnesia 
+  % hasn’t been started.)
   %
-  % Note the option {index, [pid]} in the table definition. Indexes are extra 
-  % tables that allow speedy operations on fields other than the primary key. 
-  % Keep in mind when you’re creating an index that it consumes additional space.
+  % After that’s done, init() fetches the list of all simple_cache instances 
+  % the resource discovery system has found. (Node names to identify the 
+  % instances.) This list of cache nodes contains the cache instance as well, 
+  % so that is removed and passed to the function dynamic_db_init/1, that 
+  % initialises the mnesia cluster.
   %
+  mnesia:stop(),
+  mnesia:delete_schema([node()]),
   mnesia:start(),
-  mnesia:create_table(
-    key_to_pid,
-    [{index, [pid]}, {attributes, record_info(fields, key_to_pid)}]
-  ).
+  {ok, CacheNodes} = resource_discovery:fetch_resources(simple_cache),
+  dynamic_db_init(lists:delete(node(), CacheNodes)).
+
 
 
 insert(Key, Pid) ->
@@ -126,6 +133,79 @@ delete(Pid) ->
 %%%============================================================================
 %%% Private Functions
 %%%============================================================================
+
+%% ----------------------------------------------------------------------------
+%% @doc
+%% This function initializes the database differently depending on whether it 
+%% finds some other cache instances in the cluster.
+%% @end
+%%
+%% NB: There’s an important caveat here, and that is that the initial node must 
+%% be started alone. If two simple_cache nodes are started simultaneously from 
+%% scratch, there’ll be a race condition where both may think that the other 
+%% node was the first. As a consequence, no initial schema will ever be created. 
+%%
+%% This could also be avoided with some additional synchronization in the code.
+%%
+dynamic_db_init([]) ->
+  % Handles the case when you seem to be alone; you create the table just as 
+  % Because mnesia:create_schema/1 is not invoked after ensuring that any 
+  % previous schema is deleted, the new database schema is implicitly created 
+  % and is kept in RAM only. 
+  % 
+  % At this point, you have a working simple_cache instance that is ready to 
+  % replicate its data to any other instances that join the cluster.
+  %
+  mnesia:create_table(
+    key_to_pid,
+    [{index, [pid]},
+    {attributes, record_info(fields, key_to_pid)}
+    ]);
+dynamic_db_init(CacheNodes) ->
+  % If other simple_cache instances are discovered, bring data over from the 
+  % other nodes in the cluster.
+  add_extra_nodes(CacheNodes).
+
+-define(WAIT_FOR_TABLES, 5000).
+
+%% ----------------------------------------------------------------------------
+add_extra_nodes([Node|T]) ->
+  % tell Mnesia to add an extra node to the database. You need to connect to 
+  % only one of the remote instances. Mnesia works in much the same way as 
+  % Erlang nodes: when you connect to another Mnesia instance, you’re informed 
+  % about the others, and the others are informed about you.
+  %
+  % Adding a node in this particular way should only be done with newly 
+  % started nodes that are fully RAM-based and have an empty schema.
+  case mnesia:change_config(extra_db_nodes, [Node]) of
+    {ok, [Node]} ->
+      % If the Node is successfully contacted...
+
+      % This looks cheaty...
+      %
+      % mnesia:add_table_copy(schema, node(), ram_copies),
+      % mnesia:add_table_copy(key_to_pid, node(), ram_copies),
+
+      % Copy the mnesia schema of the specified Nodecto this node.
+      mnesia:add_table_copy(schema, Node, ram_copies),
+      % Copy the mnesia tables of the specified Nodecto this node.
+      mnesia:add_table_copy(key_to_pid, Node, ram_copies),
+      
+      % Get a list of all known mnesia tables on this node, and, wait for the 
+      % tables to be accessible.
+      Tables = mnesia:system_info(tables),
+      mnesia:wait_for_tables(Tables, ?WAIT_FOR_TABLES);
+    _ ->
+      % Failed to connect to specified node. Try the next node.
+      %
+      % If you run out of nodes to try to connect to, the code crashes, causing
+      % the startup to fail, because you don’t handle the case when the list of 
+      % nodes is empty. This is another example of “let it crash”; there is 
+      % little point in adding code for that case.
+      add_extra_nodes(T)
+end.
+
+
 
 %% Checks whether a Pid refers to a process that still lives. If so, returns true.
 %%

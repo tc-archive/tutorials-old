@@ -19,6 +19,18 @@
 -export([start/2, stop/1]).
 
 
+%%%============================================================================
+%%% Public Interface
+%%%============================================================================
+
+-define(WAIT_FOR_RESOURCES, 2500).
+
+
+
+%%%============================================================================
+%%% Public Interface Implementation
+%%%============================================================================
+
 %%-----------------------------------------------------------------------------
 %% @doc Start the 'simple cache' application.
 %%
@@ -32,6 +44,9 @@ start(_StartType, _StartArgs) ->
 
   % Register with the Erlang cluster... if not ok; fail.
   ok = init_cluster(),
+
+  % Harmonise the 'simple_cache' instances in the cluster.
+  harmonise_cluster(),
 
   % Initialise the 'sc_store' module (currently an ETS table.)
   sc_store:init(),
@@ -107,7 +122,7 @@ init_cluster() ->
   DefaultNodes = ['contact1@localhost', 'contact2@localhost'],
   % Get the configuration for the default cluster manager pair.
   case get_env(simple_cache, contact_nodes, DefaultNodes) of
-￼   [] ->
+    [] ->
       % If there is no cluster manager configurations. Error.
       {error, no_contact_nodes};
     ContactNodes ->
@@ -120,7 +135,7 @@ init_cluster(ContactNodes) ->
   % For each ContactNode; 'ping' that node, and ensure is it 'online'.
   % Collect a list of results.
   ReachableNodes = [N || N <- ContactNodes, net_adm:ping(N) =:= pong],
-￼￼case ReachableNodes of
+  case ReachableNodes of
     [] ->
       % If no ClusterManager nodes are 'reachable' return an error.
       {error, no_contact_nodes_reachable};
@@ -142,7 +157,7 @@ init_cluster(ContactNodes) ->
 wait_for_nodes(NumReachableNodes, WaitTime) ->
   Slices = 10,
   SliceTime = round(WaitTime/Slices),
-  wait_for_nodes(ReachableNodes, SliceTime, Slices).
+  wait_for_nodes(NumReachableNodes, SliceTime, Slices).
 
 
 %% When the acummulator reaches 0; end the wait. Return ok.
@@ -164,6 +179,25 @@ wait_for_nodes(NumReachableNodes, SliceTime, Iterations) ->
       timer:sleep(SliceTime),
       wait_for_nodes(NumReachableNodes, SliceTime, Iterations - 1)
   end.
+
+
+%%-----------------------------------------------------------------------------
+%% @doc 
+%% Use the resource_discovery module to publish the local cache as available to
+%% others, and locate other cache instances in the cluster.
+%% @end
+%%
+harmonise_cluster() ->
+  
+  % Register this cache as a local resource.
+  resource_discovery:add_local_resource(simple_cache, node()),
+  % Register 'simple_cache' as a required resource type
+  resource_discovery:add_target_resource_type(simple_cache),
+  % Trade this resource with other nodes in the cluster.
+  resource_discovery:trade_resources(),
+  % Wait for trade_resources to complete.
+  timer:sleep(?WAIT_FOR_RESOURCES).
+
 
 
 %%-----------------------------------------------------------------------------
