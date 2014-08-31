@@ -29,25 +29,14 @@
 %%                  some optional startup arguments.
 %%
 
-{application, simple_cache,
- [{description, "A simple caching system"},
-  {vsn, "0.3.0"},
+{application, resource_discovery,
+ [{description, "A simple resource discovery system"},
+  {vsn, "0.1.0"},
   {modules, [
-    sc_app, 
-    sc_sup,
-    sc_element_sup,
-    sc_store,
-    sc_element,
-    sc_event,
-    sc_event_logger
+    rd_app, 
+    rd_sup
     ]},
-  {registered, [sc_sup]},
-  {applications, [
-    kernel, 
-    stdlib,
-    sasl,
-    mnesia,
-    resource_discovery
-    ]},
-  {mod, {sc_app, []}}
+  {registered, [rd_sup]},
+  {applications, [kernel, stdlib]},
+  {mod, {rd_app, []}}
 ]}.
