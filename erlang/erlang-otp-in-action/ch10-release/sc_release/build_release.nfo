@@ -1,0 +1,17 @@
+#------------------------------------------------------------------------------
+# ***** Create '.rel' files. *****
+#
+
+
+#------------------------------------------------------------------------------
+# ***** Create '.script' and '.bott' files. *****
+#
+# To create these files, the first thing you need to do is start an Erlang VM 
+# that has correct paths set up to all the applications specified in the '.rel' 
+# file.
+#
+
+erl -pa ./simple_cache/ebin -pa ./resource_discovery/ebin
+
+1> systools:make_script("simple_cache", [local]).
+ok
