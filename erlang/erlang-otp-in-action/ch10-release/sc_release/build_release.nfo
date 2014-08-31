@@ -15,3 +15,43 @@ erl -pa ./simple_cache/ebin -pa ./resource_discovery/ebin
 
 1> systools:make_script("simple_cache", [local]).
 ok
+
+%% If the successful this will generate a text '.script' file, and the  
+%% associated compiled  
+%%
+%% ***** Find Erlang Application Versions *****
+%% 
+%% $> cd /usr/local/Cellar/erlang/17.1/lib/erlang/lib/
+%% 506 Temple@plato:/usr/local/Cellar/erlang/17.1/lib/erlang/lib
+%% $> ls
+%% asn1-3.0.1             diameter-1.7           kernel-3.0.1           runtime_tools-1.8.14
+%% common_test-1.8.1      edoc-0.7.13            megaco-3.17.1          sasl-2.4
+%% compiler-5.0.1         eldap-1.0.3            mnesia-4.12.1          snmp-4.25.1
+%% cosEvent-2.1.15        erl_docgen-0.3.5       observer-2.0.1         ssh-3.0.3
+%% cosEventDomain-1.1.14  erl_interface-3.7.17   odbc-2.10.20           ssl-5.3.5
+%% cosFileTransfer-1.1.16 erts-6.1               orber-3.6.27           stdlib-2.1
+%% cosNotification-1.1.21 et-1.5                 os_mon-2.2.15          syntax_tools-1.6.15
+%% cosProperty-1.1.17     eunit-2.2.7            ose-1.0                test_server-3.7.1
+%% 
+
+
+%% Changes to a .script file, you can regenerate the .boot file using 
+%% systools:script2boot(Release).
+%%
+
+%% The local flag is mainly for testing
+%%
+%% The local option passed to the make_script/2 function stipulates that 
+%% absolute paths to all applications are written in the script and boot files 
+%% — meaning that if you try to start a system using this boot file, all 
+%% application code must reside in exactly the place it did when the boot file 
+%% was created. The local option is good for testing, as you’re doing here, 
+%% but it isn’t very portable and may not be suitable for production.
+%%
+%% Without the local option, the generated script and boot files expect that 
+%% all applications are located in a directory called lib somewhere on the 
+%% filesystem, pointed out by a system variable $ROOT.
+%%
+
+
+
