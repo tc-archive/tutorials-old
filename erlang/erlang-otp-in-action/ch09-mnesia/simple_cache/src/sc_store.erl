@@ -60,7 +60,16 @@ init() ->
   mnesia:stop(),
   mnesia:delete_schema([node()]),
   mnesia:start(),
-  {ok, CacheNodes} = resource_discovery:fetch_resources(simple_cache),
+
+  io:format("This Node: ~p~n", [node()]),
+
+  % {ok, CacheNodes} = resource_discovery:fetch_resources(simple_cache),
+  {ok, CacheNodes} = rd_server:fetch_resources(simple_cache),
+  io:format("CacheNodes: ~p~n", [CacheNodes]),
+
+  RemoteNodes = lists:delete(node(), CacheNodes),
+  io:format("CacheNodes: ~p~n", [RemoteNodes]),
+
   dynamic_db_init(lists:delete(node(), CacheNodes)).
 
 
@@ -94,6 +103,10 @@ lookup(Key) ->
   % The table is a set, you can only get zero or one records as result, and a 
   % dirty read is sufficient for your purposes.
   % 
+  io:format("mnesia:dirty_read...~n"),
+  Read = mnesia:dirty_read(key_to_pid, Key),
+  io:format("Mnesia Read: ~p~n", [Read]),
+
   case mnesia:dirty_read(key_to_pid, Key) of
     [{key_to_pid, Key, Pid}] ->
       % Check the Pid in the Mnesia database still refers to a process is 
@@ -156,6 +169,7 @@ dynamic_db_init([]) ->
   % At this point, you have a working simple_cache instance that is ready to 
   % replicate its data to any other instances that join the cluster.
   %
+  io:format("Creating first node mnesia tables!"),
   mnesia:create_table(
     key_to_pid,
     [{index, [pid]},
@@ -170,7 +184,8 @@ dynamic_db_init(CacheNodes) ->
 
 %% ----------------------------------------------------------------------------
 add_extra_nodes([Node|T]) ->
-  % tell Mnesia to add an extra node to the database. You need to connect to 
+  io:format("Cloning mnesia tables! from Node: ~p~n", [Node]),
+  % Tell Mnesia to add an extra node to the database. You need to connect to 
   % only one of the remote instances. Mnesia works in much the same way as 
   % Erlang nodes: when you connect to another Mnesia instance, you’re informed 
   % about the others, and the others are informed about you.
@@ -203,7 +218,7 @@ add_extra_nodes([Node|T]) ->
       % nodes is empty. This is another example of “let it crash”; there is 
       % little point in adding code for that case.
       add_extra_nodes(T)
-end.
+  end.
 
 
 

@@ -119,7 +119,8 @@ stop(_State) ->
 %%
 init_cluster() ->
   % Define the hard-coded default cluster managers (at least two).
-  DefaultNodes = ['contact1@localhost', 'contact2@localhost'],
+  % DefaultNodes = ['contact1@localhost', 'contact2@localhost'],
+  DefaultNodes = ['contact1@plato', 'contact2@plato'],
   % Get the configuration for the default cluster manager pair.
   case get_env(simple_cache, contact_nodes, DefaultNodes) of
     [] ->
@@ -188,13 +189,23 @@ wait_for_nodes(NumReachableNodes, SliceTime, Iterations) ->
 %% @end
 %%
 harmonise_cluster() ->
-  
+  % io:format("Harmonising cluster... Node: ~p~n", [node()]),
+  % % Register this cache as a local resource.
+  % resource_discovery:add_local_resource(simple_cache, node()),
+  % % Register 'simple_cache' as a required resource type
+  % resource_discovery:add_target_resource_type(simple_cache),
+  % % Trade this resource with other nodes in the cluster.
+  % resource_discovery:trade_resources(),
+  % % Wait for trade_resources to complete.
+  % timer:sleep(?WAIT_FOR_RESOURCES).
+
+  io:format("Harmonising cluster... Node: ~p~n", [node()]),
   % Register this cache as a local resource.
-  resource_discovery:add_local_resource(simple_cache, node()),
+  rd_server:add_local_resource(simple_cache, node()),
   % Register 'simple_cache' as a required resource type
-  resource_discovery:add_target_resource_type(simple_cache),
+  rd_server:add_target_resource_type(simple_cache),
   % Trade this resource with other nodes in the cluster.
-  resource_discovery:trade_resources(),
+  rd_server:trade_resources(),
   % Wait for trade_resources to complete.
   timer:sleep(?WAIT_FOR_RESOURCES).
 
@@ -215,7 +226,7 @@ harmonise_cluster() ->
 %% not to bury such things deep in your code. Keep them at the top of the 
 %% program (in the initialization part), and make them easily visible. (In this 
 %% case, you only read configuration during the start/2 function.) Following this 
-%% practice will make your code more man- ageable and more easily refactored. 
+%% practice will make your code more manageable and more easily refactored. 
 %% The more referentially transparent functions you have, the easier it is to 
 %% reason about what your code does and how it will be affected if you rearrange 
 %% things.

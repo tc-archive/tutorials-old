@@ -193,7 +193,8 @@ handle_call({fetch_resources, Type}, _From, State) ->
   end,
   io:format("Found resources: ~p~n", [Found]),
 
-  {reply, {ok, Local ++ Found}, State}.
+  % {reply, {ok, Local ++ Found}, State}.
+  {reply, {ok, Found}, State}.
 
 
 
