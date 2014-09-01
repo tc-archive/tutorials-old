@@ -83,7 +83,22 @@ erl –sname cache2 –boot ./simple_cache –config ./sys
 # To create these files, the first thing you need to do is start an Erlang VM 
 # that has correct paths set up to all the applications specified in the '.rel' 
 # file. This time we do not pass the 'local' option; and instead pass the 
-# '{erts, code:root_dir()}' tuple.
+# '{erts, code:root_dir()}' tuple. The erts option means that you want to 
+# include the runtime system as well, so that you can install the release on 
+# any compatible host machine and start it. If you don’t include ERTS in the 
+# package, you must install it (or a full Erlang/OTP distribution) separately 
+# on the target machine, and its version must match the requirement in the 
+# release package.
+#
+#
+# Including ERTS makes the package OS-dependent
+#
+# If you include ERTS in the package, it means you’re shipping executable files 
+# that will only work on compatible operating systems. For example, executables 
+# made for 32-bit Linux won’t work on a 64-bit Linux system. If you install such 
+# a package on an incompatible machine, you’ll probably get a strange error 
+# message such as “erlexec: no such file or directory” when you try to start the 
+# system.
 # 
 
 $ erl -pa ./simple_cache/ebin -pa ./resource_discovery/ebin
@@ -92,6 +107,68 @@ Eshell V5.7.4  (abort with ^G)
 ok
 2> systools:make_tar("simple_cache", [{erts, code:root_dir()}]).
 ok
+
+# A new file called simple_cache.tar.gz. This is the compressed tarball that 
+# contains all the release files.
+
+# Extract from CommandLine
+#
+> tar –xzf ../simple_cache.tar.gz
+
+# Extract via Erlang
+#
+2> erl_tar:extract("simple_cache.tar.gz", [{cwd, "tmp"}, compressed]).
+
+# The 'erl.src' file, which is an uninstantiated version of the erl startup script 
+# (on UNIX-like systems). This file contains the string %FINAL_ROOTDIR%, and the 
+# intention is that when you install the release, you copy erl.src to erl and replace 
+# this string with the actual path of your target system.
+
+
+
+#------------------------------------------------------------------------------
+# ***** Customisation *****
+#
+
+# Make ${ROOT}/bin/install.sh
+#
+#!/bin/sh
+ROOT=`pwd`
+DIR=./erts-6.1/bin
+sed s:%FINAL_ROOTDIR%:$ROOT: $DIR/erl.src > $DIR/erl
+
+
+# Make ${ROOT}/bin/simple_cache.sh
+#
+#!/bin/sh
+./erts-6.1/bin/erl \
+    -sname cache \
+    –boot ./releases/0.1.0/start \
+    –config ./releases/0.1.0/sys \
+    –detached
+
+
+
+# To create more fine-grained release packages that are to be combined on the same 
+# target system, you need to deviate from this scheme by renaming the version 
+# directory to have the form 'ReleaseName-Version' rather than just 'Version' (for 
+# example, releases/simple_cache-0.1.0 instead of releases/0.1.0). The paths in 
+# the startup script need to be changed correspondingly. Also move or copy the 
+# '.rel' file to the version subdirectory, so you always have the original file 
+# around even if you unpack a later release on top of this one. If you’re making 
+# this kind of package, you probably don’t want it to include ERTS; instead, you 
+# can make a package containing only ERTS for separate installation.
+#
+
+
+# Recreate Tarball
+#
+$ cd tmp $ erl
+Eshell V5.7.4 (abort with ^G)
+1> erl_tar:create("simple_cache-0.3.0.tar.gz", ["erts-5.7.4", "lib", ➥"releases", "bin"], [compressed]).
+
+
+
 
 
 
