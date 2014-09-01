@@ -54,4 +54,18 @@ ok
 %%
 
 
+#------------------------------------------------------------------------------
+# ***** Run Release *****
+#
+# To start the system specify which '.boot' file to use and which '.config' file 
+# to use.
+#
+
+erl –sname cache –boot ./simple_cache –config ./sys
+
+
+
+
+
+
 
