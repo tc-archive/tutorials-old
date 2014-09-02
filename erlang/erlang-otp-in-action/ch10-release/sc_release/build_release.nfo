@@ -168,6 +168,23 @@ Eshell V5.7.4 (abort with ^G)
 1> erl_tar:create("simple_cache-0.3.0.tar.gz", ["erts-5.7.4", "lib", ➥"releases", "bin"], [compressed]).
 
 
+#------------------------------------------------------------------------------
+# ***** Installing a Release *****
+#
+
+# OTP provides functionality for unpacking, installing, and upgrading releases 
+# through the release_handler module in SASL.
+#
+
+$ cd ${ROOT}
+$ ./bin/install.sh
+$ ./bin/simple_cache.sh
+
+# Other Build Tools 
+# - http://erlware.org
+# - https://github.com/rebar/rebar
+
+
 
 
 
