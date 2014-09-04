@@ -88,7 +88,8 @@ start(_StartType, _StartArgs) ->
   % Attempts ot listen on the specified port.
   {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
 
-  % Start the 'application root superviser' on the specified port,
+  % Start the initial 'application root superviser' handler with the specified
+  % socket.
   case ti_sup:start_link(LSock) of
     {ok, Pid} ->
       ti_sup:start_child(),
