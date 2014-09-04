@@ -62,14 +62,14 @@
 %%% Macros
 %%%============================================================================
 
-
+-define(DEFAULT_PORT, 1155).
 
 %%%============================================================================
 %%% Public Interface Implementation
 %%%============================================================================
 
 %%-----------------------------------------------------------------------------
-%% @doc Start the 'simple cache' application.
+%% @doc Start the 'tcp interface' application.
 %%
 %% @spec start(_StartType::any(), _StartArgs::any()) -> {ok, Other}
 %% where
@@ -79,19 +79,27 @@
 %%-----------------------------------------------------------------------------
 start(_StartType, _StartArgs) ->
 
-  % Start the 'application root superviser'
-  case tl_sup:start_link() of
+  % Get the TCP port configuration or use the defalt port.
+  Port = case application:get_env(tcp_interface, port) of
+    {ok, P}   -> P;
+    undefined -> ?DEFAULT_PORT
+    end,
 
-    {ok, RootSupervisorPid} ->
-      {ok, RootSupervisorPid};
+  % Attempts ot listen on the specified port.
+  {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
 
+  % Start the 'application root superviser' on the specified port,
+  case ti_sup:start_link(LSock) of
+    {ok, Pid} ->
+      ti_sup:start_child(),
+      {ok, Pid};
     Other ->
       {error, Other}
-
   end.
 
+
 %%-----------------------------------------------------------------------------
-%% @doc Stop the 'simple cache' application.
+%% @doc Stop the 'tcp interface' application.
 %%
 %% @spec stop() -> ok
 %% where
