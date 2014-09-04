@@ -1,10 +1,21 @@
 %%%============================================================================
 %%% @doc 
-%%% The gen_server processes that 'tl_server' in the 'tcp_interface' application.
+%%% The ti_server module is the connection handler where you accept connections 
+%%% on the listening socket and bind them to a dedicated socket so that you can 
+%%% start talking directly to the calling client over TCP. The strategy here, 
+%%% as illustrated by figure 11.1, is to let the simple-one-for-one supervisor 
+%%% keep track of the listening socket and hand it out to each new handler that 
+%%% it spawns. 
+%%% 
+%%% The latest spawned handler is the only one that is actively listening on 
+%%% the socket. As soon as it gets a connection, it tells the supervisor to 
+%%% start another handler to do the listening, so it can continue processing 
+%%% the accepted connection. After it’s done that, it’ll never go back to a 
+%%% listening state again; it’ll die when its session ends.
 %%%
 %%% @end
 %%%============================================================================
--module(sc_element).
+-module(ti_server).
 
 %%%============================================================================
 %%% OTP GenServer Behaviour
@@ -26,87 +37,36 @@
 %%% Public Interface
 %%%============================================================================
 
--export([
-  start_link/2,
-  create/2,
-  create/1,
-  fetch/1,
-  replace/2,
-  delete/1
-]).
+-export([start_link/1]).
 
-%% Constant
-%%
+
+%%%============================================================================
+%%% Macros
+%%%============================================================================
+
 -define(SERVER, ?MODULE).
 
-%% Constant - The default time (one day in seconds) a cached value can remain in 
-%% the cahce.
-%%
--define(DEFAULT_LEASE_TIME, (60 * 60 * 24)).
 
 
 %%%============================================================================
 %%% Private State
 %%%============================================================================
 
-%% Record  - Holds the cached value.
-%% value       - The value the process is holding on to, 
-%% lease_time  - The lease time
-%% timestamp   - The timestamp from  when the process was started.
+%% lsock  - A TCP Sockets
 %%
--record(state, {value, lease_time, start_time}).
+-record(state, {lsock}).
 
 
 %%%============================================================================
 %%% Public Interface Implementation
 %%%============================================================================
 
-%% Create a new 'tc_element' GenServer process.
-%%
-%% NB: This method is called from the 'sc_element_sup' supervisor to allow the  
-%%     management/supervision of created processes.
-%%
-start_link(Value, LeaseTime) ->
-    gen_server:start_link(?MODULE, [Value, LeaseTime], []).
-
-%% Create (store) a new Value with the specified LeaseTime.
-%%
-%% NB: This method calls the 'sc_element_sup' supervisor to allow the  
-%%     management/supervision of created processes. 
-%%
-%%     The supervisor will use the 'sc_element:start_link(Value, LeaseTime)' 
-%%     (configured in the 'sc_sup:init' method) to actually create the  
-%%     supervised process. This method in turn call the GenServer behviour 
-%%     'start_link' message. Simples! 
-%% 
-create(Value, LeaseTime) ->
-    sc_element_sup:start_child(Value, LeaseTime).
-
-%% Create (store) a new Value with the default LeaseTime. 
-create(Value) ->
-    create(Value, ?DEFAULT_LEASE_TIME).
-
-%% Fetch the state Value of the specified storage process. 
-fetch(Pid) ->
-  % Synchronously calls the specified GenServer process with a 'fetch' message  
-  % to return the GenServer process 'state' (the stored 'Value').
-  gen_server:call(Pid, fetch).
-
-%% Replace the state Value of the specified storage process. 
-replace(Pid, Value) ->
-  % Asynchronously calls the specified GenServer process with a 'replace'   
-  % message to replace the specified Value.
-  gen_server:cast(Pid, {replace, Value}).
-
-%% Delete the state Value of the specified storage process. 
-delete(Pid) ->
-  % Asynchronously calls the specified GenServer process with a 'delete'   
-  % message to delete the specified Value.
-  gen_server:cast(Pid, delete).
+start_link(LSock) ->
+    gen_server:start_link(?MODULE, [LSock], []).
 
 
 %%%============================================================================
-%%% OTP GenServer Callbacks
+%%% OTP GenServer Callback Implementation
 %%%============================================================================
 
 %%% Setting server timeouts
@@ -117,62 +77,91 @@ delete(Pid) ->
 %%% every callback function.
 %%%
 
-init([Value, LeaseTime]) ->
-  Now = calendar:local_time(),
-  % Gregorian seconds: a useful uniform representation of time as the number 
-  % of seconds since year 0 (year 1 BC) according to the normal 
-  % Western/International Gregorian calendar.
-  StartTime = calendar:datetime_to_gregorian_seconds(Now),
-
-  % If the server process isn’t accessed within the lease period, a timeout 
-  % message is sent to the server and passed to the handle_info/2 function, 
-  % which shuts down the process.
-
-  {ok,                              % ok
-    #state{                         % State
-      value = Value, 
-      lease_time = LeaseTime, 
-      start_time = StartTime
-    }, 
-    time_left(StartTime, LeaseTime) % The server timeout after initialization
-  }.
-
-% Handle 'fetch' message.
-handle_call(fetch, _From,  State) ->
-  % Get State.
-  #state{value = Value, lease_time = LeaseTime, start_time = StartTime} = State,
-  % Compute timeout..
-  TimeLeft = time_left(StartTime, LeaseTime),
-  {reply, {ok, Value}, State, TimeLeft}.
+%% The start_link/1 function is how the supervisor starts each handler process, 
+%% passing on the listening socket. 
+%% 
+%% This is propagated via 'gen_server:start_link/3' to the gen_server callback 
+%% 'init/1', which stores the socket in the server state and then returns, 
+%% signaling a timeout of 0 to finish the startup without keeping the caller 
+%% of init/1 waiting. 
+%%
+%% The zero timeout makes the new gen_server process drop immediately into the 
+%% timeout clause of 'handle_info/2' (timeout, State).
+%%
+init([LSock]) ->
+  {ok, #state{lsock = LSock}, 0}.
 
 
-% Handle 'replace' message.
-handle_cast({replace, Value}, State) ->
-  #state{lease_time = LeaseTime, start_time = StartTime} = State,
-  TimeLeft = time_left(StartTime, LeaseTime),
-  % Returns 'noreply', meaning that the server doesn’t reply, but, stays alive.
-  {noreply, State#state{value = Value}, TimeLeft};
+handle_call(Msg, _From, State) ->
+  {reply, {ok, Msg}, State}.
 
 
-% Terminate this sc_element process, removing it from the cache.
-handle_cast(delete, State) ->
-  % Returns 'stop', meaning that the server doesn’t reply and terminates..
+handle_cast(stop, State) ->
   {stop, normal, State}.
 
-% Kill/Stop the process.
-handle_info(timeout, State) ->
-  {stop, normal, State}.
+%% Handle the 'tcp' message from the socket.
+%%
+handle_info({tcp, Socket, RawData}, State) ->
+  NewState = handle_data(Socket, RawData, State),
+  {noreply, NewState};
+%% Handle the 'tcp_closed' message from the socket to  ensure that the 
+%% ti_server process goes away automatically when the socket is closed.
+%%
+handle_info({tcp_closed, _Socket}, State) ->
+  {stop, normal, State};
+%% Initialise a new accepting socket. (Utilises 'timeout invocation trick').
+%%
+%% The handler process has detached from the process that called 
+%% 'ti_server:start_link/1' and is running concurrently with any previously 
+%% started handlers that haven’t already finished. 
+%% 
+%% The handler immediately calls gen_tcp:accept/1 on the listening socket, 
+%% which blocks until the next incoming TCP connection. (It’s because of 
+%% this blocking call that you need to ensure that nobody else is currently 
+%% waiting for this process, or you’d be holding them up as well.)
+%%
+%% When accept() returns (this could happen almost immediately on a heavily 
+%% loaded server, or after many months if the interface is rarely used), 
+%% the first thing to do is to ask the supervisor to start another handler 
+%% by 'calling ti_sup:start_child()'. The new handler — a clone of this one — 
+%% immediately starts waiting for the next connection on the listening 
+%% socket, while the current handler process can get on with handling the 
+%% connection that it has accepted.
+%%
+%% The listening socket was opened in active mode (ti_app:start/2), so the 
+%% dedicated socket returned by accept() inherits this setting. Therfore, all 
+%% incoming data on the dedicated socket is sent directly and automatically 
+%% to the handler process as a message of the form {tcp, Socket, RawData}.
+%% 
+handle_info(timeout, #state{lsock = LSock} = State) ->
+  % Blocking Wait: Accept a new remote TCP connection.
+  {ok, _Sock} = gen_tcp:accept(LSock),
+  % Create a new server processto await the next remote TCP connection 
+  % attempt.
+  ti_sup:start_child(),
+  {noreply, State}.
 
 
-% Delete from store
 terminate(_Reason, _State) ->
-  % sc_store:delete(self()),
-  sc_store_mnesia:delete(self()),
   ok.
 
-% Code change.
+
 code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
+
+
+
+%%%============================================================================
+%%% Private Functions
+%%%============================================================================
+
+%% Currently just echos the RawDataback to the client.
+%%
+handle_data(Socket, RawData, State) ->
+  gen_tcp:send(Socket, RawData),
+  State.
+
+
 
 
 

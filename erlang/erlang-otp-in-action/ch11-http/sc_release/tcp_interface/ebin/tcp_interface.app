@@ -30,15 +30,15 @@
  [{description, "A simple tcp interface."},
   {vsn, "0.1.0"},
   {modules, [
-    tl_app, 
-    tl_sup,
-    tl_server
+    ti_app, 
+    ti_sup,
+    ti_server
     ]},
-  {registered, [tl_sup]},
+  {registered, [ti_sup]},
   {applications, [
     kernel, 
     stdlib,
     sasl
     ]},
-  {mod, {tl_app, []}}
+  {mod, {ti_app, []}}
 ]}.

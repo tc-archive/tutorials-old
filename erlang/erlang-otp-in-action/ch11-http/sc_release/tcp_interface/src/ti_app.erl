@@ -3,7 +3,7 @@
 %%% The OTP App for the 'tcp_interface' application.
 %%% @end
 %%%============================================================================
--module(tl_app).
+-module(ti_app).
 
 %%%============================================================================
 %%% OTP Application Behaviour
@@ -86,6 +86,9 @@ start(_StartType, _StartArgs) ->
     end,
 
   % Attempts ot listen on the specified port.
+  %
+  % The listening socket was opened in active mode.
+  %
   {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
 
   % Start the initial 'application root superviser' handler with the specified
