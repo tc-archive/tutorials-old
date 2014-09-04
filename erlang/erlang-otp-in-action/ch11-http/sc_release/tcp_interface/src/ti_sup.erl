@@ -3,7 +3,8 @@
 %%% @doc 
 %%% The OTP 'Root Supervisor' for the 'tcp_interface' application.
 %%%
-%%% This supervisor is in many ways just a factory for 'tl_server' processes.
+%%% This short module provides a nice, OTP-compliant factory for the ti_server 
+%%% processes that handle the incoming connections.
 %%% @end
 %%%============================================================================
 -module(sc_sup).
@@ -22,7 +23,7 @@
 %%% Public API
 %%%============================================================================
 
--export([start_link/0]).
+-export([start_link/1, start_child/0]).
 
 
 %%%============================================================================
@@ -36,31 +37,36 @@
 %%% Public API Implementation
 %%%============================================================================
 
-start_link() ->
-  supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+start_link(LSock) ->
+  supervisor:start_link({local, ?SERVER}, ?MODULE, [LSock]).
+
+start_child() ->
+  supervisor:start_child(?SERVER, []).
 
 
 %%%============================================================================
 %%% OTP Supervisor Callback Implemtations
 %%%============================================================================
 
-%% Initialise the RootSuperviser process with one child processes spec:
-%% 1) 'tl_server' : A 'tl_server' instance.
+
+
+%% The init/1 callback function gets the listening socket and includes it in the 
+%% child spec so it becomes an argument to each new child.
 %%
 %% This is creating a 'Superviser Tree Hierarhcy'. Following this pattern, you 
 %% can nest supervisors to any depth you want to give your application a suitably 
 %% fine-grained supervision structure.
 %%
-init([]) ->
+init([LSock]) ->
 
-  % Define the 'sc_element_sup' supervisor process.
+  % Define the 'tl_server' init process.
   %
   TLServerSpec = {
     tl_server,                          % The Id to identify the child specification.
-    {tl_server, start_link, []},        % The apply(M, F, A) tuple to start the process.
-    permanent,                          % Child process always restarted.
-    2000,                               % Terminate child: 'exit(Child, shutdown)' timeout.
-    supervisor,                         % Child is supervisor process.
+    {tl_server, start_link, [LSock]},   % The apply(M, F, A) tuple to start the process.
+    temporary,                          % Child process always restarted.
+    brutal_kill,                        % Terminate child: immediately
+    worker,                             % Child is a worker process.
     [tl_server]                         % The name of the callback module.
   },
 
@@ -71,13 +77,12 @@ init([]) ->
   % 
   % If a child process terminates, only that process is restarted.
   %
-  %
   % Maximum Restart Frequency : (4, 3600)
   % 
-  % If more than '4' restarts occur in the last '3600' seconds, then the supervisor 
+  % If more than '1' restarts occur in the last '0' seconds, then the supervisor 
   % terminates all the child processes and then itself.
   %
-  ProcRestartStrategy = {one_for_one, 4, 3600},
+  ProcRestartStrategy = {one_for_one, 0, 1},
 
   {ok, {ProcRestartStrategy, ManagedProcSpecs}}.
 
