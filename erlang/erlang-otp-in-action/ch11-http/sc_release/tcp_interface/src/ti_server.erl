@@ -158,8 +158,71 @@ code_change(_OldVsn, State, _Extra) ->
 %% Currently just echos the RawDataback to the client.
 %%
 handle_data(Socket, RawData, State) ->
-  gen_tcp:send(Socket, RawData),
+  % echo_data(Socket, RawData),
+  parse_invoke(Socket, RawData),
   State.
+
+
+% echo_data(Socket, RawData) ->
+%  gen_tcp:send(Socket, RawData).
+
+
+%% Expressed as a grammar where | separates alternatives and Term stands for a 
+%% constant Erlang term, the protocol for incoming calls looks like this:
+%%
+%% Call -> Function ArgList
+%% Function -> "insert" | "lookup" | "delete"
+%% ArgList -> "[" "]" | "[" Terms "]"
+%% Terms -> Term | Term "," Terms
+%%
+%% For example:
+%%   insert[eric,{"Eric","Merritt"}]
+%%   lookup[eric]
+%%
+%% In the other direction, the result from each request has the form:
+%%
+%%   Result -> "OK:" Term ".\n" | "ERROR:" Term ".\n"
+%%
+%% That is, either “OK:” or “ERROR:”, followed by a naked term and ending with 
+%% a period and a newline. For instance:
+%%
+%%   OK:{"Eric","Merritt"}.
+%%
+%% is a reply to the request "lookup[eric]", and
+%% 
+%% ERROR:bad_request 
+%% is the response to a message such as "@*#$^!%".
+parse_invoke(Socket, RawData) ->
+  try
+    % Split the input string into the 'Function' and the 'ArgList'
+    %
+    % insert[eric,{"Eric","Merritt"}]
+    % =>
+    % Function = insert
+    % RawArgList = [eric,{"Eric","Merritt"}]
+    % 
+    {Function, RawArgList} = lists:splitwith(fun (C) -> C =/= $[ end, RawData),
+    io:format("Extracted Function/RawArgList : ~p/~p~n", [Function, RawArgList]),
+
+    % Turn the RawArgList into an Erlang Term (by adding a '.'); and extract 
+    % the tokensas a List of token tuples. 
+    {ok, Toks, _Line} = erl_scan:string(RawArgList ++ ".", 1),
+    io:format("Extracted Tokens: ~p~n", [Toks]),
+
+    % This function parses Tokens as if it were a term.
+    {ok, Args} = erl_parse:parse_term(Toks),
+
+    % Use the 'apply' function to invoke the simple cache.
+    Result = apply(simple_cache, list_to_atom(Function), Args),
+
+    % Send the result of the operation back to the client.
+    gen_tcp:send(Socket, io_lib:fwrite("OK:~p.~n", [Result]))
+
+  catch
+    _Class:Err ->
+      % Send an error result back to the client.
+      gen_tcp:send(Socket, io_lib:fwrite("ERROR:~p.~n", [Err]))
+  end.
 
 
 
