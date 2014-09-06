@@ -67,7 +67,7 @@ init([LSock]) ->
     temporary,                          % Child process always restarted.
     brutal_kill,                        % Terminate child: immediately
     worker,                             % Child is a worker process.
-    [tl_server]                         % The name of the callback module.
+    [ti_server]                         % The name of the callback module.
   },
 
 

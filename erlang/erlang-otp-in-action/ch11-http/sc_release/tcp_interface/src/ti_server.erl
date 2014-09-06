@@ -13,6 +13,14 @@
 %%% the accepted connection. After it’s done that, it’ll never go back to a 
 %%% listening state again; it’ll die when its session ends.
 %%%
+%%% This protocol is straightforward to use and should also be simple to parse. 
+%%% You can easily adapt it to use with other similar servers. It’s a simple 
+%%% request/reply protocol, where a well-behaved client sends one request at a 
+%%% time and waits for a reply after each request. This effectively controls 
+%%% the rate of requests to each connection handler and should keep traffic 
+%%% at a manageable level.
+%%%
+%%%
 %%% @end
 %%%============================================================================
 -module(ti_server).

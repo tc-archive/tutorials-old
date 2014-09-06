@@ -40,5 +40,5 @@
     stdlib,
     sasl
     ]},
-  {mod, {ti_app, []}}
+  {mod, {ti_app, [temporary]}}
 ]}.

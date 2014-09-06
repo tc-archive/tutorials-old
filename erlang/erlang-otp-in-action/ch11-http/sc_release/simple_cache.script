@@ -1,4 +1,4 @@
-%% script generated at {2014,9,4} {17,26,20}
+%% script generated at {2014,9,6} {13,43,48}
 {script,
     {"simple_cache","0.2.0"},
     [{preLoaded,
@@ -232,7 +232,7 @@
                    {env,[]},
                    {maxT,infinity},
                    {maxP,infinity},
-                   {mod,{ti_app,[]}}]}]}},
+                   {mod,{ti_app,[temporary]}}]}]}},
      {progress,applications_loaded},
      {apply,{application,start_boot,[kernel,permanent]}},
      {apply,{application,start_boot,[stdlib,permanent]}},
@@ -240,6 +240,6 @@
      {apply,{application,start_boot,[mnesia,permanent]}},
      {apply,{application,start_boot,[resource_discovery,permanent]}},
      {apply,{application,start_boot,[simple_cache,permanent]}},
-     {apply,{application,start_boot,[tcp_interface,permanent]}},
+     {apply,{application,start_boot,[tcp_interface,temporary]}},
      {apply,{c,erlangrc,[]}},
      {progress,started}]}.

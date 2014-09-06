@@ -77,7 +77,9 @@
 %%
 %% @end
 %%-----------------------------------------------------------------------------
-start(_StartType, _StartArgs) ->
+start(StartType, StartArgs) ->
+
+  io:format("Starting TI_APP: ~p - ~p~n", [StartType, StartArgs]),
 
   % Get the TCP port configuration or use the defalt port.
   Port = case application:get_env(tcp_interface, port) of
@@ -89,17 +91,30 @@ start(_StartType, _StartArgs) ->
   %
   % The listening socket was opened in active mode.
   %
-  {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
+  % {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
 
-  % Start the initial 'application root superviser' handler with the specified
-  % socket.
-  case ti_sup:start_link(LSock) of
-    {ok, Pid} ->
-      ti_sup:start_child(),
-      {ok, Pid};
-    Other ->
-      {error, Other}
+  case gen_tcp:listen(Port, [{active, true}]) of 
+
+    {ok, LSock} -> 
+      io:format("Bound TCP Socket on Port: ~p~n", [Port]),
+      % Start the initial 'application root superviser' handler with the specified
+      % socket.
+      case ti_sup:start_link(LSock) of
+        {ok, Pid} ->
+          ti_sup:start_child(),
+          {ok, Pid};
+        Other ->
+          {error, Other}
+      end;
+
+    {error,eaddrinuse} ->
+      io:format("Could not bind TCP socket on Port: ~p~n", [Port]),
+      io:format("Not starting ~p~n", [?MODULE]),
+      io:format("Meh.......~n"),
+      {error, normal}
+
   end.
+
 
 
 %%-----------------------------------------------------------------------------
