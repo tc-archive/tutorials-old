@@ -43,10 +43,10 @@
   state, {
     lsock,                  % New client listener socket
     socket,                 % This client socket
-    request_line,           % Http request line.
-    headers = [],           % Http Headers.
-    body = <<>>,            % Http Body (binary).
-    content_remaining = 0,  % Http Content not yet recieved.
+    request_line,           % HTTP request line / url.
+    headers = [],           % HTTP Headers.
+    body = <<>>,            % HTTP Body (binary).
+    content_remaining = 0,  % HTTP Content not yet recieved.
     callback,               % The name of the behaviour implementation module.
     user_data,              % Application data passed to the callback module.
     parent                  % Process ID of the gws_connection_sup supervisor
@@ -127,6 +127,14 @@ handle_info(
   {noreply, header(Name, Value, State)};
 %% Handle the 'http' event tuple where the data tuple is tagged 'http_eoh'.
 %% there is no 'content_remaining'.
+%%
+%% NB: When the empty line that signals the end of the headers is reached, the 
+%% socket sends a message in the following form:
+%% 
+%%  {http, _Socket, http_eoh}
+%%
+%% As there is no body to process; handle the request.
+%%
 handle_info(
     {http, _Sock, http_eoh}, 
     #state{content_remaining = 0} = State
@@ -137,6 +145,15 @@ handle_info(
   {stop, normal, handle_http_request(State)};
 %% Handle the 'http' event tuple where the data tuple is tagged 'http_eoh'.
 %% there is 'content_remaining'.
+%%
+%% NB: When the empty line that signals the end of the headers is reached, the 
+%% socket sends a message in the following form:
+%% 
+%%  {http, _Socket, http_eoh}
+%%
+%% As there is data to be read switch the socket from {packet, http_bin} to 
+%% {packet, raw}, telling it to stop parsing HTTP-specific data.
+%%
 handle_info(
     {http, _Sock, http_eoh}, 
     State
@@ -268,7 +285,9 @@ header('Content-Length' = Name, Value, State) ->
 %% Return a 100 continue to the client and add the header to the state.
 %%
 header(<<"Expect">> = Name, <<"100-continue">> = Value, State) ->
-  % Send 100 response to client.
+  % Send 100 response to client. If we don’t send this reply, the client will 
+  % pause a couple of seconds before transmitting the body, which slows things 
+  % down quite a bit.
   gen_tcp:send(State#state.socket, gen_web_server:http_reply(100)),
   % Update header state.
   State#state{headers = [{Name, Value} | State#state.headers]};
@@ -283,6 +302,10 @@ header(Name, Value, State) ->
 %% There is no binary data to read!
 %% The whole HTTP request has been obtained! Process the request!
 %%
+%% This is finally where the main interaction happens between the 
+%% 'gen_web_server container code' and the 'user-supplied behaviour implementation'
+%% (the callback module).
+%%
 handle_http_request(
   #state{
     callback = Callback,
@@ -294,8 +317,8 @@ handle_http_request(
   
   {http_request, Method, _, _} = Request,
   
-  % Dispatch the request to the Callback module ('gen_web_server') to obtain a
-  % result.
+  % Dispatch the request to the Callback module (the provided 'gen_web_server' 
+  % implementation) to handle the request and obtain a result.
   Reply = dispatch(Method, Request, Headers, Body, Callback, UserData),
   % Send the response to the client.
   gen_tcp:send(State#state.socket, Reply),
