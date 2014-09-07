@@ -1,6 +1,6 @@
 %%%============================================================================
 %%% @doc 
-%%% The OTP App for the 'tcp_interface' application.
+%%% The OTP App for the 'http_interface' application.
 %%% @end
 %%%============================================================================
 -module(hi_app).
@@ -64,7 +64,7 @@
 
 -define(DEFAULT_PORT, 1156).
 
--define(DEFAULT_IP_ADDR, "127.0.0.1").
+%-define(DEFAULT_IP_ADDR, "127.0.0.1").
 
 %%%============================================================================
 %%% Public Interface Implementation
@@ -94,10 +94,17 @@ start(StartType, StartArgs) ->
     case application:get_env(http_interface, port) of
       {ok, P}   -> P;
       undefined -> ?DEFAULT_PORT
-    end.
+    end,
 
   % hi_sup:start_link(IP_ADDR, Port).
   hi_sup:start_link(Port).
+
+  % case hi_sup:start_link(Port) of
+  %   {ok, Pid} ->
+  %     {ok, Pid};
+  %   Other ->
+  %       {error, Other}
+  % end.
 
 
 

@@ -1,6 +1,22 @@
 %%%============================================================================
 %%% @doc 
 %%% The hi_server module is an implementation of the 'gen_web_server' behaviour.
+%%%
+%%% Much as in a gen_server implementation module, you have the behaviour 
+%%% declaration, the export list for the callbacks, and some API functions for 
+%%% things like starting a server instance. In this case, the start_link 
+%%% functions want at least a port number as input, to be passed from hi_sup. 
+%%% Also note that an empty list is given to gen_web_server:start_link() as the 
+%%% UserArgs argument; this particular server implementation doesn’t use it for 
+%%% anything.
+%%%
+%%% The init/1 callback function is called by the gen_web_server for each new 
+%%% connection, to initialize the user_data field. The UserArgs argument that 
+%%% was given to gen_web_server:start_link() is passed unchanged to init/1, so 
+%%% in this particular implementation you expect an empty list as input. But 
+%%% this simple server doesn’t use the user_data feature of gen_web_server for 
+%%% anything, so init/1 returns another empty list here.
+%%%
 %%% @end
 -module(hi_server).
 
@@ -54,6 +70,18 @@ start_link(IP, Port) ->
 init([]) ->
   {ok, []}.
 
+
+%% Simple Implementation
+%%
+%% Binary pattern matching to strip the leading slash from the key (which is 
+%% given as part of the URI). To keep this example simple, the keys and the 
+%% stored data are binaries representing plain text. Other Erlang terms that may 
+%% be stored in the cache aren’t handled; in particular, if simple_cache:lookup(Key) 
+%% succeeds, the found value is expected to be a binary, string, or IO-list, or 
+%% the server can’t send it back on the socket as it is.
+%%
+
+
 get(
     {http_request, 'GET', {abs_path, <<"/",Key/bytes>>}, _},
     _Head, 
@@ -74,7 +102,8 @@ delete(
   simple_cache:delete(Key),
   gen_web_server:http_reply(200).
 
-￼￼
+
+
 put(
     {http_request, 'PUT', {abs_path, <<"/",Key/bytes>>}, _},
     _Head, 
@@ -85,6 +114,8 @@ put(
     gen_web_server:http_reply(200).
 
 
+% Not applicable for this rest service.
+%
 post(
     _Request, 
     _Head, 
@@ -93,7 +124,8 @@ post(
     ) ->
   gen_web_server:http_reply(501).
 
-
+% Not applicable for this rest service.
+%
 head(
     _Request, 
     _Head, 
@@ -101,7 +133,8 @@ head(
     ) ->
   gen_web_server:http_reply(501).
 
-
+% Not applicable for this rest service.
+%
 options(
     _Request, 
     _Head, 
@@ -110,7 +143,8 @@ options(
     ) ->
   gen_web_server:http_reply(501).
 
-
+% Not applicable for this rest service.
+%
 trace(
     _Request, 
     _Head, 
@@ -119,7 +153,8 @@ trace(
     ) ->
   gen_web_server:http_reply(501).
 
-
+% Not applicable for this rest service.
+%
 other_methods(
     _Request, 
     _Head, 

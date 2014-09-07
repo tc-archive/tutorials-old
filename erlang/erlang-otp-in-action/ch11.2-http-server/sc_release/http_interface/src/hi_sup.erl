@@ -25,7 +25,7 @@
 
 -export([
   start_link/1, 
-  start_link/2, 
+  % start_link/2, 
   start_child/0
 ]).
 
@@ -44,8 +44,8 @@
 start_link(Port) ->
   supervisor:start_link({local, ?SERVER}, ?MODULE, [Port]).
 
-start_link(IP, Port) ->
-  supervisor:start_link({local, ?SERVER}, ?MODULE, [IP, Port]).
+% start_link(IP, Port) ->
+%   supervisor:start_link({local, ?SERVER}, ?MODULE, [IP, Port]).
 
 start_child() ->
   supervisor:start_child(?SERVER, []).
@@ -71,8 +71,8 @@ init([Port]) ->
   HLServerSpec = {
     hi_server,                          % The Id to identify the child specification.
     {hi_server, start_link, [Port]},    % The apply(M, F, A) tuple to start the process.
-    temporary,                          % Child process always restarted.
-    brutal_kill,                        % Terminate child: immediately
+    permanent,                          % Child process always restarted.
+    2000,                               % Terminate child: immediately
     worker,                             % Child is a worker process.
     [hi_server]                         % The name of the callback module.
   },
