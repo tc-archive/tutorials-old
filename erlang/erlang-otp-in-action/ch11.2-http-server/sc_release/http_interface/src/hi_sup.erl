@@ -23,7 +23,11 @@
 %%% Public API
 %%%============================================================================
 
--export([start_link/1, start_child/0]).
+-export([
+  start_link/1, 
+  start_link/2, 
+  start_child/0
+]).
 
 
 %%%============================================================================
@@ -37,8 +41,11 @@
 %%% Public API Implementation
 %%%============================================================================
 
-start_link(LSock) ->
-  supervisor:start_link({local, ?SERVER}, ?MODULE, [LSock]).
+start_link(Port) ->
+  supervisor:start_link({local, ?SERVER}, ?MODULE, [Port]).
+
+start_link(IP, Port) ->
+  supervisor:start_link({local, ?SERVER}, ?MODULE, [IP, Port]).
 
 start_child() ->
   supervisor:start_child(?SERVER, []).
@@ -57,13 +64,13 @@ start_child() ->
 %% can nest supervisors to any depth you want to give your application a suitably 
 %% fine-grained supervision structure.
 %%
-init([PortNum]) ->
+init([Port]) ->
 
   % Define the 'tl_server' init process.
   %
   HLServerSpec = {
     hi_server,                          % The Id to identify the child specification.
-    {hi_server, start_link, [PortNum]}, % The apply(M, F, A) tuple to start the process.
+    {hi_server, start_link, [Port]},    % The apply(M, F, A) tuple to start the process.
     temporary,                          % Child process always restarted.
     brutal_kill,                        % Terminate child: immediately
     worker,                             % Child is a worker process.

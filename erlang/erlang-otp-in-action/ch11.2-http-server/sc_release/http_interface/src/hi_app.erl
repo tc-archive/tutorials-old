@@ -83,47 +83,21 @@ start(StartType, StartArgs) ->
 
   io:format("Starting HI_APP: ~p - ~p~n", [StartType, StartArgs]),
 
-  % Get the TCP port configuration or use the defalt port.
-  Port = case application:get_env(http_interface, port) of
-    {ok, P}   -> P;
-    undefined -> ?DEFAULT_PORT
-    end,
-
     % Get the TCP port configuration or use the defalt port.
-  Port = case application:get_env(http_interface, ip_addr) of
-    {ok, P}   -> P;
-    undefined -> ?DEFAULT_IP_ADDR
-    end,
+  % IP = case application:get_env(http_interface, ip_addr) of
+  %   {ok, P}   -> P;
+  %   undefined -> ?DEFAULT_IP_ADDR
+  %   end,
 
-  hi_sup:start_link([Port, IP_ADDR]).
+  % Get the TCP port configuration or use the default port.
+  Port = 
+    case application:get_env(http_interface, port) of
+      {ok, P}   -> P;
+      undefined -> ?DEFAULT_PORT
+    end.
 
-  % % Attempts ot listen on the specified port.
-  % %
-  % % The listening socket was opened in active mode.
-  % %
-  % % {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
-
-  % case gen_tcp:listen(Port, [{active, true}]) of 
-
-  %   {ok, LSock} -> 
-  %     io:format("Bound TCP Socket on Port: ~p~n", [Port]),
-  %     % Start the initial 'application root superviser' handler with the specified
-  %     % socket.
-  %     case ti_sup:start_link(LSock) of
-  %       {ok, Pid} ->
-  %         ti_sup:start_child(),
-  %         {ok, Pid};
-  %       Other ->
-  %         {error, Other}
-  %     end;
-
-  %   {error,eaddrinuse} ->
-  %     io:format("Could not bind TCP socket on Port: ~p~n", [Port]),
-  %     io:format("Not starting ~p~n", [?MODULE]),
-  %     io:format("Meh.......~n"),
-  %     {error, normal}
-
-  % end.
+  % hi_sup:start_link(IP_ADDR, Port).
+  hi_sup:start_link(Port).
 
 
 
