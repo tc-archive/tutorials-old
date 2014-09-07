@@ -57,13 +57,13 @@ start_child() ->
 %% can nest supervisors to any depth you want to give your application a suitably 
 %% fine-grained supervision structure.
 %%
-init([LSock]) ->
+init([PortNum]) ->
 
   % Define the 'tl_server' init process.
   %
   HLServerSpec = {
     hi_server,                          % The Id to identify the child specification.
-    {hi_server, start_link, [LSock]},   % The apply(M, F, A) tuple to start the process.
+    {hi_server, start_link, [PortNum]}, % The apply(M, F, A) tuple to start the process.
     temporary,                          % Child process always restarted.
     brutal_kill,                        % Terminate child: immediately
     worker,                             % Child is a worker process.
