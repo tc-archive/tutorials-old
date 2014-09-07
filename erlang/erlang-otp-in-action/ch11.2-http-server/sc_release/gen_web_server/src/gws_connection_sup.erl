@@ -41,8 +41,10 @@
 %% gen_web_server:start_link/4, but this way it’s guaranteed that a new 
 %% 'gws_connection_sup process' will always have a process that is listening 
 %% on the socket, ready to handle any incoming connection.
+%%
 start_link(Callback, IP, Port, UserArgs) ->
   % Use the superviser module to start a new 'gws_connection_sup' process.
+  % NB: As this is a library, not, an application...
   {ok, Pid} = supervisor:start_link(?MODULE, [Callback, IP, Port, UserArgs]),
   % User the new superviser to start an initial 'gws_server' chld process.
   start_child(Pid),
