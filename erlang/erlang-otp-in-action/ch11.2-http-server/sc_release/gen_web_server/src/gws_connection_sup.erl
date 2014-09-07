@@ -6,6 +6,13 @@
 %%%============================================================================
 -module(gws_connection_sup).
 
+%%% Any crashes that occur in the gws_connection_sup group will have no effect 
+%%% on the separate worker process (other than what the supervisor decides). 
+%%% Because of this principle, you should generally:
+%%% 
+%%% !!! KEEP SUPERVISOR FREE FROM APPLICATION SPECIFIC CODE !!!
+%%%
+
 %%%============================================================================
 %%% Public Init API Interface
 %%%============================================================================
@@ -53,15 +60,32 @@ start_child(Server) ->
 %%% OTP Supervisor Behaviour Implementation
 %%%============================================================================ 
 
+%%% TCP flow control and active/passive sockets
+%%%
+%%% Although active mode is cleaner and has more of an Erlang/OTP feel to it, 
+%%% it doesn’t provide any flow control. In active mode, the Erlang runtime 
+%%% system reads data from the socket as quickly as it can and passes it on as 
+%%% Erlang messages to the socket’s owner process. If a client is able to send 
+%%% data faster than the receiver can read it, it causes the message queue to 
+%%% grow until all available memory is used up. In passive mode, the owner 
+%%% process must explicitly read data off the socket, adding complexity to the 
+%%% code but providing more control over when data enters the system and at 
+%%% what rate; the built-in flow control in TCP blocks the sender 
+%%% automatically.
+%%%
+
 init([Callback, IP, Port, UserArgs]) ->
 
   % Define the BasicSockOpts.
   %
+  % NB: Without {reuseaddr, true}, the server can’t be restarted (on the same 
+  %     port) until the OS kernel has timed out on the listening socket.
+  %
   BasicSockOpts = [
-    binary,
-    {active, false},
-    {packet, http_bin},
-    {reuseaddr, true}
+    binary,             % Incoming data is delivered as binaries (not strings).
+    {active, false},    % The socket is opened in passive mode.
+    {packet, http_bin}, % Incoming data is expected to be formatted as HTTP.
+    {reuseaddr, true}   % Allows local port numbers to be reused (sooner).
     ],
   
   % If an IP is defined then add it to the BasicSockOpts.
@@ -69,7 +93,7 @@ init([Callback, IP, Port, UserArgs]) ->
   SockOpts = 
     case IP of
       undefined -> BasicSockOpts;
-      _        -> [{ip,IP} | BasicSockOpts]
+      _         -> [{ip,IP} | BasicSockOpts]
     end,
     
   % Open a new listening Socket.
@@ -78,16 +102,16 @@ init([Callback, IP, Port, UserArgs]) ->
 
   % Define the 'gws_connection_sup' init process.
   %
-  Server = {                            % The Id to identify the child specification.
-    gws_server, {                       % The apply(M, F, A) tuple to start the process.
+  Server = {             % The Id to identify the child specification.
+    gws_server, {        % The apply(M, F, A) tuple to start the process.
     gws_server, 
       start_link, 
       [Callback, LSock, UserArgs]
     },
-    temporary,                          % Child process always restarted.
-    brutal_kill,                        % Terminate child: immediately
-    worker,                             % Child is a worker process.
-    [gws_server]                        % The name of the callback module.
+    temporary,           % Child process always restarted.
+    brutal_kill,         % Terminate child: immediately
+    worker,              % Child is a worker process.
+    [gws_server]         % The name of the callback module.
     },
 
     RestartStrategy = {simple_one_for_one, 1000, 3600},
