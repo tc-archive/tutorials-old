@@ -49,14 +49,17 @@ ls(Server) ->
 get_file(Server, FileName) ->
 	Server ! {self(), {get_file, FileName}},
 	receive
-		{Server, FileData} ->
+		{Server, {ok, FileData}} ->
+			io:format("Got file data as binary?: ~p~n", [is_binary(FileData)]),
 			io:format("Got file data: ~p~n", [FileData]),
-			file:write_file(FileName, FileData, [append])
+			file:write_file(FileName, FileData)
 	end.
 
 
 put_file(Server, FileName) ->
-	FileData = file:read_file(FileName),
+	{ok, FileData} = file:read_file(FileName),
+	io:format("Got file data: ~p~n", [FileData]),
+	io:format("Got file data as binary?: ~p~n", [is_binary(FileData)]),
 	Server ! {self(), {put_file, FileName, FileData}},
 	receive
 		{Server, ok} ->

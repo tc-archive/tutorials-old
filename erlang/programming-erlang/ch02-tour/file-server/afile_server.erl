@@ -56,14 +56,17 @@ loop(Dir) ->
 			Client ! {self(), file:read_file(FullFilePath)},
 			io:format("Sent file contents to client: ~p~n", [Client]);
 
-		{Client, {write_file, FileName, FileData}} ->
+		{Client, {put_file, FileName, FileData}} when is_binary(FileData) ->
 			io:format("write_file: ~p~n", [FileName]),
 			FullFilePath = filename:join(Dir, FileName),
 			io:format("Target File: ~p~n", [FullFilePath]),
 			file:write_file(FullFilePath, FileData),
 			io:format("Wrote File: ~p -> ~p ~n", [FullFilePath, FileData]),
 			Client ! {self(), ok},
-			io:format("Obtained file contents from client: ~p~n", [Client])
+			io:format("Obtained file contents from client: ~p~n", [Client]);
+
+		{Client, X} ->
+			Client ! {self(), {error,  bad_input, X}}
 
 	end,
 
