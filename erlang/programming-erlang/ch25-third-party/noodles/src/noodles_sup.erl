@@ -1,4 +1,4 @@
--module(bertie_sup).
+-module(noodles_sup).
 
 -behaviour(supervisor).
 

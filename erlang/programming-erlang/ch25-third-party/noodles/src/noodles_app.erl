@@ -1,4 +1,4 @@
--module(bertie_app).
+-module(noodles_app).
 
 -behaviour(application).
 
@@ -10,7 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    bertie_sup:start_link().
+    noodles_sup:start_link().
 
 stop(_State) ->
     ok.
