@@ -18,6 +18,12 @@
 	start/1
 ]).
 
+-export([
+	init/3,
+	handle/2,
+	terminate/3
+]).
+
 
 %%%============================================================================
 %% Public API Implementation
@@ -58,7 +64,7 @@ start(Port) ->
 
 
 %%%============================================================================
-%%% Public API Implementation
+%%% Callback API Implementation
 %%%============================================================================
 
 %%% The module names given in the dispatcher patterns must provide three
@@ -103,7 +109,7 @@ terminate(_Reason, _Req, _State) ->
 %%
 %% @end
 %%-----------------------------------------------------------------------------
-ead_file(Path) ->
+read_file(Path) ->
 	File = ["."|binary_to_list(Path)],
 	case file:read_file(File) of
 		{ok, Bin} ->
