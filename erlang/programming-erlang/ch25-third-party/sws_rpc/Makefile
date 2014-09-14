@@ -8,4 +8,4 @@ all:
 	  -pa './deps/cowlib/ebin' \
 	  -pa './deps/cowboy/ebin' \
 	  -pa './ebin' \
-	  -s sws start
+	  -s sws_rpc start

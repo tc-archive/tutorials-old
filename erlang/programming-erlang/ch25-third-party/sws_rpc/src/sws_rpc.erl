@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 12. Sep 2014 07:09
 %%%----------------------------------------------------------------------------
--module(sws).
+-module(sws_rpc).
 
 
 %%%============================================================================
@@ -101,6 +101,7 @@ start(Port) ->
 %% @end
 %%-----------------------------------------------------------------------------
 init({tcp, http}, Req, _Opts) ->
+	io:format("init(Type:{tcp, http}, Req:~p, _Opts:~p)", [Req, _Opts]),
 	{ok, Req, undefined}.
 
 
@@ -110,13 +111,10 @@ init({tcp, http}, Req, _Opts) ->
 %% @end
 %%-----------------------------------------------------------------------------
 handle(Req, State) ->
-	% Extract the 'path' to the resource as a binary.
+	io:format("handle(Req:~p, State:~p)", [Req, State]),
 	{Path, Req1} = cowboy_req:path(Req),
-	% Read the response as a <<binary>>.
-	Response = read_file(Path),
-	% Reply
-	{ok, Req2} = cowboy_req:reply(200, [], Response, Req1),
-	{ok, Req2, State}.
+	handle(Path, Req1, State).
+
 
 
 %%-----------------------------------------------------------------------------
@@ -125,12 +123,51 @@ handle(Req, State) ->
 %% @end
 %%-----------------------------------------------------------------------------
 terminate(_Reason, _Req, _State) ->
+	io:format(
+		"terminate(_Reason:~p, _Req:~p, _State:~p)", [_Reason, _Req, _State]
+		),
 	ok.
 
 
 %%%============================================================================
 %%% Private
 %%%============================================================================
+
+
+%%-----------------------------------------------------------------------------
+%% @doc
+%%
+%% @end
+%%-----------------------------------------------------------------------------
+handle(<<"/rpc">>, Req, State) ->
+	% Parse RQ url...
+	{Args, Req1} = cowboy_req:qs_vals(Req),
+	% Parse RQ body...
+	{ok, Bin, Req2} = cowboy_req:body(Req1),
+	% Decode the JSON body to erlang terms...
+	Val = mochijson2:decode(Bin),
+	% Execute the RPC...
+	Response = do_rpc(Args, Val),
+	% Convert the ErlangTerm result to JSON...
+	Json = mochijson2:encode(Response),
+	% Send the reply..
+	{ok, Req3} = cowboy_req:reply(200, [], Json, Req2), {ok, Req3, State};
+%%
+handle(Path, Req, State) ->
+	Response = read_file(Path),
+	{ok, Req1} = cowboy_req:reply(200, [], Response, Req),
+	{ok, Req1, State}.
+
+%%-----------------------------------------------------------------------------
+%% @doc
+%%
+%% @end
+%%-----------------------------------------------------------------------------
+do_rpc([{<<"mod">>,MB},{<<"func">>,FB}], X) ->
+	Mod = list_to_atom(binary_to_list(MB)),
+	Func = list_to_atom(binary_to_list(FB)),
+	apply(Mod, Func, [X]).
+
 
 %%-----------------------------------------------------------------------------
 %% @doc
