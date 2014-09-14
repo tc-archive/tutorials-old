@@ -19,8 +19,8 @@
 ]).
 
 -export([
-	init/3,
-	handle/2,
+	init/3,       % Called when a new connection is established.
+	handle/2,     %
 	terminate/3
 ]).
 
@@ -46,17 +46,18 @@ start(Port) ->
 
 	ok = application:start(crypto),
 	ok = application:start(ranch),
+	ok = application:start(cowlib),
 	ok = application:start(cowboy),
 
 	N_acceptors = 10,
 
 	Dispatch = cowboy_router:compile([
 		%% {URIHost, list({URIPath, Handler, Opts})}
-		{'_', [{'_', simple_web_server, []}]}
+		{'_', [{'_', sws, []}]}
 		]),
 
 	cowboy:start_http(
-		my_simple_web_server,
+		my_sws,
 		N_acceptors,
 		[{port, Port}],
 		[{env, [{dispatch, Dispatch}]}]
@@ -70,9 +71,30 @@ start(Port) ->
 %%% The module names given in the dispatcher patterns must provide three
 %%% callback routines: init/3, handle/3, and terminate/2.
 
+
 %%-----------------------------------------------------------------------------
 %% @doc
+%% Handles a new connection.
 %%
+%% Params:
+%% {tcp, http}: An HTTP connection.
+%% Req        : The 'request object' context.
+%% Opts       : Passed in paramters.
+%%
+%%
+%% init/3 conventionally returns the tuple {ok, Req, State}, which causes the
+%% web server to accept the connection.
+%%
+%% Req is the request object, and State is a private state associated with the
+%% connection. If the connection was accepted, then the HTTP driver will call
+%% the function handle/2 with the request object and state that was returned
+%% from the init function.
+%%
+%% Returns
+%%
+%% {ok, Req, State},
+%%
+
 %% @end
 %%-----------------------------------------------------------------------------
 init({tcp, http}, Req, _Opts) ->
@@ -85,8 +107,11 @@ init({tcp, http}, Req, _Opts) ->
 %% @end
 %%-----------------------------------------------------------------------------
 handle(Req, State) ->
+	% Extract the 'path' to te resource as a binary.
 	{Path, Req1} = cowboy_req:path(Req),
+	% Read the response as a <<binary>>.
 	Response = read_file(Path),
+	% Reply
 	{ok, Req2} = cowboy_req:reply(200, [], Response, Req1),
 	{ok, Req2, State}.
 
