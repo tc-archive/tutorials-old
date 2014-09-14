@@ -56,7 +56,7 @@ start(Port) ->
 
 	Dispatch = cowboy_router:compile([
 		%% {URIHost, list({URIPath, Handler, Opts})}
-		{'_', [{'_', sws, []}]}
+		{'_', [{'_', sws_rpc, []}]}
 		]),
 
 	cowboy:start_http(
@@ -101,7 +101,7 @@ start(Port) ->
 %% @end
 %%-----------------------------------------------------------------------------
 init({tcp, http}, Req, _Opts) ->
-	io:format("init(Type:{tcp, http}, Req:~p, _Opts:~p)", [Req, _Opts]),
+	% io:format("init(Type:{tcp, http}, Req:~p, _Opts:~p)", [Req, _Opts]),
 	{ok, Req, undefined}.
 
 
@@ -111,7 +111,7 @@ init({tcp, http}, Req, _Opts) ->
 %% @end
 %%-----------------------------------------------------------------------------
 handle(Req, State) ->
-	io:format("handle(Req:~p, State:~p)", [Req, State]),
+	% io:format("handle(Req:~p, State:~p)", [Req, State]),
 	{Path, Req1} = cowboy_req:path(Req),
 	handle(Path, Req1, State).
 
@@ -123,9 +123,9 @@ handle(Req, State) ->
 %% @end
 %%-----------------------------------------------------------------------------
 terminate(_Reason, _Req, _State) ->
-	io:format(
-		"terminate(_Reason:~p, _Req:~p, _State:~p)", [_Reason, _Req, _State]
-		),
+	% io:format(
+	%	"terminate(_Reason:~p, _Req:~p, _State:~p)", [_Reason, _Req, _State]
+	%	),
 	ok.
 
 
@@ -144,8 +144,10 @@ handle(<<"/rpc">>, Req, State) ->
 	{Args, Req1} = cowboy_req:qs_vals(Req),
 	% Parse RQ body...
 	{ok, Bin, Req2} = cowboy_req:body(Req1),
+	io:format("Trying to decode:~n~p~n", [Bin]),
 	% Decode the JSON body to erlang terms...
 	Val = mochijson2:decode(Bin),
+	io:format("Decoded:~n~p~n", [Val]),
 	% Execute the RPC...
 	Response = do_rpc(Args, Val),
 	% Convert the ErlangTerm result to JSON...

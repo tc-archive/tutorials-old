@@ -5,4 +5,4 @@
               {applications,[kernel,stdlib]},
               {mod,{sws_rpc_app,[]}},
               {env,[]},
-              {modules,[sws_rpc,sws_rpc_app,sws_rpc_sup]}]}.
+              {modules,[echo,sws_rpc,sws_rpc_app,sws_rpc_sup]}]}.
