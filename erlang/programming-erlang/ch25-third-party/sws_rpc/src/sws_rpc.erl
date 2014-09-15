@@ -67,6 +67,13 @@ start(Port) ->
 	).
 
 
+start_from_shell([PortAsAtom]) ->
+	PortAsInt = list_to_integer(atom_to_list(PortAsAtom)),
+	start(PortAsInt).
+
+
+
+
 %%%============================================================================
 %%% Callback API Implementation
 %%%============================================================================
