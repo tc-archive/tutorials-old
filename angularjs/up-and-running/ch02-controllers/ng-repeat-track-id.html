@@ -1,4 +1,4 @@
-<html ng-app="notesApp">
+<html ng-app="ngRepeatTrackIdApp">
   <body ng-controller="MainCtrl as ctrl">
     <button ng-click="ctrl.changeNotes()">Change Notes</button>
     <br/>
@@ -33,7 +33,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
     </script>
     <script type="text/javascript">
-      angular.module('notesApp', []) .controller('MainCtrl', [function() {
+      angular.module('ngRepeatTrackIdApp', []) .controller('MainCtrl', [function() {
       var self = this; 
       var notes = [
         {id: 1, label: 'First Note', done: false, someRandom: 31431},

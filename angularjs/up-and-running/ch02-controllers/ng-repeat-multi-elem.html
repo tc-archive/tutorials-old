@@ -1,0 +1,31 @@
+<html ng-app="ngRepeatMultiElemApp">
+  <body ng-controller="MainCtrl as ctrl">
+    <table>
+      <!--
+      For each note, we want a row where we display the label of the note, followed by a 
+      second table row where we display the status of the note.
+
+      The 'ng-repeat-start' directive and the 'ng-repeat-end' directive work in conjunction
+      to spread the scope of the repeat over several elements.
+      -->
+      <tr ng-repeat-start="note in ctrl.notes">
+        <td>{{note.label}}</td>
+      </tr>
+      <tr ng-repeat-end>
+        <td>Done: {{note.done}}</td>
+      </tr>
+    </table>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('ngRepeatMultiElemApp', []) .controller('MainCtrl', [function() {
+        var self = this; 
+        self.notes = [
+          {id: 1, label: 'First Note', done: false},
+          {id: 2, label: 'Second Note', done: false},
+          {id: 3, label: 'Finished Third Note', done: true}
+        ];
+      }]);
+    </script>
+  </body>
+</html>
