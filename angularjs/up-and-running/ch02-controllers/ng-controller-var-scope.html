@@ -1,0 +1,25 @@
+<html ng-app="varScopeApp">
+  <head>
+    <title>Var Scope App</title>
+  </head>
+  <!-- Bind controller and name -->
+  <body ng-controller="MainCtrl as ctrl">
+    {{ctrl.helloMsg}} AngularJS.
+    <br/>
+    {{ctrl.goodbyeMsg}} AngularJS
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular-route.min.js"></script>
+    <script type="text/javascript">
+      angular.module('varScopeApp', ["ngRoute"]).controller(
+        'MainCtrl', [
+          function() {
+            // Variables/Functions bound to 'this' are public to the defined controller.
+            this.helloMsg = 'Hello ';
+            // A private variable.
+            var goodbyeMsg = 'Goodbye ';
+          }
+        ]
+      );
+    </script>
+  </body>
+</html>

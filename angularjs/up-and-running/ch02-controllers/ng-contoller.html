@@ -1,0 +1,23 @@
+<html ng-app="basicModController">
+  <head>
+    <title>Hello BasicModController AngularJS</title>
+  </head> 
+  <!-- Define the controller MainCtrl -->
+  <body ng-controller="MainCtrl">
+    Hello BasicModController AngularJS
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"/>
+    <script type="text/javascript">
+      angular.module('basicModController', []).controller(
+        // Define the controller 'MainCtrl'.
+        // The dependencies for the controller as string variables, and the last 
+        // argument in the array is the actual controller function...
+        'MainCtrl', [
+        function() {
+          // Controller specific code goes here...
+          console.log('MainCtrl has been created');
+          }
+        ]
+      ); // End Module
+    </script>
+  </body>
+</html>
