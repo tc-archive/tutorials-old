@@ -1,0 +1,39 @@
+<html ng-app="classApp">
+  <head>
+    <title>Notes App</title>
+    <style>
+      .done {
+        background-color: green;
+      } 
+      .pending {
+        background-color: red;
+      }
+      </style>
+  </head>
+  <body ng-controller="MainCtrl as ctrl">
+    <!-- 'ng-class' directive: Apply a CSS class. NB: Also 'ng-hide' directive. -->
+    <div ng-repeat="note in ctrl.notes" ng-class="ctrl.getNoteClass(note.done)">
+      <span class="label" ng-bind="note.label"></span>
+      <!-- 'ng-show' directive: Show/Hide an element. -->
+      <span class="assignee" ng-show="note.assignee" ng-bind="note.assignee"></span>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+    <script type="text/javascript">
+      angular.module('classApp', []).controller('MainCtrl', [function() {
+        var self = this; 
+        self.notes = [
+          {label: 'First Note', done: false, assignee: 'Shyam'}, 
+          {label: 'Second Note', done: false},
+          {label: 'Done Note', done: true},
+          {label: 'Last Note', done: false, assignee: 'Brad'}
+        ];
+        self.getNoteClass = function(status) { 
+          return {
+            done: status,
+            pending: !status
+          };
+        };
+      }]);
+    </script>
+    </body>
+    </html>
