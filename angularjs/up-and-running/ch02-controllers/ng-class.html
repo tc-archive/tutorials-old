@@ -1,6 +1,6 @@
-<html ng-app="classApp">
+<html ng-app="ngClassApp">
   <head>
-    <title>Notes App</title>
+    <title>NG Class App</title>
     <style>
       .done {
         background-color: green;
@@ -19,7 +19,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
     <script type="text/javascript">
-      angular.module('classApp', []).controller('MainCtrl', [function() {
+      angular.module('ngClassApp', []).controller('MainCtrl', [function() {
         var self = this; 
         self.notes = [
           {label: 'First Note', done: false, assignee: 'Shyam'}, 

@@ -1,0 +1,57 @@
+<html ng-app="notesApp">
+  <body ng-controller="MainCtrl as ctrl">
+    <button ng-click="ctrl.changeNotes()">Change Notes</button>
+    <br/>
+    DOM Elements change every time someone clicks
+    <!--
+    Vanilla 'ng-repeat'. This creates a new DOM element for each iterated item.
+    -->
+    <div ng-repeat="note in ctrl.notes1">
+      <!--
+      The 'ng-repeat' directive generates a hash-key for each new item by default.
+      With no tracking id defined a new id should be generated each time.
+      -->
+      {{note.$$hashKey}}
+      <span class="label">{{note.label}}</span>
+      <span class="author" ng-bind="note.done"></span>
+    </div>
+    <br/>
+    DOM Elements are reused every time someone clicks
+    <!--
+    AngularJS allows us to provide a 'tracking expression' when specifying 'ng-repeat'.
+    This allows optimisation by using the same DOM nodes to be used by refilling them.
+    -->
+    <div ng-repeat="note in ctrl.notes2 track by note.id">
+      <!--
+      The 'ng-repeat' directive generates a hash-key for each new item by default.
+      With a tracking id defined this hash should be re-used.
+      -->
+      {{note.$$hashKey}}
+      <span class="label"> {{note.label}}</span>
+      <span class="author" ng-bind="note.done"></span>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('notesApp', []) .controller('MainCtrl', [function() {
+      var self = this; 
+      var notes = [
+        {id: 1, label: 'First Note', done: false, someRandom: 31431},
+        {id: 2, label: 'Second Note', done: false},
+        {id: 3, label: 'Finished Third Note', done: true}
+      ];
+      self.notes1 = angular.copy(notes); 
+      self.notes2 = angular.copy(notes); 
+      self.changeNotes = function() {
+        notes = [
+          {id: 1, label: 'Changed Note', done: false, someRandom: 4242}, 
+          {id: 2, label: 'Second Note', done: false}, 
+          {id: 3, label: 'Finished Third Note', done: true}
+        ];
+        self.notes1 = angular.copy(notes);
+        self.notes2 = angular.copy(notes);
+      };
+      }]);
+    </script>
+    </body>
+</html>
