@@ -4,7 +4,28 @@
   </head> 
   <body ng-controller="MainCtrl as ctrl">
     <div>
-      <h2>Were do you live?</h2>
+      <h2>What is your gender?</h2>
+      <!--
+       In this example, the third option box takes a dynamic value. In this case, 
+       we assign it as part of the initialization block ('ng-init'), but in a real 
+       application, the initialization could be done from within a controller 
+       instead of in the HTML directly.
+      -->
+      <div ng-init="otherGender = 'Other'">
+        <input name="gender" type="radio" value="male"
+          ng-model="user.gender">
+          Male
+        </input>
+        <input name="gender" type="radio" value="female"
+          ng-model="user.gender">
+          Female 
+        </input>
+        <input name="gender" type="radio"
+          ng-model="user.gender" ng-value="otherGender">
+          {{otherGender}}
+        </input>
+      </div>
+      <h2>Where do you live?</h2>
       <textarea ng-model="ctrl.user.address" required></textarea>
       <h2>What are your favorite sports?</h2>
         <div ng-repeat="sport in ctrl.sports">
@@ -13,6 +34,10 @@
             <!--
             'ng-true-value'/'ng-false-value' assigning string values to 
             boolean checkbox model.
+
+            NB: Also there is an 'ng-value' directive takes an AngularJS expression, 
+            and the return value of the expression becomes the value that is assigned 
+            to the model.
             -->
             With Binding:
             <input type="checkbox" 
