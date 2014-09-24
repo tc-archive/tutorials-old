@@ -1,0 +1,42 @@
+<html ng-app="customStateApp">
+  <body ng-controller="MainCtrl as mainCtrl">
+    <h1>Hello Controllers!</h1>
+    <button ng-click="mainCtrl.open('first')">
+    Open First
+    </button>
+    <button ng-click="mainCtrl.open('second')">
+    Open Second
+    </button>
+    <div ng-switch on="mainCtrl.tab">
+      <div ng-switch-when="first">
+        <div ng-controller="SubCtrl as ctrl">
+          <h3>First tab</h3>
+          <ul>
+            <!--  ng-repeat on the list() function of the controller. -->
+            <li ng-repeat="item in ctrl.list()">
+              <span ng-bind="item.label"></span>
+            </li>
+          </ul>
+          <!--  ng-click on the add() function of the controller. -->
+          <button ng-click="ctrl.add()"> Add More Items</button>
+        </div>
+      </div>
+      <div ng-switch-when="second">
+        <div ng-controller="SubCtrl as ctrl"> <h3>Second tab</h3>
+          <ul>
+            <!--  ng-repeat on the list() function of the controller. -->
+            <li ng-repeat="item in ctrl.list()">
+              <span ng-bind="item.label"></span>
+            </li>
+          </ul>
+          <!--  ng-click on the add() function of the controller. -->
+          <button ng-click="ctrl.add()"> Add More Items</button>
+          </div>
+        </div>
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+      </script>
+      <script src="custom-state-service-app.js">
+      </script>
+  </body>
+</html>
