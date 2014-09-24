@@ -1,4 +1,7 @@
 <html ng-app="notesApp">
+  <!--
+  State loss demo! State is lost when we switch between controllers.
+  -->
   <head>
     <script
       src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
@@ -23,7 +26,7 @@
           <button ng-click="ctrl.add()">Add More Items</button> 
         </div>
       </div>
-      
+
       <div ng-switch-when="second">
         <div ng-controller="SubCtrl as ctrl"> 
           <h3>Second tab</h3>
