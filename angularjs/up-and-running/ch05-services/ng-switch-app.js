@@ -1,4 +1,5 @@
-angular.module('notesApp', []) 
+angular.module('ngSwitchApp', []) 
+
   .controller('MainCtrl', [function() {
     var self = this;
     self.tab = 'first'; 
@@ -6,16 +7,17 @@ angular.module('notesApp', [])
       self.tab = tab;
       };
     }])
-.controller('SubCtrl', [function() {
-  var self = this; 
-  self.list = [
-    {id: 1, label: 'Item 0'},
-    {id: 2, label: 'Item 1'}
-    ];
-  self.add = function() { 
-    self.list.push({
-      id: self.list.length + 1,
-      label: 'Item ' + self.list.length
-      });
-    };
-  }]);
+  
+  .controller('SubCtrl', [function() {
+    var self = this; 
+    self.list = [
+      {id: 1, label: 'Item 0'},
+      {id: 2, label: 'Item 1'}
+      ];
+    self.add = function() { 
+      self.list.push({
+        id: self.list.length + 1,
+        label: 'Item ' + self.list.length
+        });
+      };
+    }]);

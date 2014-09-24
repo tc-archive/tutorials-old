@@ -1,6 +1,8 @@
-<html ng-app="notesApp">
+<html ng-app="ngSwitchApp">
   <!--
-  State loss demo! State is lost when we switch between controllers.
+  State loss demo! State is lost when we switch between controllers and showing 
+  the use of the directive 'ag-switch'.
+
   -->
   <head>
     <script
@@ -13,9 +15,18 @@
     <h1>Hello Controllers!</h1>
     <button ng-click="mainCtrl.open('first')">Open First</button>
     <button ng-click="mainCtrl.open('second')">Open Second</button> 
+    
+    <!--
+    The 'ng-switch' directive acts like a switch statement in the HTML. It takes a variable 
+    (using the on attribute, which in this case is MainCtrl’s tab), and then, depending on 
+    the state, hides and shows elements (using the ng-switch-when attribute, used as children 
+    of the ng-switch). The ng-switch-when takes the value that the variable should take.
+    -->
     <div ng-switch on="mainCtrl.tab">
       
+      <!-- When mainCtrl.tab == "first" show this <div>... -->
       <div ng-switch-when="first">
+        <!-- This controller is created/destroyed as it is switched in/out. -->
         <div ng-controller="SubCtrl as ctrl">
           <h3>First tab</h3>
           <ul>
@@ -27,7 +38,9 @@
         </div>
       </div>
 
+      <!-- When mainCtrl.tab == "second" show this <div>... -->
       <div ng-switch-when="second">
+        <!-- This controller is created/destroyed as it is switched in/out. -->
         <div ng-controller="SubCtrl as ctrl"> 
           <h3>Second tab</h3>
           <ul>
