@@ -1,4 +1,4 @@
-<html ng-app="notesApp">
+<html ng-app="ngSubmitApp">
   <head>
     <title>Notes App</title>
   </head>
@@ -9,6 +9,10 @@
     the Submit button, hitting enter on a text field. The ng-submit gets trig‐ gered on 
     all those events, while the ng-click will only be triggered when the user clicks on 
     the button.
+
+    Notice that we did not declare a user object in the controller (that is, self.user = {}). 
+    When you use ng-model, AngularJS automatically creates the objects and keys necessary 
+    in the chain to instantiate a data-binding connection.
     -->
     <form ng-submit="ctrl.submit()">
       <input type="text" ng-model="ctrl.user.username"/>
@@ -18,7 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
     </script>
     <script type="text/javascript">
-      angular.module('notesApp', []) .controller('MainCtrl', [function() {
+      angular.module('ngSubmitApp', []) .controller('MainCtrl', [function() {
       var self = this;
       self.submit = function() {
         console.log('Logon! User with', self.user.username, self.user.password);
