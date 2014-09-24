@@ -1,0 +1,78 @@
+<!--
+  In this example, we nest a subform inside our main form, but because the HTML form 
+  element cannot be nested, we use the ng-form directive to do it. Now we can have 
+  substate within our form, evaluate quickly if each section is valid, and leverage the 
+  same binding and form states that we have looked at so far.
+-->
+<html ng-app>
+  <head>
+    <title>ngShow2App</title>
+  </head>
+  <body>
+    <form novalidate name="myForm">
+      <input 
+        name="uname"
+        type="text" class="username" placeholder="Username" 
+        ng-model="ctrl.user.username" 
+        ng-minlength="4" required
+        />
+      <input 
+        name="pwd"
+        type="password" class="password" placeholder="Password" 
+        ng-model="ctrl.user.password" 
+        required
+        />
+      <!--
+      A subform using the ng-form directive. We can give this a name to identify and 
+      grab the state of the subform.
+
+      The state of the subform can be accessed directly (profile.$invalid) or through 
+      the parent form (myForm.profile.$invalid).
+
+      Individual elements of the form can be accessed as normal (profile.firstName. 
+      $error.required).
+
+      Subforms and nested forms still affect the outer form (the myForm.$invalid is 
+      true because of the use of the required tags).
+      -->
+      <!-- This subform is validated as a composite unit. -->
+      <ng-form name="profile"> 
+        <input 
+          name="firstName"
+          type="text" placeholder="First Name" 
+          ng-model="ctrl.user.profile.firstName" 
+          required
+          />
+        <input 
+          name="middleName"
+          type="text" placeholder="Middle Name"
+          ng-model="ctrl.user.profile.middleName"
+          /> 
+        <input
+          name="lastName"
+          type="text" placeholder="Last Name" 
+          required
+          ng-model="ctrl.user.profile.lastName" 
+          />
+        <input 
+          name="dob"
+          type="date" placeholder="Date Of Birth"
+          ng-model="ctrl.user.profile.dob"
+          />
+        </ng-form>
+        <span ng-show="myForm.profile.$invalid"> 
+          Please fill out the profile information
+        </span>
+        <input 
+          type="submit" 
+          value="Submit" 
+          ng-disabled="myForm.$invalid"
+          />
+      </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+  </body>
+</html>
+
+
+
