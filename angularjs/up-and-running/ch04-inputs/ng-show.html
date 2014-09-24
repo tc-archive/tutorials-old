@@ -1,0 +1,69 @@
+<html ng-app="ngShowApp">
+  <head>
+    <title>Notes App</title>
+  </head>
+  <body ng-controller="MainCtrl as ctrl">
+    <form ng-submit="ctrl.submit()" name="myForm">
+      <span>Username:</span>
+      <!--
+      User Validation Feedback
+      1) Define a 'name' attribute.
+      2) Define an 'ng-show' directive.
+      -->
+      <input type="text"
+        name="uname"
+        ng-model="ctrl.user.username"
+        required
+        ng-minlength="4"
+        />
+      <!-- 
+      'ng-show' directive. Utilises the HTML attribute defined 'formName',  
+      'inputName', and FormController validation status.
+      The '$error' object has acces to: {invalid, valid, pristine, dirty, required} 
+      validation properties.
+      -->
+      <span ng-show="myForm.uname.$error.required">
+        This is a required field
+      </span>
+      <span ng-show="myForm.uname.$error.minlength">
+        Minimum length required is 4
+      </span>
+      <span ng-show="myForm.uname.$invalid">
+        This field is invalid
+      </span>
+      <br/>
+      <span>Password:</span>
+      <input 
+        type="password"
+        name="pwd" 
+        ng-model="ctrl.user.password"
+        required
+        />
+      <span ng-show="myForm.pwd.$error.required"> 
+        This is a required field
+      </span>
+      <br/>
+      <input 
+        type="submit"
+        value="Submit"
+        ng-disabled="myForm.$invalid"
+        />
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('ngShowApp', []) .controller('MainCtrl', [function () {
+        var self = this; 
+        self.submit = function () {
+          console.log('Logon! User with', self.user);
+        };
+      }]);
+    </script>
+  </body>
+</html>
+
+
+
+
+
+

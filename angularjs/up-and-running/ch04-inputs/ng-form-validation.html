@@ -39,3 +39,70 @@
     </script>
   </body>
 </html>
+
+<!-- Validation Input States
+
+  required
+  CSS: ng-valid-requiredorng-invalid-required 
+  
+  min
+  CSS: ng-valid-min or ng-invalid-min 
+
+  max
+  CSS: ng-valid-max or ng-invalid-max 
+
+  minlength  
+  CSS: ng-valid-minlengthorng-invalid-minlength 
+  
+  maxlength
+  CSS: ng-valid-maxlengthorng-invalid-maxlength 
+  
+  pattern
+  CSS: ng-valid-pattern or ng-invalid-pattern 
+  
+  url
+  CSS: ng-valid-url or ng-invalid-url 
+  
+  email
+  CSS: ng-valid-email or ng-invalid-email 
+  
+  date
+  CSS: ng-valid-date or ng-invalid-date
+
+  number
+  CSS: ng-valid-number or ng-invalid-number
+
+-->
+
+
+<!-- Validation Output States
+
+  When a 'named form' is specified AngularJS creates a FormController that holds the current
+  state of the form as well as some helper methods. The FormController can be accessed using
+  the form’s name. The following state is exposed.
+
+  $error
+  This field on the form houses all the individual fields and the errors on each form element 
+  We will talk more about this in the following section.
+
+  $invalid (CSS: ng-invalid)
+  AngularJS sets this state when any of the validations (required, ng-minlength, and others)
+  mark any of the fields within the form as invalid.
+
+  $valid (CSS: ng-valid)
+  The inverse of the previous state, which states that all the validations in the form are
+  currently evaluating to correct.
+
+  $pristine (CSS: ng-pristine)
+  All forms in AngularJS start with this state. This allows you to figure out if a user has
+  started typing in and modifying any of the form elements. Possible usage: disabling the 
+  reset button if a form is pristine.
+
+  $dirty (CSS: ng-dirty)
+  The inverse of$pristine, which states that the user made some changes (he can revert it, 
+  but the$dirty bit is set).
+
+  
+  Each of the states mentioned in the table (except $error) are Booleans and can be used to 
+  conditionally hide, show, disable, or enable HTML elements in the UI.
+-->
