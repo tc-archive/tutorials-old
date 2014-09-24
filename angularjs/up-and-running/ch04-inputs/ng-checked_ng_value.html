@@ -1,0 +1,54 @@
+<html ng-app="ngCheckBoxApp">
+  <head>
+    <title>Notes App</title>
+  </head> 
+  <body ng-controller="MainCtrl as ctrl">
+    <div>
+      <h2>What are your favorite sports?</h2>
+        <div ng-repeat="sport in ctrl.sports">
+          <label ng-bind="sport.label"></label>
+          <div>
+            <!--
+            'ng-true-value'/'ng-false-value' assigning string values to 
+            boolean checkbox model.
+            -->
+            With Binding:
+            <input type="checkbox" 
+              ng-model="sport.selected" 
+              ng-true-value="YES" ng-false-value="NO"
+              /> 
+          </div>
+        <div>
+        <!--
+        The 'ng-checked' directive, binds to an AngularJS expression. Whenever 
+        the value is true, AngularJS will set the checked property for the input 
+        element, and remove and unset it when the value is false.
+
+        This can be used to establish a one way binding. It will only chhange 
+        when the underlying data model changes.
+        -->
+        Using ng-checked:
+        <input type="checkbox" 
+          ng-checked="sport.selected === 'YES'"
+          />
+        </div> 
+        <div>
+          Current state: {{sport.selected}}
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('ngCheckBoxApp', []) .controller('MainCtrl', [function() {
+      var self = this; 
+      self.sports = [
+        {label: 'Basketball', selected: 'YES'},
+        {label: 'Cricket', selected: 'NO'},
+        {label: 'Soccer', selected: 'NO'},
+        {label: 'Swimming', selected: 'YES'}
+      ];
+    }]);
+    </script>
+  </body>
+</html>
