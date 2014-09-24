@@ -7,8 +7,10 @@
     <script type="text/javascript">
       angular.module('diLogServiceApp', []) .controller(
         'MainCtrl', [
-        // Inject the Angular $log Service.
+        // Define Dependency: Define the Angular $log Service as a dependency.
         '$log', 
+        // Inject Dependency: Inject the Angular $log Service into the MainCtrl 
+        // controller.
         function($log) {
           var self = this; self.logStuff = function() {
             $log.log('The button was pressed');
@@ -17,3 +19,34 @@
     </script>
   </body>
 </html>
+
+<!--
+Common AngularJS Services
+
+Some other AngularJS services that we will see or use on a common basis are:
+
+$window
+The $window service in AngularJS is nothing but a wrapper around the global win‐ dow object. The sole reason for its existence is to avoid global state, especially in tests. Instead of directly working with the window object, we can ask for and work with $window. In the unit tests, the $window service can be easily mocked out (avail‐ able for free with the AngularJS mocking library).
+
+$location
+The $location service in AngularJS allows us to interact with the URL in the browser bar, and get and manipulate its value. Any changes made to the $loca tion service get reflected in the browser, and any changes in the browser are im‐ mediately captured in the $location service. The $location service has the fol‐ lowing functions, which allow us to work with the URL:
+  
+  absUrl
+  A getter that gives us the absolute URL in the browser (called $location. absUrl()).
+
+  url
+  A getter and setter that gets or sets the URL. If we give it an argument, it will set the URL; otherwise, it will return the URL as a string.
+
+  path
+  Again, a getter and setter that sets the path of the URL. Automatically adds the forward slash at the beginning. So $location.path() would give us the current path of the application, and $location.path("/new") would set the path to /new.
+
+search
+  Sets or gets the search or query string of the current URL. Calling $loca tion.search() without any arguments returns the search parameter as an ob‐ ject. Calling $location.search("test") removes the search parameter from the URL, and calling $location.search("test", "abc"); sets the search pa‐ rameter test to abc.
+
+$http
+We will deal with $http extensively in Chapter 6, but it is the core AngularJS service used to make XHR requests to the server from the application. Using the $http
+
+
+Using the $http service, we can make GET and POST requests, set the headers and caching, and deal with server responses and failures.
+
+-->
