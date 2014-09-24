@@ -4,6 +4,8 @@
   </head> 
   <body ng-controller="MainCtrl as ctrl">
     <div>
+      <h2>Were do you live?</h2>
+      <textarea ng-model="ctrl.user.address" required></textarea>
       <h2>What are your favorite sports?</h2>
         <div ng-repeat="sport in ctrl.sports">
           <label ng-bind="sport.label"></label>
@@ -26,6 +28,9 @@
 
         This can be used to establish a one way binding. It will only chhange 
         when the underlying data model changes.
+
+        If one-way data-binding is required use 'ng-model' directive. 
+        If two-way data-binding is required use 'ng-checked' directive. 
         -->
         Using ng-checked:
         <input type="checkbox" 
