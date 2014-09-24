@@ -69,3 +69,21 @@
     </script>
   </body>
 </html>
+
+<!-- Notes
+AngularJS compares the ng-options individual values with the ng- model by reference. Thus, 
+even if the two are objects that have the same keys and values, AngularJS will not show that
+ item as selected in the drop-down unless and until they are the same object. We 
+ accomplished this in our example by using an item from the array countries to assign the
+ initial value of the model.
+
+There is a better way to accomplish this, which is through the use of the track by syntax
+with ng-options. We could have written the ng- options as:
+
+ng-options="c.label for c in ctrl.countries track by c.id"
+
+This would ensure that the object c is compared using the ID field, instead of by reference, 
+which is the default.
+-->
+
+
