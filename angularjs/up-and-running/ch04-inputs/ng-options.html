@@ -1,0 +1,71 @@
+<html ng-app="notesApp">
+  <head>
+    <title>Notes App</title>
+  </head>
+  <body ng-controller="MainCtrl as ctrl">
+    <!--
+    Here there are two select boxes, both bound to different models in the controller.
+
+    The first select element is bound to ctrl.selectedCountryId. It holds 'ids'.
+    The second select element is bound to ctrl.selectedCountry. It holds 'objects'.
+
+    Because the backing model for the two select boxes are different, changing one 
+    does not affect the value or the selection in the other drop-down.
+
+    SYNTAX: 
+    'modelValue' as 'labelValue' for 'item' in 'array'. 
+
+    You can also optionally give a grouping clause, for which the syntax would be ng- options="modelValue as labelValue group by groupValue for item in ar ray". Similar to how we specified the model and label values, we can point the groupValue at another key in the object (say, continent).
+
+    SYNTAX: 
+    'modelValue' as 'labelValue' group by 'groupValue' for 'item' in 'array'
+
+    When you use objects, the clause changes as follows: 
+
+    SYNTAX: 
+    'modelValue' as 'labelValue' group by 'groupValue' for ('key', 'value') in 'object'.
+    -->
+    <div>
+      <!--
+      This tells AngularJS to create one option for each country in the array of 
+      countries. 
+
+      SYNTAX: modelValue as labelValue for item in array. 
+
+      In this case, we tell AngularJS that our modelValue is the ID of each element, 
+      the label value is the label key of each array item, and then our typical for 
+      each loop.
+      -->
+      <select ng-model="ctrl.selectedCountryId"
+        ng-options="c.id as c.label for c in ctrl.countries">
+      </select>
+      Selected Country ID : {{ctrl.selectedCountryId}}
+    </div>
+
+    <div>
+      <!--
+      Here, when we omit the modelValue, AngularJS assumes that each item in the 
+      repeat is the actual model value, so when we select an item from the second select 
+      box, the country object (c) of that option box gets assigned to ctrl.selectedCountry.
+      -->
+      <select ng-model="ctrl.selectedCountry"
+        ng-options="c.label for c in ctrl.countries">
+      </select>
+      Selected Country : {{ctrl.selectedCountry}}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('notesApp', []) .controller('MainCtrl', [function() {
+        this.countries = [ 
+          {label: 'USA', id: 1}, 
+          {label: 'India', id: 2}, 
+          {label: 'Other', id: 3}
+        ];
+        this.selectedCountryId = 2; 
+        this.selectedCountry = this.countries[1];
+      }]);
+    </script>
+  </body>
+</html>
