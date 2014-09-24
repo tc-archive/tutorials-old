@@ -1,0 +1,19 @@
+<html ng-app="diLogServiceApp">
+  <body ng-controller="MainCtrl as mainCtrl">
+    <h1>Hello Services!</h1>
+    <button ng-click="mainCtrl.logStuff()">Log something</button>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('diLogServiceApp', []) .controller(
+        'MainCtrl', [
+        // Inject the Angular $log Service.
+        '$log', 
+        function($log) {
+          var self = this; self.logStuff = function() {
+            $log.log('The button was pressed');
+          };
+      }])
+    </script>
+  </body>
+</html>

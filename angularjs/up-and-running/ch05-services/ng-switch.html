@@ -21,6 +21,10 @@
     (using the on attribute, which in this case is MainCtrl’s tab), and then, depending on 
     the state, hides and shows elements (using the ng-switch-when attribute, used as children 
     of the ng-switch). The ng-switch-when takes the value that the variable should take.
+
+    Both of the tabs, First and Second, are using the same controller, SubCtrl. But each one 
+    has its own instance of the list variable. Adding items in one tab does not add them to 
+    the other, and vice versa.
     -->
     <div ng-switch on="mainCtrl.tab">
       
