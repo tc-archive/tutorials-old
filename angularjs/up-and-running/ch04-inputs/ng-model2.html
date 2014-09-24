@@ -1,0 +1,33 @@
+<html ng-app="ngModel2App">
+  <head>
+    <title>Notes App</title>
+  </head>
+  <body ng-controller="MainCtrl as ctrl">
+
+    <!-- username text box with ng-model for controller -->
+    <input type="text" ng-model="ctrl.username"/>
+    <!-- username text box with ng-model for controller -->
+    <input type="password" ng-model="ctrl.password"/> 
+
+    <button ng-click="ctrl.submit()">Submit</button>
+    <button ng-click="ctrl.reset()">Reset</button>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    
+    <script type="text/javascript"> 
+      angular.module('ngModel2App', []).controller('MainCtrl', [function() { 
+        var self = this;
+        // Resets the models username and password.
+        self.reset = function() {
+          self.username = "";
+          self.password = "";
+          };
+        // Simulates sending a logon request
+        self.submit = function() {
+          console.log('Logon! User with', self.username, self.password);
+          };
+      }]);
+    </script>
+  </body>
+</html>
