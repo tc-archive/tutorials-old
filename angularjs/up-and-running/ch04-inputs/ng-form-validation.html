@@ -1,0 +1,41 @@
+<html ng-app="ngFormValidationApp">
+  <head>
+    <title>Notes App</title>
+  </head>
+  <body ng-controller="MainCtrl as ctrl">
+    <form ng-submit="ctrl.submit()" name="logonForm">
+      <!-- 'ng-minlength' directive. HTML5 'required' validation tag. -->
+      <input 
+        type="text"
+        ng-model="ctrl.user.username" 
+        required
+        ng-minlength="4"
+        />
+        <!-- HTML5 'required' validation tag. -->
+      <input 
+        type="password" 
+        ng-model="ctrl.user.password" 
+        required
+        />
+      <!-- 
+      HTML5 'required' validation tag.
+      'ng-disabled' directive. Instruct the button to disable itself if the form 
+      with the name 'logonForm' is $invalid. 
+      -->
+      <input 
+        type="submit" 
+        value="Submit"
+        ng-disabled="logonForm.$invalid"
+        />
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript">
+      angular.module('ngFormValidationApp', []) .controller('MainCtrl', [function() {
+        var self = this; self.submit = function() {
+          console.log('Logon! User with', self.user);
+        };
+      }]);
+    </script>
+  </body>
+</html>
