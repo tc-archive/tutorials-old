@@ -4,6 +4,12 @@
  *
  * After it is created, all other controllers that ask for the ItemService will get the 
  * exact same instance that was returned the very first time.
+ *
+ * You should use module.factory() to define your services if:
+ *
+ * - You follow a functional style of programming.
+ * - You prefer to return functions and objects.
+ *
  */
 angular.module('customStateFactoryApp', []).
   

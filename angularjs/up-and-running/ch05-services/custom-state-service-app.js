@@ -29,6 +29,12 @@ function ItemService() {
  *
  * After it is created, all other controllers that ask for the ItemService will get the 
  * exact same instance that was returned the very first time.
+ *
+ * You should use module.service() to define your services if:
+ *
+ * - You follow a Class/OO  style of programming.
+ * - You prefer to define classes and types instead of functions and objects.
+ *
  */
  angular.module('customStateServiceApp', []).
 
