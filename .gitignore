@@ -3,6 +3,9 @@
 
 angularjs/angularjs-foundation/video-app/
 
+**/node_modules
+
+
 # Compiled source #
 ###################
 *.com
