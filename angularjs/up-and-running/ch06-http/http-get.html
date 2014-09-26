@@ -24,13 +24,22 @@
         
         self.items = [];
         
-        // An HTTP GET request. Returns a Promise wto which 
-        // success and error function handlers are defined.
+        // An HTTP GET request. Returns a Promise (which can be chained in a synchronous 
+        // programming style even though it is asynchronous) onto which success and error 
+        // function handlers are defined.
+        //
+        // response.headers : The headers for the call
+        // response.status  : The status code for the response
+        // response.config  : The configuration with which the call was made
+        // response.data    : The body of the response from the server
+        //
         $http.get('http://localhost:8000/api/note').then(
           function(response) {
+            // Handle 200 responses...
             self.items = response.data; 
           }, 
           function(errResponse) {
+            // Handle non-200 responses...
             console.error('Error while fetching notes');
           }
         );
