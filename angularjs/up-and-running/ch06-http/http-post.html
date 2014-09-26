@@ -32,7 +32,7 @@
       
       // Fetch the Todos
       var fetchTodos = function() {
-        return $http.get('/api/note').then(
+        return $http.get('http://localhost:8000/api/note').then(
           function(response) {
             self.items = response.data;
           }, 
@@ -46,10 +46,13 @@
 
       // Add a new Todo...
       self.add = function() {
-        $http.post('/api/note', self.newTodo) // POST - the new Todo to the server...
-          .then(fetchTodos)                   // THEN - fetch the new collection of Todo from the server...
+        // POST - the new Todo to the server...
+        $http.post('http://localhost:8000/api/note', self.newTodo)
+          // THEN - fetch the new collection of Todo from the server...
+          .then(fetchTodos)
+          // THEN - reset the newTodo model.
           .then(function(response) {
-            self.newTodo = {};                // THEN - reset the newTodo model.
+            self.newTodo = {};
           });
       }; 
     }]);
