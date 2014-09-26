@@ -31,7 +31,6 @@ var notes = [
 //     res.header('Access-Control-Allow-Headers', 'Content-Type');
 //     next();
 // }
-
 // app.configure(function() {
   // app.use(allowCrossDomain);
   // app.use(express.static(__dirname + '/public'));   // set the static files location /public/img will be /img for users
