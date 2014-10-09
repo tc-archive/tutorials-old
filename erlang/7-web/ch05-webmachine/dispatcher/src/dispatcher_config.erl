@@ -8,7 +8,10 @@
 -spec dispatch() -> [webmachine_dispatcher:route()].
 dispatch() ->
     lists:flatten([
-        {[], dispatcher_resource, []}
+      {[], rsrc_dispatcher, []},
+      {["noodle", "pancakes"], rsrc_dispatcher, []},
+      {["echo", '*'], rsrc_starpath, []},
+      {["bound_param", bound_param], rsrc_bound_param, []}
     ]).
 
 web_config() ->
