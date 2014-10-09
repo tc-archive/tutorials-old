@@ -1,0 +1,9 @@
+{application,dispatcher,
+             [{description,"dispatcher"},
+              {vsn,"1"},
+              {modules,[dispatcher,dispatcher_app,dispatcher_config,
+                        dispatcher_resource,dispatcher_sup]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{dispatcher_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.

@@ -1,0 +1,11 @@
+{application,wm,
+             [{description,"wm"},
+              {vsn,"1"},
+              {modules,[hello_resource,resource_hello,resource_uncertain,
+                        rsrc_404,rsrc_hello,rsrc_moved_permanently,
+                        rsrc_nonexistant,rsrc_previously_existed,
+                        uncertain_resource,wm,wm_app,wm_config,wm_sup]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{wm_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.
