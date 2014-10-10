@@ -4,7 +4,6 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 09. Oct 2014 22:47
 %%%----------------------------------------------------------------------------
 -module(petite_url_srv).
 -author("Temple").
@@ -16,7 +15,8 @@
 -export([
   start_link/0,
   get_url/1,
-  put_url/1
+  put_url/1,
+  get_latest/1
 ]).
 
 %%%============================================================================
@@ -43,6 +43,8 @@
 %%% Records and Types
 %%%============================================================================
 
+%% The state of this gen_server is a simple integer. It is incremented as
+%% each integer is used to as the next 'shortened url identifier'...
 -record(st, {next}).
 
 %%%============================================================================
@@ -59,6 +61,9 @@ get_url(Id) ->
 
 put_url(Url) ->
   gen_server:call(?SERVER, {put_url, Url}).
+
+get_latest(Count) ->
+  gen_server:call(?SERVER, {get_latest, Count}).
 
 %%%============================================================================
 %%% GenServer Callback Implementation
@@ -78,6 +83,7 @@ code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
 
 
+%% |*| - 'get_url' clause.
 handle_call({get_url, Id}, _From, State) ->
   Reply =
     case ets:lookup(?TAB, Id) of
@@ -87,10 +93,26 @@ handle_call({get_url, Id}, _From, State) ->
       {ok, Url}
     end,
     {reply, Reply, State};
+%% |*| - 'put_url' clause.
 handle_call({put_url, Url}, _From, State = #st{next=N}) ->
   Id = b36_encode(N),
   ets:insert(?TAB, {Id, Url}),
+  % Update the integer state to use the next as the next 'new shortend url'...
   {reply, {ok, Id}, State#st{next=N+1}};
+%% |*| - 'get_latest' clause.
+handle_call({get_latest, Count}, _From, State = #st{next=N}) ->
+  Start = N - 1,
+  End = max(N - Count, 0),
+  Ids = [b36_encode(I) || I <- lists:seq(Start, End, -1)],
+  Result = lists:map(
+    fun(Id) ->
+      [Record] = ets:lookup(?TAB, Id),
+      Record
+    end,
+    Ids
+  ),
+  {reply, {ok, Result}, State};
+%% |*| - Catch all clause.
 handle_call(_Request, _From, State) ->
   {stop, unknown_call, State}.
 
@@ -106,6 +128,11 @@ handle_info(_Info, State) ->
 %%% Private Functions
 %%%============================================================================
 
+%%%----------------------------------------------------------------------------
+%%% @doc
+%%% Accepts an integer and encode it to base 36.
+%%% @end
+%%%----------------------------------------------------------------------------
 b36_encode(N) ->
   integer_to_list(N, 36).
 

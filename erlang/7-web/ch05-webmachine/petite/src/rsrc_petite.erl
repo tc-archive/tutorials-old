@@ -12,5 +12,5 @@ init([]) ->
 
 -spec to_html(wrq:reqdata(), term()) -> {iodata(), wrq:reqdata(), term()}.
 to_html(ReqData, State) ->
-    {"<html><body>Hello, new world</body></html>", ReqData, State}.
+    {"<html><body>Hello! I am the Petite URL shortener!</body></html>", ReqData, State}.
 

@@ -1,11 +1,9 @@
-%%%-------------------------------------------------------------------
+%%%----------------------------------------------------------------------------
 %%% @author Temple
-%%% @copyright (C) 2014, Lateral Industries
 %%% @doc
 %%%
 %%% @end
-%%% Created : 10. Oct 2014 12:30
-%%%-------------------------------------------------------------------
+%%%----------------------------------------------------------------------------
 -module(rsrc_petite_shorten).
 -author("Temple").
 
@@ -55,8 +53,9 @@ to_text(ReqData, State) ->
 
 
 %%%============================================================================
-%%% Manual Testing
+%%% Manual Testing (Add shortened urls)
 %%%============================================================================
 
 %% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Fpragprog.com%2F'
-%% curl -i -X POST http://localhost:8080/shorten --data 'url=wobble'
+%% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Ferlang.com%2F'
+%% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Fwobble.com%2F'
