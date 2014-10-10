@@ -1,0 +1,10 @@
+{application,hello_wm,
+             [{description,"hello_wm"},
+              {vsn,"1"},
+              {modules,[hello_wm,hello_wm_app,hello_wm_config,hello_wm_sup,
+                        rsrc_hello,rsrc_moved_permanently,rsrc_nonexistant,
+                        rsrc_previously_existed]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{hello_wm_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.

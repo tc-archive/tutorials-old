@@ -1,0 +1,21 @@
+%%-*- mode: erlang -*-
+{application, dispatcher_wm,
+ [
+  {description, "dispatcher_wm"},
+  {vsn, "1"},
+  {modules, []},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  inets,
+                  crypto,
+                  mochiweb,
+                  webmachine
+                 ]},
+  {mod, { dispatcher_wm_app, []}},
+  {env, [
+      {web_ip, "0.0.0.0"},
+      {web_port, 8080}
+  ]}
+ ]}.

@@ -1,0 +1,10 @@
+{application,dispatcher_wm,
+             [{description,"dispatcher_wm"},
+              {vsn,"1"},
+              {modules,[dispatcher_wm,dispatcher_wm_app,dispatcher_wm_config,
+                        dispatcher_wm_sup,rsrc_bound_param,rsrc_dispatcher,
+                        rsrc_starpath]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{dispatcher_wm_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.

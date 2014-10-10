@@ -1,0 +1,10 @@
+{application,petite,
+             [{description,"petite"},
+              {vsn,"1"},
+              {modules,[petite,petite_app,petite_config,petite_resource,
+                        petite_sup,petite_url_srv,rsrc_petite,
+                        rsrc_petite_fetch,rsrc_petite_shorten]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{petite_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.
