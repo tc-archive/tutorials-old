@@ -13,7 +13,6 @@
 
 -export([
   init/1,
-  generate_etag/2,
   content_types_provided/2,
   to_text/2,
   to_html/2,
@@ -28,10 +27,6 @@
 
 init([]) ->
   {ok, undefined}.
-
-
-generate_etag(ReqData, State) ->
-  {ok, N} = petite_url_srv:get_last_id(), {integer_to_list(N), ReqData, State}.
 
 
 content_types_provided(ReqData, State) ->
@@ -123,7 +118,7 @@ base_url(ReqData) ->
 
 
 %%%============================================================================
-%%% Manual Testing (add shortened urls)
+%%% Manual Testing (Add shortened urls)
 %%%============================================================================
 
 %% Populate ('shorten' api)
@@ -146,30 +141,3 @@ base_url(ReqData) ->
 %% Get as 'application/json' ('latest' api)
 %%
 %% curl --header 'accept: application/json' http://localhost:8080/latest
-
-
-%%%============================================================================
-%%% Manual Testing (check cahcing)
-%%%============================================================================
-
-%% Populate ('shorten' api)
-%%
-%% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Fpragprog.com%2F'
-%% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Ferlang.com%2F'
-%% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Fwobble.com%2F'
-%%
-%%
-%%
-%% Test ETag
-%%
-%% curl -I http://localhost:8080/latest
-%%  => Etag: 2
-%%
-%% curl -i --header 'if-none-match: "1"' http://localhost:8080/latest
-%%  => Etag: 2 - No Response generated as the ETag was the same as th past request.
-%%
-%% curl -i -X POST http://localhost:8080/shorten --data 'url=https%3A%2F%2Fwibble.com%2F'
-%% curl -I --header 'if-none-match: "1"' http://localhost:8080/latest
-%%  => Etag: 3 and new Response.
-%%
-%%

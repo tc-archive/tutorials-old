@@ -1,0 +1,9 @@
+{application,cache_wm,
+             [{description,"cache_wm"},
+              {vsn,"1"},
+              {modules,[cache_wm,cache_wm_app,cache_wm_config,cache_wm_sup,
+                        rsrc_cache,rsrc_cache_wm]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{cache_wm_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.

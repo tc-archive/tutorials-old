@@ -16,8 +16,7 @@
   start_link/0,
   get_url/1,
   put_url/1,
-  get_latest/1,
-  get_last_id/0
+  get_latest/1
 ]).
 
 %%%============================================================================
@@ -66,9 +65,6 @@ put_url(Url) ->
 get_latest(Count) ->
   gen_server:call(?SERVER, {get_latest, Count}).
 
-get_last_id() ->
-  gen_server:call(?SERVER, get_last_id).
-
 %%%============================================================================
 %%% GenServer Callback Implementation
 %%%============================================================================
@@ -116,9 +112,6 @@ handle_call({get_latest, Count}, _From, State = #st{next=N}) ->
     Ids
   ),
   {reply, {ok, Result}, State};
-%% |*| - 'get_lst_id' clause.
-handle_call(get_last_id, _From, State=#st{next=N}) ->
-  {reply, {ok, N - 1}, State};
 %% |*| - Catch all clause.
 handle_call(_Request, _From, State) ->
   {stop, unknown_call, State}.

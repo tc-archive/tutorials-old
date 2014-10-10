@@ -1,0 +1,11 @@
+{application,mustache_wm,
+             [{description,"mustache_wm"},
+              {vsn,"1"},
+              {modules,[mustache_wm,mustache_wm_app,mustache_wm_config,
+                        mustache_wm_resource,mustache_wm_sup,
+                        rsrc_basic_template,rsrc_collection_template,
+                        rsrc_mustache_wm,rsrc_template_file]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{mustache_wm_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.
