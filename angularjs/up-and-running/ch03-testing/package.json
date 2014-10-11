@@ -1,6 +1,6 @@
 {
   "name": "ch03-testing",
-  "main": "server.js",
+  "main": "controller.js",
   "dependencies": {
     "express": "~4.0.0",
     "cors": "~2.4.2",
