@@ -19,7 +19,7 @@ module.exports = function(config) {
       'main/src/*.js',
       'main/test/*.js'
     ],
-    // files: [ 
+    // files: [
     //   'main/lib/angular.js',
     //   'main/lib/angular-mocks.js',
     //   'main/src/controller.js',
