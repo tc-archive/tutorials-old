@@ -13,5 +13,6 @@ angular.module('notesApp', []).controller('ListCtrl', [function() {
       unfinished: !item.done
     };
   }; 
-  
+
 }]);
+
