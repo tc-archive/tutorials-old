@@ -4,17 +4,15 @@
 %%%
 %%% @end
 %%%----------------------------------------------------------------------------
--module(rsrc_mustache_wm).
--author("Temple").
-
+-module(rsrc_auth_wm).
 
 %%%============================================================================
 %%% Webmachine Public API
 %%%============================================================================
 
 -export([
-    init/1,
-    to_html/2
+  init/1,
+  to_html/2
 ]).
 
 -include_lib("webmachine/include/webmachine.hrl").
@@ -29,5 +27,4 @@ init([]) ->
 
 -spec to_html(wrq:reqdata(), term()) -> {iodata(), wrq:reqdata(), term()}.
 to_html(ReqData, State) ->
-  {"<html><body>Hello! I is Erlang Mustache Templating Webmachine!</body></html>\n",
-    ReqData, State}.
+  {"<html><body>Hello! I is Erlang Cache Webmachine!</body></html>\n", ReqData, State}.

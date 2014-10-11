@@ -1,0 +1,10 @@
+{application,auth_wm,
+             [{description,"auth_wm"},
+              {vsn,"1"},
+              {modules,[auth_wm,auth_wm_app,auth_wm_config,auth_wm_resource,
+                        auth_wm_sup,rsrc_auth_wm,rsrc_basic_auth,
+                        rsrc_never_auth]},
+              {registered,[]},
+              {applications,[kernel,stdlib,inets,crypto,mochiweb,webmachine]},
+              {mod,{auth_wm_app,[]}},
+              {env,[{web_ip,"0.0.0.0"},{web_port,8080}]}]}.

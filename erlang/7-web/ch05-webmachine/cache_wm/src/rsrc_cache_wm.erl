@@ -27,7 +27,7 @@ init([]) ->
 
 -spec to_html(wrq:reqdata(), term()) -> {iodata(), wrq:reqdata(), term()}.
 to_html(ReqData, State) ->
-  {"<html><body>Hello! I am Erlang Webmachine!</body></html>\n", ReqData, State}.
+  {"<html><body>Hello! I is Erlang Cache Webmachine!</body></html>\n", ReqData, State}.
 
 
 
