@@ -1,9 +1,11 @@
+//-----------------------------------------------------------------------------
 describe('SimpleCtrl', function() { 
 
   // Initialise a new module...
   beforeEach(module('NavModule'));
   
-  // Initialise a new 'ctrl controller' and '$location service'  
+  // Inject a new $controller 'ctrl' and a new $location service '$loc' into 
+  // the 'NavModule'.
   var ctrl, $loc; 
   beforeEach(inject(function($controller, $location) {
     ctrl = $controller('SimpleCtrl');

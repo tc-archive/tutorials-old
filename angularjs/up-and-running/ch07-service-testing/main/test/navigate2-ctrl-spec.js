@@ -4,9 +4,9 @@ describe('SimpleCtrl2', function() {
   //
   beforeEach(module('Nav2Module'));
 
-  // For each test - Reload the controller.
+  // Inject a new $controller 'ctrl' and a new $location service '$loc' into 
+  // the 'NavModule'.  var ctrl, $loc; 
   //
-  var ctrl, $loc; 
   beforeEach(inject(function($controller, $location) {
     ctrl = $controller('SimpleCtrl2');
     $loc = $location;
