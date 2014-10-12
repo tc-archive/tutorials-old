@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------------
+// Angular Controller Tests
+//
+// NB: It is recommended that you set up all your mocks and spies before 
+// instantiating your controllers.
+//
 
 //=============================================================================
 // Inline Mock Test Example
