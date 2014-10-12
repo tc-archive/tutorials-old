@@ -1,10 +1,11 @@
 //-----------------------------------------------------------------------------
-// A server client controller module that utilises the $http service to fetch 
+// A service client controller module that utilises the $http service to fetch 
 // 'note data' from the server.
 //
-angular.module('ServerClientMod', [])
+angular.module('ServiceClientMod', [])
 
-  .controller('MainCtrl', ['$http', function($http) {
+  // .controller('MainCtrl', ['$http', function($http) {
+    .controller('ServiceClientCtrl', ['$http', function($http) {
     var self = this; 
 
     self.items = []; 

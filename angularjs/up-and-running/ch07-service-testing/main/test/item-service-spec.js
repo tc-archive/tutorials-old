@@ -28,7 +28,7 @@ describe('ItemCtrl with inline mock', function() {
     $provide.value('ItemService', mockService);
   }));
 
-  // SetUp: Inject a new $controller 'ctrl' into the 'NavModule'.
+  // SetUp: Inject a new $controller 'ctrl' into the 'ItemServiceMod'.
   //
   beforeEach(inject(function($controller) {
     ctrl = $controller('ItemCtrl');
@@ -59,7 +59,7 @@ describe('ItemCtrl With global mock', function() {
   //
   beforeEach(module('ItemServiceModMock'));
 
-  // SetUp: Inject a new $controller 'ctrl' into the 'NavModule'.
+  // SetUp: Inject a new $controller 'ctrl' into the 'ItemServiceMod'.
   //
   beforeEach(inject(function($controller) { 
     ctrl = $controller('ItemCtrl');
@@ -86,7 +86,7 @@ describe('ItemCtrl with spies', function() {
   // SetUp: Create and inject a new 'spy proxy' on the 'ItemService'. This  
   //        replaces the original service.
   //
-  // SetUp: Inject a new $controller 'ctrl' into the 'NavModule'.
+  // SetUp: Inject a new $controller 'ctrl' into the 'ItemServiceMod'.
   //
   beforeEach(inject(function($controller, ItemService) {
     // Call the 'spyOn' Jasmine function with an object as the first argument, 
@@ -132,7 +132,7 @@ describe('ItemCtrl with SpyReturn', function() {
   // SetUp: Create and inject a new 'spy proxy' on the 'ItemService'. This  
   //        replaces the original service.
   //
-  // SetUp: Inject a new $controller 'ctrl' into the 'NavModule'.
+  // SetUp: Inject a new $controller 'ctrl' into the 'ItemServiceMod'.
   //
   beforeEach(inject(function($controller, ItemService) {
     // Call the 'spyOn' Jasmine function with an object as the first argument, 
