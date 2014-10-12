@@ -13,10 +13,12 @@ describe('ItemCtrl with inline mock', function() {
   var ctrl, mockService;
 
   // SetUp: Reload the 'ItemServiceMod'.
+  //
   beforeEach(module('ItemServiceMod'));
 
   // SetUp: Use the '$provide' service to provide an 'inline mock' of the 
   //        'ItemService'. This replaces the original service.
+  //
   beforeEach(module(function($provide) {    
     mockService = {
       list: function() {
@@ -49,10 +51,12 @@ describe('ItemCtrl With global mock', function() {
   var ctrl;
 
   // SetUp: Reload the 'ItemServiceMod'.
+  //
   beforeEach(module('ItemServiceMod')); 
   
   // SetUp: Use the 'ItemServiceModMock' global mock to provide an 
   //        'ItemService'. This replaces the original service.
+  //
   beforeEach(module('ItemServiceModMock'));
 
   // SetUp: Inject a new $controller 'ctrl' into the 'NavModule'.
@@ -69,13 +73,14 @@ describe('ItemCtrl With global mock', function() {
 
 
 //=============================================================================
-// Jasmine Spy Test Example
+// Jasmine Spy Test with Actual Underlying Call Example
 //=============================================================================
 describe('ItemCtrl with spies', function() { 
 
   var ctrl, itemService;
 
   // SetUp: Reload the 'ItemServiceMod'.
+  //
   beforeEach(module('ItemServiceMod'));
 
   // SetUp: Create and inject a new 'spy proxy' on the 'ItemService'. This  
@@ -88,7 +93,8 @@ describe('ItemCtrl with spies', function() {
     // and a string with the function name that we want to hook on to as the 
     // second argument. 
     // 
-    // Here Jasmine will spy on the 'list' function of the 'ItemService'.
+    // Here Jasmine will spy on the 'list' function of the 'ItemService', and 
+    // will 'call through' to the actual underlying service.
     //
     spyOn(ItemService, 'list').andCallThrough(); 
 
@@ -99,6 +105,7 @@ describe('ItemCtrl with spies', function() {
   it('should load mocked out items', function() { 
 
     // Expect that the 'itemService.list()' functions has been called once.
+    //
     expect(itemService.list).toHaveBeenCalled();
     expect(itemService.list.callCount).toEqual(1); 
     
@@ -109,6 +116,50 @@ describe('ItemCtrl with spies', function() {
   });
 
 });
+
+
+//=============================================================================
+// Jasmine Spy Test with Mocked Underlying Call Example
+//=============================================================================
+describe('ItemCtrl with SpyReturn', function() {
+
+  var ctrl, itemService; 
+
+  // SetUp: Reload the 'ItemServiceMod'.
+  //
+  beforeEach(module('ItemServiceMod'));
+
+  // SetUp: Create and inject a new 'spy proxy' on the 'ItemService'. This  
+  //        replaces the original service.
+  //
+  // SetUp: Inject a new $controller 'ctrl' into the 'NavModule'.
+  //
+  beforeEach(inject(function($controller, ItemService) {
+    // Call the 'spyOn' Jasmine function with an object as the first argument, 
+    // and a string with the function name that we want to hook on to as the 
+    // second argument. 
+    // 
+    // Here Jasmine will spy on the 'list' function of the 'ItemService', and 
+    // will 'mock the returned data' instead of calling the actual underlying 
+    // service.
+    //
+    spyOn(ItemService, 'list').andReturn([{id: 1, label: 'Mock'}]);
+    itemService = ItemService;
+    ctrl = $controller('ItemCtrl');
+  }));
+
+  it('should load mocked out items', function() {
+    // Expect that the 'itemService.list()' functions has been called once.
+    //
+    expect(itemService.list).toHaveBeenCalled();
+    expect(itemService.list.callCount).toEqual(1);
+    expect(ctrl.items).toEqual([{id: 1, label: 'Mock'}]);
+  });
+
+});
+
+
+
 
 
 
