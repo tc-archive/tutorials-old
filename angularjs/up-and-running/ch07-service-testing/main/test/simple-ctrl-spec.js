@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-describe('Test Controller: ListCtrl', function() {
+describe('Test Controller: SimpleCtrl', function() {
 
   // Before each unit test... 
   // ... instantiate a new version of the specified 'module'.
@@ -28,7 +28,7 @@ describe('Test Controller: ListCtrl', function() {
   //
   var ctrl;
   beforeEach(inject(function($controller) {
-    ctrl = $controller('ListCtrl');
+    ctrl = $controller('SimpleCtrl');
   }));
 
   // Test the 'constructor' function sets up the correct initial state.

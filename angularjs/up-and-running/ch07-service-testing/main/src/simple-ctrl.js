@@ -3,7 +3,7 @@
 //
 angular.module('SimpleCntrlModule', [])
 
-  .controller('ListCtrl', [function() {
+  .controller('SimpleCtrl', [function() {
   
     var self = this; 
   

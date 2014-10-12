@@ -1,14 +1,14 @@
-describe('SimpleCtrl2', function() { 
+describe('NavCtrl2', function() { 
 
   // For each test - Reload the module.
   //
-  beforeEach(module('Nav2Module'));
+  beforeEach(module('NavModule2'));
 
   // Inject a new $controller 'ctrl' and a new $location service '$loc' into 
   // the 'NavModule'.  var ctrl, $loc; 
   //
   beforeEach(inject(function($controller, $location) {
-    ctrl = $controller('SimpleCtrl2');
+    ctrl = $controller('NavCtrl2');
     $loc = $location;
   }));
 

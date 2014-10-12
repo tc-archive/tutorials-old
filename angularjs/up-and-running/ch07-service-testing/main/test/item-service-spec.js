@@ -8,7 +8,7 @@
 //=============================================================================
 // Inline Mock Test Example
 //=============================================================================
-describe('ItemCtrl with inline mock', function() { 
+describe('ItemServiceCtrl with inline mock', function() { 
 
   var ctrl, mockService;
 
@@ -31,7 +31,7 @@ describe('ItemCtrl with inline mock', function() {
   // SetUp: Inject a new $controller 'ctrl' into the 'ItemServiceMod'.
   //
   beforeEach(inject(function($controller) {
-    ctrl = $controller('ItemCtrl');
+    ctrl = $controller('ItemServiceCtrl');
   }));
 
   // Test
@@ -46,7 +46,7 @@ describe('ItemCtrl with inline mock', function() {
 //=============================================================================
 // Global Mock Test Example
 //=============================================================================
-describe('ItemCtrl With global mock', function() {
+describe('ItemServiceCtrl With global mock', function() {
 
   var ctrl;
 
@@ -62,7 +62,7 @@ describe('ItemCtrl With global mock', function() {
   // SetUp: Inject a new $controller 'ctrl' into the 'ItemServiceMod'.
   //
   beforeEach(inject(function($controller) { 
-    ctrl = $controller('ItemCtrl');
+    ctrl = $controller('ItemServiceCtrl');
   }));
 
   it('should load mocked out items', function() { 
@@ -75,7 +75,7 @@ describe('ItemCtrl With global mock', function() {
 //=============================================================================
 // Jasmine Spy Test with Actual Underlying Call Example
 //=============================================================================
-describe('ItemCtrl with spies', function() { 
+describe('ItemServiceCtrl with spies', function() { 
 
   var ctrl, itemService;
 
@@ -99,7 +99,7 @@ describe('ItemCtrl with spies', function() {
     spyOn(ItemService, 'list').andCallThrough(); 
 
     itemService = ItemService;
-    ctrl = $controller('ItemCtrl');
+    ctrl = $controller('ItemServiceCtrl');
   }));
 
   it('should load mocked out items', function() { 
@@ -121,7 +121,7 @@ describe('ItemCtrl with spies', function() {
 //=============================================================================
 // Jasmine Spy Test with Mocked Underlying Call Example
 //=============================================================================
-describe('ItemCtrl with SpyReturn', function() {
+describe('ItemServiceCtrl with SpyReturn', function() {
 
   var ctrl, itemService; 
 
@@ -148,7 +148,7 @@ describe('ItemCtrl with SpyReturn', function() {
     spyOn(ItemService, 'list').andReturn([{id: 1, label: 'Mock'}]);
     
     itemService = ItemService;
-    ctrl = $controller('ItemCtrl');
+    ctrl = $controller('ItemServiceCtrl');
   }));
 
   it('should load mocked out items', function() {

@@ -25,8 +25,8 @@ angular.module('ItemServiceMod', [])
 
   }])
 
-  // Add a 'controller' (called 'ItemCtrl') for the module 
-  .controller('ItemCtrl', ['ItemService', function(ItemService) {
+  // Add a 'controller' (called 'ItemServiceCtrl') for the module 
+  .controller('ItemServiceCtrl', ['ItemService', function(ItemService) {
     var self = this;  // Capture the 'this' context on creation...
     self.items = ItemService.list();
   }]);

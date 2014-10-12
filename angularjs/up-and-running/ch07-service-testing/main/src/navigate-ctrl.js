@@ -4,7 +4,7 @@
 //
 angular.module('NavModule', [])
   
-  .controller('SimpleCtrl', ['$location', function($location) {
+  .controller('NavCtrl', ['$location', function($location) {
 
     var self = this; 
 

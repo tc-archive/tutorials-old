@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-describe('SimpleCtrl', function() { 
+describe('NavCtrl', function() { 
 
   // Initialise a new module...
   beforeEach(module('NavModule'));
@@ -8,7 +8,7 @@ describe('SimpleCtrl', function() {
   // the 'NavModule'.
   var ctrl, $loc; 
   beforeEach(inject(function($controller, $location) {
-    ctrl = $controller('SimpleCtrl');
+    ctrl = $controller('NavCtrl');
     $loc = $location;
   }));
 
