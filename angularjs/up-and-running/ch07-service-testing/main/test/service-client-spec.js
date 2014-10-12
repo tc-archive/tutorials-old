@@ -18,6 +18,7 @@ describe('ServiceClientCtrl Server Calls', function() {
   //
   beforeEach(inject(function($controller, $httpBackend) {
     mockBackend = $httpBackend;
+    // Also PUT, POST, etc. arg1: URL; arg2: Data
     mockBackend.expectGET('/api/note').respond([{id: 1, label: 'Mock'}]);
     ctrl = $controller('ServiceClientCtrl');
     // At this point, a server request will have been made...
@@ -35,6 +36,8 @@ describe('ServiceClientCtrl Server Calls', function() {
   });
 
   // TearDown: Verify there are no exceptions...
+  //
+  // NB: Good practice recomendation.
   //
   afterEach(function() {
     // Ensure that all expects set on the $httpBackend were actually called. 
