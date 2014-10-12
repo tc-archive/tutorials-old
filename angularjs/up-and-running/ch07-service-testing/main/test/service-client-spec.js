@@ -3,7 +3,7 @@
 //=============================================================================
 // Angular '$httpBackend' Mock Test Example
 //=============================================================================
-describe('ServiceClientCtrl Server Calls', function() {
+describe('ServiceClientCtrl Server Call Mock Test', function() {
 
   var ctrl, mockBackend;
 
@@ -11,8 +11,8 @@ describe('ServiceClientCtrl Server Calls', function() {
   //
   beforeEach(module('ServiceClientMod'));
  
-  // SetUp: Create and inject a new '$httpBackend' to mock the 'ServiceClientCtrl'.   
-  //        This replaces the original service.
+  // SetUp: Create and inject a new '$httpBackend' to mock the 
+  //        'ServiceClientCtrl'. This replaces the original service.
   //
   // SetUp: Inject a new $controller 'ctrl' into the 'ServiceClientMod'.
   //
@@ -40,7 +40,7 @@ describe('ServiceClientCtrl Server Calls', function() {
   // NB: Good practice recomendation.
   //
   afterEach(function() {
-    // Ensure that all expects set on the $httpBackend were actually called. 
+    // Ensure that all 'expects' set on the $httpBackend were actually called. 
     mockBackend.verifyNoOutstandingExpectation();
     // Ensure that all requests to the server have actually responded (using 
     // flush()) .

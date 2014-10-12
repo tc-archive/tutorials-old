@@ -4,13 +4,16 @@
 //
 angular.module('ServiceClientMod', [])
 
-  // .controller('MainCtrl', ['$http', function($http) {
-    .controller('ServiceClientCtrl', ['$http', function($http) {
+  // The 'ServiceClientCtrl'.
+  //
+  .controller('ServiceClientCtrl', ['$http', function($http) {
     var self = this; 
 
     self.items = []; 
     self.errorMessage = '';
 
+    // The 'embedded 'NotesService'.
+    //
     $http.get('/api/note').then(
       function(response) {
         // Success Handler - Save the returned data to the ctrl state.
