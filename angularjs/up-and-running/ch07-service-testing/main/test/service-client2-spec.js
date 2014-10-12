@@ -6,6 +6,10 @@ describe('ServiceClientMod2 Integration Test', function() {
 
   var ctrl, mockBackend; 
 
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
+
   // SetUp: Reload the 'ServiceClientMod2'.
   //
   beforeEach(module('ServiceClientMod2'));
@@ -22,9 +26,10 @@ describe('ServiceClientMod2 Integration Test', function() {
     // At this point, a server request will have been made
   }));
 
-
+  //---------------------------------------------------------------------------
   // Tests
-  //
+  //--------------------------------------------------------------------------- 
+
   it('should handle error while loading items', function() { 
 
     // Initially, before the server responds, the items should be empty.
@@ -38,8 +43,11 @@ describe('ServiceClientMod2 Integration Test', function() {
     // and check the error message...
     expect(ctrl.errorMessage).toEqual('Not Found');
   
-    });
+  });
 
+  //---------------------------------------------------------------------------
+  // TearDown
+  //---------------------------------------------------------------------------
   // TearDown: Verify there are no exceptions...
   //
   // NB: Good practice recomendation.
@@ -52,6 +60,9 @@ describe('ServiceClientMod2 Integration Test', function() {
     // Ensure that all requests to the server have actually responded 
     // (using flush()) 
     mockBackend.verifyNoOutstandingRequest();
+
   }); 
 
 });
+
+

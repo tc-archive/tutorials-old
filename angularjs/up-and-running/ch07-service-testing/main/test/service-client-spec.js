@@ -7,6 +7,10 @@ describe('ServiceClientCtrl Server Call Mock Test', function() {
 
   var ctrl, mockBackend;
 
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
+
   // SetUp: Reload the 'ServiceClientMod'.
   //
   beforeEach(module('ServiceClientMod'));
@@ -24,8 +28,10 @@ describe('ServiceClientCtrl Server Call Mock Test', function() {
     // At this point, a server request will have been made...
   }));
 
+  //---------------------------------------------------------------------------
   // Tests
-  //
+  //---------------------------------------------------------------------------
+
   it('should load items from server', function() {
     // Initially, before the server responds, the items should be empty.
     expect(ctrl.items).toEqual([]);
@@ -34,6 +40,10 @@ describe('ServiceClientCtrl Server Call Mock Test', function() {
     // Now retrieve and test the set-up response...
     expect(ctrl.items).toEqual([{id: 1, label: 'Mock'}]);
   });
+
+  //---------------------------------------------------------------------------
+  // TearDown
+  //---------------------------------------------------------------------------
 
   // TearDown: Verify there are no exceptions...
   //

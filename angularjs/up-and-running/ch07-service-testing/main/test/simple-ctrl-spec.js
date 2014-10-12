@@ -1,6 +1,12 @@
 //-----------------------------------------------------------------------------
 describe('Test Controller: SimpleCtrl', function() {
 
+  var ctrl;
+
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
+
   // Before each unit test... 
   // ... instantiate a new version of the specified 'module'.
   //
@@ -26,10 +32,13 @@ describe('Test Controller: SimpleCtrl', function() {
   // Use the$controllerservice to create an instance of the 'ListCtrl' by 
   // passing the name of the controller as a string to the $controller service, 
   //
-  var ctrl;
   beforeEach(inject(function($controller) {
     ctrl = $controller('SimpleCtrl');
   }));
+
+  //---------------------------------------------------------------------------
+  // Tests
+  //--------------------------------------------------------------------------- 
 
   // Test the 'constructor' function sets up the correct initial state.
   //

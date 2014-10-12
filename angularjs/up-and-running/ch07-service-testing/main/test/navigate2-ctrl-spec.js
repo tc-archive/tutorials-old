@@ -1,5 +1,9 @@
 describe('NavCtrl2', function() { 
 
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
+
   // For each test - Reload the module.
   //
   beforeEach(module('NavModule2'));
@@ -12,8 +16,10 @@ describe('NavCtrl2', function() {
     $loc = $location;
   }));
 
-  // Test 1
-  //
+  //---------------------------------------------------------------------------
+  // Tests
+  //--------------------------------------------------------------------------- 
+
   it('should navigate away from the current page', function() {
     expect($loc.path()).toEqual('');
     $loc.path('/here');
@@ -21,8 +27,6 @@ describe('NavCtrl2', function() {
     expect($loc.path()).toEqual('/some/where');
   });
 
-  // Test 2
-  //
   it('should navigate away from the current page', function() {
     expect($loc.path()).toEqual('');
     $loc.path('/there');

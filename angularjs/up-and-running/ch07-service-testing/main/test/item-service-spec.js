@@ -4,13 +4,16 @@
 // NB: It is recommended that you set up all your mocks and spies before 
 // instantiating your controllers.
 //
-
 //=============================================================================
 // Inline Mock Test Example
 //=============================================================================
 describe('ItemServiceCtrl with inline mock', function() { 
 
   var ctrl, mockService;
+
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
 
   // SetUp: Reload the 'ItemServiceMod'.
   //
@@ -34,11 +37,13 @@ describe('ItemServiceCtrl with inline mock', function() {
     ctrl = $controller('ItemServiceCtrl');
   }));
 
-  // Test
+  //---------------------------------------------------------------------------
+  // Tests
+  //--------------------------------------------------------------------------- 
+
   it('should load mocked out items', function() {
     expect(ctrl.items).toEqual([{id: 1, label: 'Mock'}]);
   }); 
-
 
 });
 
@@ -49,6 +54,10 @@ describe('ItemServiceCtrl with inline mock', function() {
 describe('ItemServiceCtrl With global mock', function() {
 
   var ctrl;
+
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
 
   // SetUp: Reload the 'ItemServiceMod'.
   //
@@ -65,6 +74,10 @@ describe('ItemServiceCtrl With global mock', function() {
     ctrl = $controller('ItemServiceCtrl');
   }));
 
+  //---------------------------------------------------------------------------
+  // Tests
+  //--------------------------------------------------------------------------- 
+
   it('should load mocked out items', function() { 
     expect(ctrl.items).toEqual([{id: 1, label: 'Mock'}]);
   }); 
@@ -78,6 +91,10 @@ describe('ItemServiceCtrl With global mock', function() {
 describe('ItemServiceCtrl with spies', function() { 
 
   var ctrl, itemService;
+
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
 
   // SetUp: Reload the 'ItemServiceMod'.
   //
@@ -102,6 +119,10 @@ describe('ItemServiceCtrl with spies', function() {
     ctrl = $controller('ItemServiceCtrl');
   }));
 
+  //---------------------------------------------------------------------------
+  // Tests
+  //--------------------------------------------------------------------------- 
+
   it('should load mocked out items', function() { 
 
     // Expect that the 'itemService.list()' functions has been called once.
@@ -124,6 +145,10 @@ describe('ItemServiceCtrl with spies', function() {
 describe('ItemServiceCtrl with SpyReturn', function() {
 
   var ctrl, itemService; 
+
+  //---------------------------------------------------------------------------
+  // SetUp
+  //---------------------------------------------------------------------------
 
   // SetUp: Reload the 'ItemServiceMod'.
   //
@@ -151,6 +176,10 @@ describe('ItemServiceCtrl with SpyReturn', function() {
     ctrl = $controller('ItemServiceCtrl');
   }));
 
+  //---------------------------------------------------------------------------
+  // Tests
+  //--------------------------------------------------------------------------- 
+
   it('should load mocked out items', function() {
     // Expect that the 'itemService.list()' functions has been called once.
     //
@@ -160,11 +189,6 @@ describe('ItemServiceCtrl with SpyReturn', function() {
   });
 
 });
-
-
-
-
-
 
 
 
