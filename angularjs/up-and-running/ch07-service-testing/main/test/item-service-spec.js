@@ -28,3 +28,21 @@ describe('ItemCtrl with inline mock', function() {
 
 
 });
+
+
+describe('ItemCtrl With global mock', function() {
+
+  var ctrl; 
+  beforeEach(module('ItemServiceMod')); 
+  
+  beforeEach(module('ItemServiceModMock'));
+  
+  beforeEach(inject(function($controller) { 
+    ctrl = $controller('ItemCtrl');
+  }));
+
+  it('should load mocked out items', function() { 
+    expect(ctrl.items).toEqual([{id: 1, label: 'Mock'}]);
+  }); 
+
+});
