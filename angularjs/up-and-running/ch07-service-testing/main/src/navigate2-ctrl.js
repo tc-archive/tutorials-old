@@ -1,3 +1,7 @@
+//-----------------------------------------------------------------------------
+// A (two method) controller module for altering the browser url navigation 
+// path...
+//
 angular.module('Nav2Module', [])
 
   .controller('SimpleCtrl2', ['$location', '$window',
@@ -14,5 +18,5 @@ angular.module('Nav2Module', [])
         $location.path('/some/where/else');
       };
     }
-    
+
   ]);

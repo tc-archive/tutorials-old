@@ -1,4 +1,6 @@
 //-----------------------------------------------------------------------------
+// A controller module for an 'Item Service'...
+//
 angular.module('ItemServiceMod', [])
   
   // Define a 'factory' for the module that can create an 'ItemService' 

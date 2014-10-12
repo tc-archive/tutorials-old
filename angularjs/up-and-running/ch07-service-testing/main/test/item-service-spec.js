@@ -143,7 +143,10 @@ describe('ItemCtrl with SpyReturn', function() {
     // will 'mock the returned data' instead of calling the actual underlying 
     // service.
     //
+    // NB: It is recommended to mock before creating the controller.
+    //
     spyOn(ItemService, 'list').andReturn([{id: 1, label: 'Mock'}]);
+    
     itemService = ItemService;
     ctrl = $controller('ItemCtrl');
   }));
