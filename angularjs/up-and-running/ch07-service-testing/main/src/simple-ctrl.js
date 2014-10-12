@@ -1,4 +1,4 @@
-angular.module('CntrlModule', []).controller('ListCtrl', [function() {
+angular.module('SimpleCntrlModule', []).controller('ListCtrl', [function() {
   
   var self = this; 
   

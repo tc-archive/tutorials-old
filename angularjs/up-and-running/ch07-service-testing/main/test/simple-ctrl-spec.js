@@ -11,7 +11,7 @@ describe('Test Controller: ListCtrl', function() {
   // This module function is one of the helper methods that the 
   // angular-mocks.js AngularJS library file provides, as well as many others.
   //
-  beforeEach(module('CntrlModule'));
+  beforeEach(module('SimpleCntrlModule'));
 
   // Before each unit test... 
   // ... instantiate a new instance of the 'controller'.
