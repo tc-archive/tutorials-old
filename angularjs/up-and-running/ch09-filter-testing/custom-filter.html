@@ -11,7 +11,7 @@
         Start Time (DateTime): {{ctrl.startTime | date:'medium'}}
       </div>
       <div>
-        Start Time (Our filter): {{ctrl.startTime | timeAgo}
+        Start Time (Our filter): {{ctrl.startTime | timeAgo:false}}
       </div>
       <div>
         someTimeAgo : {{ctrl.someTimeAgo | date:'short'}}
@@ -69,10 +69,14 @@
       var ONE_DAY = ONE_HOUR * 24;
       var ONE_MONTH = ONE_DAY * 30;
 
-      return function(ts) {
+      return function(ts, optShowSecondsMessage) {
 
         var currentTime = new Date().getTime();
         var diff = currentTime - ts;
+
+        if (optShowSecondsMessage !== false) {
+          optShowSecondsMessage = true;
+        }
 
         if (diff < ONE_MINUTE) {
           return (diff / 1000).toFixed(4) + ' seconds ago';
