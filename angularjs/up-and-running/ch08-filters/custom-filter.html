@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>Custom Filters in Action</title>
+  </head>
+  <body ng-app="CustomFilterMod">
+    <div ng-controller="CustomFilterCtrl as ctrl">
+      <div>
+        Start Time (Timestamp): {{ctrl.startTime}}
+      </div>
+      <div>
+        Start Time (DateTime): {{ctrl.startTime | date:'medium'}}
+      </div>
+      <div>
+        Start Time (Our filter): {{ctrl.startTime | timeAgo}}
+      </div>
+      <div>
+        someTimeAgo : {{ctrl.someTimeAgo | date:'short'}}
+      </div>
+      <div>
+        someTimeAgo (Our filter): {{ctrl.someTimeAgo | timeAgo}}
+      </div>
+    </div>
+    <script 
+      src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript"> angular.module('CustomFilterMod', [])
+
+    // Controller definition.
+    //
+    .controller('CustomFilterCtrl', [function() {
+      this.startTime = new Date().getTime();
+      this.someTimeAgo = new Date().getTime() - (1000*60*60*4); 
+    }])
+
+    // Filter definition.
+    //
+    // A filter is defined in a very similar manner to controllers and services. 
+    // Any services required by the filter can be injected into it.
+    //
+    // Every filter returns a function, which is what gets called for every 
+    // usage of the filter. This function gets called with the value that 
+    // the filter is being applied on.
+    //
+    .filter('timeAgo', [function() {
+
+      var ONE_MINUTE = 1000 * 60;
+      var ONE_HOUR = ONE_MINUTE * 60;
+      var ONE_DAY = ONE_HOUR * 24;
+      var ONE_MONTH = ONE_DAY * 30;
+
+      return function(ts) {
+
+        var currentTime = new Date().getTime();
+        var diff = currentTime - ts;
+
+        if (diff < ONE_MINUTE) {
+          return (diff / 1000).toFixed(4) + ' seconds ago';
+        } 
+        else if (diff < ONE_HOUR) {
+          return (diff / ONE_MINUTE).toFixed(2) + ' minutes ago';
+        } 
+        else if (diff < ONE_DAY) {
+          console.log("Hours: " + (diff / ONE_HOUR));
+          return (diff / ONE_HOUR).toFixed(1) + ' hours ago';
+        } 
+        else if (diff < ONE_MONTH) {
+          return (diff / ONE_DAY).toFixed(1) + 'days ago';
+        }
+        else {
+          return (diff / MONTH).toFixed(1) + 'months ago'; 
+        }
+      };
+    }]);
+    </script>
+  </body>
+</html>
+
+
