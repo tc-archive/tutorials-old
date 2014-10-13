@@ -41,6 +41,14 @@
     // usage of the filter. This function gets called with the value that 
     // the filter is being applied on.
     //
+    // Optional arguments, (like the currency/number filter) can be specified 
+    // as additional parameters to the function we return:
+    //
+    // Example: 
+    //  Filter Expressions : {{ctrl.startTime | timeAgo:true,..., x:y}}
+    //  Filter function    : return function(ts, ignoreSeconds,..., x)
+    //
+    //
     .filter('timeAgo', [function() {
 
       var ONE_MINUTE = 1000 * 60;
