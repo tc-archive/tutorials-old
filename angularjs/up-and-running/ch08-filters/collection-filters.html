@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Collection Filters in Action</title>
+  </head>
+  <body ng-app="ColFilterMod">
+    <div ng-controller="ColFilterCtrl as ctrl">
+      <!-- 
+      Clicking on each button chnages between each filer mode.
+      The default is 'string'.
+      -->
+      <button ng-click="ctrl.currentFilter = 'string'"> 
+        Filter with String
+      </button>
+      <button ng-click="ctrl.currentFilter = 'object'">
+        Filter with Object
+      </button>
+      <button ng-click="ctrl.currentFilter = 'function'">
+        Filter with Function
+      </button>
+      Filter Text
+      <input type="text" ng-model="ctrl.filterOptions['string']"/>
+      Show Done Only
+      <input type="checkbox" ng-model="ctrl.filterOptions['object'].done">
+      <ul>
+        <li ng-repeat="note in ctrl.notes 
+          | filter:ctrl.filterOptions[ctrl.currentFilter] 
+          | orderBy:ctrl.sortOrder 
+          | limitTo:5">
+          {{note.label}} - {{note.type}} - {{note.done}}
+        </li>
+      </ul>
+    </div>
+    <script 
+      src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+    </script>
+    <script type="text/javascript"> angular.module('ColFilterMod', [])
+
+      .controller('ColFilterCtrl', [function() {
+
+        // An array of notes, with three keys (label, type, and done).
+        this.notes = [
+          {label: 'FC Todo', type: 'chore', done: false},
+          {label: 'FT Todo', type: 'task', done: false},
+          {label: 'FF Todo', type: 'fun', done: true},
+          {label: 'SC Todo', type: 'chore', done: false},
+          {label: 'ST Todo', type: 'task', done: true},
+          {label: 'SF Todo', type: 'fun', done: true},
+          {label: 'TC Todo', type: 'chore', done: false},
+          {label: 'TT Todo', type: 'task', done: false},
+          {label: 'TF Todo', type: 'fun', done: false}
+        ];
+
+        // Default sort order, type ascending, label descending.
+        this.sortOrder = ['+type', '-label'];
+
+        // Filter Options. An objecy containing various filter.
+        //
+        // This set-up contains three filter (one of each type) that are 
+        // controlled by the associated html buttons.
+        //
+        this.filterOptions = {
+          // A 'string' collection filter.
+          "string": '',
+          // An 'object' collection filter.
+          "object": {done: false, label: 'C'},
+          // A 'function' collection filter.
+          "function": function(note) {
+            return note.type === 'task' && note.done === false; 
+          }
+        };
+
+        // Set the initial filter be the 'string' filter.
+        this.currentFilter = 'string'; }]);
+
+      </script>
+  </body>
+</html>
