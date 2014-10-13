@@ -34,7 +34,7 @@
 
     // Filter definition.
     //
-    // A filter is defined in a very similar manner to controllers and services. 
+    // A filter is defined in a very similar manner to controllers and services.//
     // Any services required by the filter can be injected into it.
     //
     // Every filter returns a function, which is what gets called for every 
@@ -48,6 +48,19 @@
     //  Filter Expressions : {{ctrl.startTime | timeAgo:true,..., x:y}}
     //  Filter function    : return function(ts, ignoreSeconds,..., x)
     //
+    //
+    // Things to Remember About Filters
+    //
+    // #1. View filters are executed every digest cycle.
+    //     - They are re-evaluated every time a digest cycle happens.
+    //       Can cause excessive computation as data grows.
+    //
+    // #2. Filters should be blazingly fast.
+    //     - Should not be slow (nano -seconds). No DOM manipulation. No 
+    //       asynchronous calls.
+    //
+    // #3. Prefer filters in services and controllers for optimization.
+    //     - Control when the filters are executed.
     //
     .filter('timeAgo', [function() {
 
