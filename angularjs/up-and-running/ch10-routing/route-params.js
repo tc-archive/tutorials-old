@@ -18,6 +18,12 @@ angular.module('resolveApp', ['ngRoute'])
       // This route tells the AngularJS routing that there will be a value 
       // after the '/detail' in the URL that needs to be picked up, stored, 
       // and provided as detId to the controller.
+      //
+      // Example:
+      //
+      //  URL          : '/detail/123?q=MySearchParam'
+      //  $routeParams : {detId: '123', q: 'MySearchParam'}
+      //
       .when(
         '/detail/:detId', {
           template: '<h2>' +
