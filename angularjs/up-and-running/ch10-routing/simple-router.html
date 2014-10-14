@@ -22,7 +22,8 @@
       angular.module('SimpleRouteMod', ['ngRoute'])
         // Routes are configured in the config element...
         // They can be invoked via 'anchors' or directly 
-        // manipulating the url in the browser...
+        // manipulating the url in the browser... browser 
+        // history is also handled...
         .config(['$routeProvider', function($routeProvider) {
           // Routes are added to the $routeProvider within 
           // when/otherwise functions.
@@ -39,5 +40,92 @@
           });
         }]);
     </script>
+    <!--
+    
+    |*| : $routeProvider.when() ***********************************************
+
+    $routeProvider.when(url, {
+      template: string,
+      templateUrl: string,
+      controller: string, function or array, 
+      controllerAs: string,
+      resolve: object<key, function>
+    });
+
+
+    -*- 'url' -*- 
+
+    The url to be matched. Can be a 'RegEx', and also contain pattern matched 
+    variable tokens that can be picked out from the '$routeParams' service. 
+
+      Eg: '/path', '/path/:itemId' 
+
+
+    -*- template' -*- 
+
+    An html template can be directly embedded if required.
+
+
+    -*- templateUrl' -*- 
+
+    The server relative path to an html template file.
+
+
+  -*- controller' -*- 
+
+    The controller attached to the route.
+
+      Eg: $routeProvider.when('/test', {
+            template: '<h1>Test Route</h1>', 
+            controller: ['$window', function($window) {
+              $window.alert('Test route has been loaded!');
+            }]
+          });
+
+
+    -*- controllerAs' -*- 
+
+    Define the 'name' of the controller/ The following are equivilent:
+
+      Eg: $routeProvider.when('/test', {
+            template: '<h1>Test Route</h1>',
+            controller: 'MyCtrl as ctrl'
+          });
+
+          $routeProvider.when('/test', {
+            template: '<h1>Test Route</h1>',
+            controller: 'MyCtrl',
+            controllerAs: 'ctrl'
+          });
+
+
+    -*-redirectTo' -*-
+
+    Redirect to a specified route.
+
+      Eg: $routeProvider.when('/new', {
+            template: '<h1>New Route</h1>'
+          });
+
+          $routeProvider.when('/old', {
+            redirectTo: '/new'
+          });
+
+
+    -*- resolve  -*-
+
+    The final configuration, and most versatile and complex of the route 
+    configuration options, is the resolve. In the next section, we cover 
+    how to implement resolves. At a conceptual level, resolves are a way 
+    of executing and finishing asynchronous tasks before a particular 
+    route is loaded. This is a great way to check if the user is logged 
+    in and has authorization and permissions, and even preload some data 
+    before a controller and route are loaded into the view.
+    
+    -->
   </body>
 </html>
+
+
+
+
