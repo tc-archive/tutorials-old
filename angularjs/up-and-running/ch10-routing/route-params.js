@@ -15,6 +15,9 @@ angular.module('resolveApp', ['ngRoute'])
         '/', {
           template: '<h1>Main Page</h1>'
         })
+      // This route tells the AngularJS routing that there will be a value 
+      // after the '/detail' in the URL that needs to be picked up, stored, 
+      // and provided as detId to the controller.
       .when(
         '/detail/:detId', {
           template: '<h2>' +
