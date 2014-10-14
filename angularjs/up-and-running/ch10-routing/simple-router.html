@@ -29,11 +29,11 @@
           $routeProvider.when('/', {
             template: '<h5>This is the default route</h5>'
           })
-          //
+          // Defined by 'branch' and 'template'.
           .when('/second', {
             template: '<h5>This is the second route</h5>'
           })
-          //
+          // Define a default via a redirect.
           .otherwise({
             redirectTo: '/'
           });
