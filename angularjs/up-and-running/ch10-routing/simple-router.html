@@ -15,23 +15,29 @@
       <li><a href="#/second">Second Route</a></li>
       <li><a href="#/asdasdasd">Nonexistent Route</a></li>
     </ul>
+    <!-- ng-View defines where the biew templates are rendered. -->
     <div ng-view></div>
     <script type="text/javascript"> 
-
+      // Inject the 'ngRoute' module...
       angular.module('SimpleRouteMod', ['ngRoute'])
-
+        // Routes are configured in the config element...
+        // They can be invoked via 'anchors' or directly 
+        // manipulating the url in the browser...
         .config(['$routeProvider', function($routeProvider) {
+          // Routes are added to the $routeProvider within 
+          // when/otherwise functions.
           $routeProvider.when('/', {
             template: '<h5>This is the default route</h5>'
           })
-
-        .when('/second', {
+          //
+          .when('/second', {
             template: '<h5>This is the second route</h5>'
           })
-
-        .otherwise({redirectTo: '/'});
-
-      }]);
+          //
+          .otherwise({
+            redirectTo: '/'
+          });
+        }]);
     </script>
   </body>
 </html>
