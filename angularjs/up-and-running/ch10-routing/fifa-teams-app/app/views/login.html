@@ -1,4 +1,15 @@
 <!-- File: chapter10/routing-example/app/views/login.html -->
+<!--
+The login.html file displays a simple form with two fields for the username 
+and pass word. It defines the controller using the 'ng-controller' directive 
+directly, and uses the 'ng-submit' to trigger the login call from the 
+controller. 
+
+It also has a section that shows the errorMessage if available.
+
+NB: A 'partial' template.
+
+-->
 <div class="login-container"
      ng-controller="LoginCtrl as loginCtrl">
   <div class="alert alert-danger"

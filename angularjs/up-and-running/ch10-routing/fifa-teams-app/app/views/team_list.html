@@ -1,24 +1,23 @@
 <!-- File: chapter10/routing-example/app/views/teams_list.html -->
 <!-- 
-A 'partial' template.
-
-The ng-href directive is used whenever we have dynamic URLs. While we can use 
-a statement like href="{{ctrl.myUrl}}", it is recommended that we use ng-href 
-instead.
+The 'ng-href' directive is used whenever we have dynamic URLs. While we can 
+use a statement like href="{{ctrl.myUrl}}", it is recommended that we use 
+'ng-href' instead.
 
 This is because when the application initially loads, there is a small window 
-of time when the href has the value {{ctrl.myUrl}} be‐ fore AngularJS kicks 
-in and replaces the content. To avoid this, we use ng-href, which initially 
-leaves the href as blank and places the value of ctrl.myUrl in href after 
+of time when the href has the value {{ctrl.myUrl}} before AngularJS kicks 
+in and replaces the content. To avoid this, we use 'ng-href', which initially 
+leaves the href as blank and places the value of 'ctrl.myUrl' in href after 
 AngularJS is up and running.
 
-Similarly, the ng-src directive is used for images that need dynam‐ ic URLs. 
+Similarly, the 'ng-src' directive is used for images that need dynamic URLs. 
 If we use src="{{ctrl.myImg}}" in our HTML, the HTML immediately makes a call 
 to fetch {{ctrl.myImg}} as an image from the server, which will obviously 
-throw an error. Thus, the ng-src directive allows AngularJS to kick in and set 
-the src tag on the img after the value has been calculated. Thus it prevents 
-an extra erro‐ neous request.
+throw an error. Thus, the 'ng-src' directive allows AngularJS to kick in and 
+set the src tag on the img after the value has been calculated. Thus it 
+prevents an extra erro‐ neous request.
 
+NB: A 'partial' template.
 -->
 <div class="team-list-container">
   <!-- 'ng-repeat' : Repeat for each item in the collection. -->
