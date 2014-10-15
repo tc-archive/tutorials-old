@@ -17,9 +17,21 @@ angular.module('fifaApp', ['ngRoute'])
       templateUrl: 'views/team_list.html',
       controller: 'TeamListCtrl as teamListCtrl'
     })
+    // The '/login' route loads a 'templateUrl'. The reason it doesn’t specify  
+    // a controller in the route configuration is because the HTML defines the 
+    // controller using the 'ng-controller' syntax. For each route, we can 
+    // decide to include the controller directly in the HTML or using the 
+    // controller configuration in the route.
+    //
     .when('/login', {
       templateUrl: 'views/login.html'
     })
+    // The largest and most complex of the routes is the Team Detail route. 
+    // It is defined as '/team/:code'. This tells AngularJS that as part of the 
+    // URL, take everything after '/team/' and make it available to the 
+    // controller in case it requires it as the variable code in 
+    // '$routeParams'.
+    //
     .when('/team/:code', {
       templateUrl: 'views/team_details.html',
       controller:'TeamDetailsCtrl as teamDetailsCtrl',
@@ -36,7 +48,14 @@ angular.module('fifaApp', ['ngRoute'])
         }]
       }
     });
+    // Lastly, there is an otherwise route, which redirects the user to the 
+    // '/ 'route if the user enters a URL that the route configuration 
+    // doesn’t recognize.
+    //
     $routeProvider.otherwise({
       redirectTo: '/'
     });
   });
+
+
+
