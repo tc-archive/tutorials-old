@@ -14,4 +14,4 @@ site.
 • There are SaaS implementations that take the pain out of indexing your SPA,
   like BromBone, Prerender.io, and GetSeoJS, which offer all of these in a 
   single package at a convenient price if you don’t want to implement and 
-  maintain your own version.
+  maintain your own version. 
