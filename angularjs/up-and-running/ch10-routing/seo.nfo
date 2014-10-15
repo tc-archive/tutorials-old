@@ -1,0 +1,17 @@
+*** SEO and SPA ***
+
+Work has to be donw for SEO to allo Google, Bing, etc. to scrape an SPA 
+site.
+
+• YearOfMoo has a great in-depth article on enabling SEO for your AngularJS 
+  application, which goes into the nitty-gritty details of how you might want 
+  to enable it from scratch. It is a recommended read so you understand how 
+  it works under the covers.
+
+• The GitHub project angular-seo is a great starting point for taking 
+  YearOfMoo’s ideas and implementing them using PhantomJS.
+
+• There are SaaS implementations that take the pain out of indexing your SPA,
+  like BromBone, Prerender.io, and GetSeoJS, which offer all of these in a 
+  single package at a convenient price if you don’t want to implement and 
+  maintain your own version.
