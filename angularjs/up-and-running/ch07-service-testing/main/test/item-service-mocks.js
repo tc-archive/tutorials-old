@@ -1,5 +1,5 @@
 //=============================================================================
-// This module implements a 'global mock' of the 'ItemService'. 
+// This module implements a 'global mock' of the 'ItemService'.
 //=============================================================================
 angular.module('ItemServiceModMock', []) 
 
