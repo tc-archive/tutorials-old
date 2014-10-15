@@ -126,6 +126,34 @@
     in and has authorization and permissions, and even preload some data 
     before a controller and route are loaded into the view.
 
+
+    |*| : BE CAREFULL!
+
+    1) Empty templates
+
+    Never have both an empty 'template' and 'templateUrl' or the route 
+    will be ignored. For things like 'logout' specify the name of the op 
+    rather an empty value.
+
+
+    2) Resolve injection into controller
+
+    Using 'resolves' and want to inject the values of the dependency into our controller, make sure we are defining our controller as part of the route definition, and not directly in our controller with the ng-controller directive.
+
+
+    3) $routeParam variable type
+
+    $routeParams data is always stored as string; so make sure to convert 
+    any compared data (e.g. integers ids from a database).
+
+
+    4) One 'ng-view' per application
+
+    The 'ng-view' durective cannot be nested - doing so will create 
+    multiple views of the same thing. A morecomplex router must be used 
+    for nested views.
+
+
     -->
   </body>
 </html>
