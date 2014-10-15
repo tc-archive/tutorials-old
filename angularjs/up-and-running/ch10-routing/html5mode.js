@@ -19,7 +19,7 @@
 //   is usually 'index.html'.
 //
 //
-angular.module('myHtml5App', ['ngRoute']) 
+angular.module('myHtml5App', ['ngRoute'])
   
   .config(['$locationProvider', '$routeProvider',
     function($locationProvider, $routeProvider) {
