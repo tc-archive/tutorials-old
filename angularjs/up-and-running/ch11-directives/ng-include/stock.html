@@ -1,4 +1,20 @@
-<!-- 
+<!-- HTML Partials
+
+Any time we have to serve HTML partials, we need an HTTP server because the 
+browser does not allow serving or requesting files on the file:// protocol. 
+So to make this application work on our local machine, we have a few options:
+
+• Install Node’s http-server by running 'sudo npm install -g http-server'. Then 
+  run 'http-server' from the directory that contains index.html.
+
+• Python addicts can run 'python -m SimpleHTTPServer' from the folder where the 
+  index.html file is as well.
+
+• Finally, WebStorm can start a built-in server when you ask it to open the 
+  'index.html' file in a browser.
+--> 
+
+<!--
 The stock template defined by the controller in 'app.js' 
 ('stockMarketApp':'MainCtrl') and imported into 'index.html' via the 'ng-include'
 directive. 

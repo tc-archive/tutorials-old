@@ -1,3 +1,18 @@
+<!-- 'ng-include' limitations.
+
+While ng-include is great at extracting snippets of HTML into smaller files, 
+it is not without limitations. The stock.html file we created has two major 
+limitations if we in‐ clude it using the ng-include directive in AngularJS:
+
+• The stock.html file currently looks for a variable called 'stock' and displays 
+  its name, price, and percentage change information. Now, in 'index.html', if we ended up changing the repeater from 'stock' in 'mainCtrl.stocks' to 'each' 
+  in 'mainCtrl.stocks', we would end up showing four empty blocks without the name, price, or change information. This is because although we changed the name of the variable in the main 'index.html' file, the 'stock.html' file still expects a variable called 'stock' for it to display. Thus, if we are using 'ng-include', each file that includes 'stock.html' must name the variable containing the information stock.
+
+• The 'stock.html' file is also currently dependent on being used along with 
+  'mainCtrl'. This is because it expects there to be a mainCtrl.getChange function that it uses to calculate the percentage change of the stock. If 
+  'stock.html' is used in some other HTML that either does not have the controller named 'mainCtrl', or if the controller does not have the function getChange(), then the HTML will not be able to display the percentage change. Thus, the behavior that the extracted HTML depends on will have to be manually included with the right name every time this HTML is used.
+  
+-->
 <html>
   <head>
     <title>Stock Market App</title>
@@ -8,6 +23,8 @@
       <div ng-repeat="stock in mainCtrl.stocks">
         <!-- 
         Replace this 'div' with the html template defined in the controller.
+
+        Also: <div ng-include="'views/stock.html'"></div>
         -->
         <div ng-include="mainCtrl.stockTemplate"></div>
       </div>
