@@ -1,0 +1,31 @@
+<html>
+<head>
+  <title>Stock Market App</title>
+</head>
+<body ng-app="stockMarketApp">
+
+  <div ng-controller="MainCtrl as mainCtrl">
+    <h3>List of Stocks</h3>
+    <!--
+      To make our directive fully contained and reusable, we can now pass 
+      the stock object to our widget. This way, if the variable is renamed 
+      outside, the new variable can be passed to our directive, making it 
+      independent of the name. This can be done using the = binding with the 
+      scope object, and we can reassign the value to a consistent name on the 
+      directive’s isolated scope. Let’s first see how we might want to change 
+      the usage of the directive in the html file.
+    -->
+    <div ng-repeat="s in mainCtrl.stocks">
+      <!--
+      So the directive would use the would use the '$scope' key 'stockData'...
+      -->
+      <div stock-widget stock-data="s">
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="directive.js"></script>
+</body>
+</html>

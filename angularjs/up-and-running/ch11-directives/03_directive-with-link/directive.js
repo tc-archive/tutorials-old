@@ -29,6 +29,23 @@ angular.module('stockMarketApp')
       // directly with the DOM element, and much more. 
       //
       link: function($scope, $element, $attrs) {
+        // What’s the Scope?
+        //
+        // You might wonder what scope we are adding these functions to. You’re 
+        // right to be worried, and it is something we should always keep in mind 
+        // when we add functions to the scope in the link function. In the example 
+        // in this section, ng-repeat in the main index.html file creates a scope 
+        // for each stock in our array, and it is to this scope that we’re adding 
+        // the functions. Because of this, we’re not affecting the controller’s 
+        // scope directly, but that is an unintentional side effect of ng-repeat. 
+        // If we had used our directive outside ng-repeat, we would have ended up 
+        // modifying the controller’s scope directly, which is bad practice.
+        // 
+        // The default scope given in the link function (unless specified otherwise) 
+        // is the scope that the parent has. Adding functions to the parent scope 
+        // should always be frowned upon, because the parent should ideally not be 
+        // changed from within a child.
+        //
         $scope.getChange = function(stock) {
           return Math.ceil(
             ((stock.price - stock.previous) / stock.previous) * 100
