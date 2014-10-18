@@ -8,7 +8,8 @@
         ng-bind="stock.price | currency">
   </span>
   Percentage Change:
+  <!-- Bind to the directive method instead of controller -->
   <span class="stock-change"
-        ng-bind="mainCtrl.getChange(stock) + '%'">
+        ng-bind="getChange(stock) + '%'">
   </span>
 </div>
