@@ -1,0 +1,48 @@
+<!-- File: chapter11/directive-with-scope-advanced/index.html -->
+<html>
+<head>
+  <title>Stock Market App</title>
+</head>
+<body ng-app="stockMarketApp">
+
+  <div ng-controller="MainCtrl as mainCtrl">
+    <h3>List of Stocks</h3>
+    <!--
+    See: 'directive.js' 'stockWidget' 'scope'.
+
+    - stock-data="s" 
+      Bind this 's' to '$scope.stockData' as an object.
+
+    - "Stock {{$index}}. {{s.name}}"
+      Bind this 'string expression' to '$scope.stockTitle' as a string.
+       * Takes a string value, which also allows for string interpola‐ tions (or 
+         handling the {{ }} syntax), so we can pass it a combination of hardcoded
+         text and variable values
+
+    - "mainCtrl.onStockSelect(stockPrice, stockName)"
+      Bind this 'controller function' to '$scope.whenSelect' as a function.
+      * Takes the reference of the function it calls, along with the parameter 
+        names for the function. It only makes a reference of this function avail‐
+        able to our directive, and it’s up to us to decide when this function is 
+        actually triggered
+
+        !!! Do note that the key names specified in the HTML have to exactly 
+            match those provided by our directive. Although, the html tag can 
+            define which variable are passed to the controller function and 
+            their order.
+
+    -->
+    <div ng-repeat="s in mainCtrl.stocks">
+      <div stock-widget
+           stock-data="s"
+           stock-title="Stock {{$index}}. {{s.name}}"
+           when-select="mainCtrl.onStockSelect(stockPrice, stockName)">
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="directive.js"></script>
+</body>
+</html>
