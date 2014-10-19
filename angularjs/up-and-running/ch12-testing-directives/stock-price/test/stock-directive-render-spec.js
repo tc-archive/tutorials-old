@@ -1,6 +1,10 @@
 //=============================================================================
-// Firective Test Example
+// Directive Render Test Example
 //=============================================================================
+
+// Tests the 'rendering' of the directive.
+//
+
 describe('Stock Widget Directive Rendering', function() {
 
   var compile, mockBackend, rootScope;
@@ -12,7 +16,6 @@ describe('Stock Widget Directive Rendering', function() {
   // SetUp: Reload the 'stockMarketApp'.
   //
   beforeEach(module('stockMarketApp'));
-
 
 
   // SetUp:  Inject '$compile', '$httpBackend', '$rootScope' test dependencies.
@@ -82,6 +85,12 @@ describe('Stock Widget Directive Rendering', function() {
     //
     scope.$digest();
     mockBackend.flush();
+
+
+    // !!!
+    // These first 5 steps are identicial to ''stoct-directive-behavior-spec' 
+    // test.
+
 
     // Step 6
     //
