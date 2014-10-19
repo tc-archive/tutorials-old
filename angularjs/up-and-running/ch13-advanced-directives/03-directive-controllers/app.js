@@ -1,5 +1,8 @@
 // Angular Directives: Controller
 //
+// Directive controllers can be used to communicate between 'directives' and  
+// 'shared state'. 
+//
 // Directive controllers are used in AngularJS for inter-directive communication, 
 // By inter-directive communication, we mean when one directive on an element 
 // wants to communicate with another directive on its parent or on the same 
