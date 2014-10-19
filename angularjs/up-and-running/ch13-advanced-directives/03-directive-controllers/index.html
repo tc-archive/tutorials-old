@@ -1,0 +1,52 @@
+<!-- 
+*** Directive Controller Application Flow ***
+
+1.  When the tabs directive (the parent one) is found in the HTML, the content 
+    is transcluded and a space for the tabs is preserved in the HTML (using 
+    'ng-repeat'). The actual tabs are inserted below it.
+
+2.  Each individual tab registers with the parent,so that the parent tabs 
+    controller can decide which tab is 'currently selected', and 'highlight'  
+    and 'hide/show' the other tabs as needed.
+
+3.  Each tab again uses transclusion on its content to wrap it in a container 
+    so that it can be hidden and shown as needed.
+
+4.  On registration,the 'tabs controller' sets the very first tab as 'selected' 
+    (using a scope variable on the scope passed up to the 'tabs controller').
+
+5.  After that, the 'ng-click' handles 'hiding' and 'showing' of the individual 
+    tabs using the functions defined on the scope of the tabs directive.
+
+-->
+<html>
+<head>
+  <title>Stock Market App</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body ng-app="stockMarketApp">
+
+  <div ng-controller="MainCtrl as mainCtrl">
+    <tabs>
+      <!-- First Tab -->
+      <tab title="First Tab">
+        This is the first tab.
+        The app started at {{mainCtrl.startedTime | date}}
+      </tab>
+      <!-- Second Tab -->
+      <tab title="Second Tab">
+        This is the second tab
+        <!-- Preserve space for transcluded elements. -->
+        <div ng-repeat="stock in mainCtrl.stocks">
+          Stock Name: {{stock.name}}
+        </div>
+      </tab>
+    </tabs>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="tabs.js"></script>
+  <script src="tab.js"></script>
+</body>
+</html>
