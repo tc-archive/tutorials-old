@@ -18,6 +18,23 @@ angular.module('stockMarketApp')
       // 'tabs directive', and we want its controller to be made available to 
       // the tab directive.
       //
+      // *** Require Options ***
+      //
+      // require: 'tabs' 
+      // Look for a directive called 'tabs', which exposes a controller on the
+      // 'same element' the directive is on. Throw an error if not found.
+      //
+      // require: ['tabs', 'ngModel']
+      // Look for multiple controllers on this directive.
+      //
+      // require: '?tabs'
+      // Look for a directive called 'tabs', which exposes a controller on the
+      // 'same element' the directive is on. Pass null if not found.
+      //
+      // require: '^tabs':
+      // Look for a directive called 'tabs', which exposes a controller on the
+      // 'parent element' the directive is on. Throw an error if not found.
+      //
       require: '^tabs',
       // Define a new scope for this directive so that local variables don’t 
       // override anything in the parent scope.
