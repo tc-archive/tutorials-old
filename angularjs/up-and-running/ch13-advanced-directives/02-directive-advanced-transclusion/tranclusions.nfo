@@ -1,0 +1,22 @@
+TRANSCLUSIONS
+
+In general, we can use the transclude concept any time we need a component whose 
+'templating and UI changes depend on its usage and context'. We can decide whether 
+or not we need transclude as follows:
+
+• Does each user of the directive need to specify his own template or rendering 
+  logic? If so, then use transclude.
+
+• Is only the content of the directive important, or is the element on which the 
+  directive is applied necessary as well? Use 'transclude: true' in the former, 
+  and 'transclude: element' in the latter.
+
+• If it’s a simple matter of displaying the transcluded content as is, use the 
+  'ng-transclude' directive directly in your directive template.
+
+• Do we need to generate multiple copies of the template or add 
+  behavior,variables, and business logic to the scope on which the transclusion 
+  is done? If so, 'inject the transcluding function into our link function'.
+
+• Call the transclusion function with an optional new scope (this is recommended)
+  and linking function for that instance. Within the linking function, add the functions and variables that the template needs.
