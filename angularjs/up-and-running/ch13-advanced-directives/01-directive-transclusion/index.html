@@ -1,0 +1,30 @@
+<html>
+<head>
+  <title>Stock Market App</title>
+</head>
+<body ng-app="stockMarketApp">
+
+  <div ng-controller="MainCtrl as mainCtrl">
+    <h3>List of Stocks</h3>
+    <!--
+      The default behavior of any AngularJS directive, in that if it has a 
+      template or templateUrl, it will remove the content of the element where 
+      the directive is found and replace it with the template specified in the 
+      directive definition object.
+ 
+      However, in cases, where we want AngularJS to respect both the inner 
+      contents where the directive is used, as well as the original template 
+      of the directive, we use the concept of 'transclusion'.
+    -->
+    <div ng-repeat="s in mainCtrl.stocks">
+      <div stock-widget stock-data="s">
+        Recommended Stock : {{s.name}}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="directive.js"></script>
+</body>
+</html>

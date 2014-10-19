@@ -1,0 +1,29 @@
+<div class="stock-dash">
+  <!--
+    Basic Transclusion
+
+    Basic transclusion can be thought of as a two-step process:
+    
+    1.  First, we tell the directive that we are going to use transclusion as 
+        part of this directive. This tells AngularJS that whenever the 
+        directive is  encountered in the HTML, to make a copy of its content 
+        and store it so that it’s not lost when AngularJS replaces it with the 
+        directive’s template. This is accomplished by setting the key 
+        transclude to true as part of the directive definition object.
+  
+    2.  Second, we need to tell AngularJS where to put the content that was 
+        stored in the template. This is accomplished by using the 
+        'ng-transclude' directive, which ensures that the content that was 
+        captured is made a child of the element in the directive template.
+  -->
+  <span ng-transclude></span>
+
+  Price:
+  <span class="stock-price"
+        ng-bind="stockData.price | currency">
+  </span>
+  Percentage Change:
+  <span class="stock-change"
+        ng-bind="getChange(stockData) + '%'">
+  </span>
+</div>
