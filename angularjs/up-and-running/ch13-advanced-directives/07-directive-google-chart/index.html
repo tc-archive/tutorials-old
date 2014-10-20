@@ -1,0 +1,56 @@
+<!--
+Integrating 3rd Party Libraries
+
+1.  Depending on the library, wait for the library to load before starting our 
+    directive.
+
+2.  Take in the data from a controller, and convert it into a format suitable 
+    for our third-party component.
+
+3.  Display the data using the third-party component.
+
+4.  Whenever the data changes inside AngularJS, update the third-party 
+    component.
+
+5.  Listen for events from the third-party component and pass them to the 
+    relevant controller through function bindings.
+
+
+This will render the chart with the initial data. When we click the button in the 
+page, the data gets updated in the controller. Because the data is passed to the 
+directive by reference, the directive gets the latest data as well and the watch 
+function is triggered. This updates the chart with the latest values and we get an 
+automatically updating UI with no additional work.
+
+-->
+<html>
+<head>
+  <title>Google Chart App</title>
+</head>
+<body ng-app="googleChartApp">
+
+  <div ng-controller="MainCtrl as mainCtrl">
+    <div>
+      <button ng-click="mainCtrl.changeData()">
+        Change Pie Chart Data
+      </button>
+    </div>
+    <!--
+    We use the pie chart as an attribute directive, and pass it some 
+    configuration as well as the data it needs in order to display as arguments
+    to the directive. This allows us to make it reusable instead of tying it 
+    down to a specific service or the same configuration object every time.
+    -->
+    <div pie-chart
+         chart-data="mainCtrl.pieChartData"
+         chart-config="mainCtrl.pieChartConfig">
+    </div>
+  </div>
+
+  <script src="http://www.google.com/jsapi"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="googleChartLoader.js"></script>
+  <script src="pieChart.js"></script>
+</body>
+</html>
