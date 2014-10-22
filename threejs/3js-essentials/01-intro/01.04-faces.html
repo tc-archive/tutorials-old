@@ -16,6 +16,7 @@
     //*************************************************************************
     // Global Variables
     //*************************************************************************
+    
     var renderer;
     var scene;
     var camera;
@@ -87,11 +88,22 @@
 
       // Create a cube
       //
-      var cubeGeometry = new THREE.BoxGeometry(6, 4, 6);
-      var cubeMaterial = new THREE.MeshLambertMaterial({color: 'red'});
-      var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    var cubeGeometry = new THREE.BoxGeometry(6, 4, 6);
+    var materialArray = applyFaceColors(cubeGeometry);
+    var cubeMaterial = new THREE.MeshFaceMaterial(materialArray);
 
+      // var cubeGeometry = new THREE.BoxGeometry(6, 4, 6);
+      // var cubeMaterial = 
+      //   new THREE.MeshLambertMaterial(
+      //     {color: 'red', transparent:true, opacity:0.6}
+      //   );
+      var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
       cube.castShadow = true;
+
+      // 
+      //
+      addVertices(cube);
+
 
       // Add the cube to the scene
       //
@@ -121,12 +133,70 @@
       render();
     }
 
+
+    /**
+     * Applies coloring to each individual face and updates the geometry so
+     * the materialIndex points to the correct face
+     *
+     * @param geometry the geometry to create facecolor for
+     * @return an array of materials
+     */
+    function applyFaceColors(geometry) {
+      var result = [];
+
+      var faceCount = 0;
+      geometry.faces.forEach(function(face) {
+        face.materialIndex = faceCount++;
+        result.push(new THREE.MeshBasicMaterial({
+          // Simple way to create a blueish color for each face.
+          //
+          color: Math.random()*0x0000FF,
+          transparent:true, 
+          opacity:0.8
+        }));
+      });
+
+      return result;
+    }
+
+    /**
+     * Add small spheres on each of the vertices of the supplied mesh.
+     * @param mesh
+     */
+    function addVertices(mesh) {
+
+        var vertices = mesh.geometry.vertices;
+        var vertexMaterial = new THREE.MeshPhongMaterial({color: 0x00ff00});
+
+        // For each vertex, add a sphere
+        //
+        vertices.forEach(function (vertex) {
+            var vertexSphere = new THREE.SphereGeometry(0.15);
+            var vertexMesh = new THREE.Mesh(vertexSphere, vertexMaterial);
+            vertexMesh.position = vertex;
+            scene.add(vertexMesh);
+        });
+    }
+
     
     // Called when the scene needs to be rendered. Delegates to 
     // requestAnimationFrame for future renders
     // 
     function render() {
+
+    var rotSpeed = 0.01;
+    camera.position.x = 
+        camera.position.x * Math.cos(rotSpeed) 
+        + camera.position.z * Math.sin(rotSpeed);
+
+    camera.position.z = 
+        camera.position.z * Math.cos(rotSpeed) 
+        - camera.position.x * Math.sin(rotSpeed);
+
+    camera.lookAt(scene.position);
+
       // Render using requestAnimationFrame
+      //
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
