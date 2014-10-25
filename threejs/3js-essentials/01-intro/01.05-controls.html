@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>01.04 - Faces</title>
+    <title>01.05 - Controls</title>
     <script src="../libs/three.js"></script>
+    <script src="../libs/dat.gui.min.js"></script>
     <style>
       body {
         /* Full Screen: Set margin to 0 and overflow to hidden. */
@@ -30,6 +31,10 @@
     // A renderer for calculating and drawing a view.
     //
     var renderer;
+
+    // A control UI element for altering config parameters
+    //
+    var control;
 
     
     // Initializes the scene, camera and objects. Called when the window is
@@ -98,9 +103,10 @@
 
       // Create a cube
       //
-    var cubeGeometry = new THREE.BoxGeometry(6, 4, 6);
-    var materialArray = applyFaceColors(cubeGeometry);
-    var cubeMaterial = new THREE.MeshFaceMaterial(materialArray);
+      var cubeGeometry = new THREE.BoxGeometry(6, 4, 6);
+      var cubeMaterial = new THREE.MeshLambertMaterial(
+        {color: 0xff0000, transparent:true, opacity:0.6}
+        );
 
       // var cubeGeometry = new THREE.BoxGeometry(6, 4, 6);
       // var cubeMaterial = 
@@ -108,9 +114,10 @@
       //     {color: 'red', transparent:true, opacity:0.6}
       //   );
       var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+      cube.name='cube';
       cube.castShadow = true;
 
-      // 
+      // Add the Verticies
       //
       addVertices(cube);
 
@@ -128,6 +135,17 @@
       spotLight.castShadow = true;
 
       scene.add(spotLight);
+
+
+      // Setup the control object for the control gui
+      //
+      control = new function() {
+          this.rotationSpeed = 0.005;
+          this.opacity = 0.6;
+          this.color = cubeMaterial.color.getHex();
+      };
+      addControlGui(control);
+
 
       // ----------------------------------------------------------------------
       // Finish
@@ -188,13 +206,25 @@
         });
     }
 
+
+    // Add a control to the UI.
+    //
+    function addControlGui(controlObject) {
+      var gui = new dat.GUI();
+      gui.add(controlObject, 'rotationSpeed', -0.01, 0.01);
+      gui.add(controlObject, 'opacity', 0.1, 1);
+      gui.addColor(controlObject, 'color');
+    }
+
     
     // Called when the scene needs to be rendered. Delegates to 
     // requestAnimationFrame for future renders
     // 
     function render() {
 
-      var rotSpeed = 0.01;
+      // Chnage rotation
+      //
+      var rotSpeed = control.rotationSpeed;
       camera.position.x = 
           camera.position.x * Math.cos(rotSpeed) 
           + camera.position.z * Math.sin(rotSpeed);
@@ -204,6 +234,15 @@
           - camera.position.x * Math.sin(rotSpeed);
 
       camera.lookAt(scene.position);
+
+      // Change opacity
+      //
+      scene.getObjectByName('cube').material.opacity = control.opacity;
+
+      // Change color
+      //
+      scene.getObjectByName('cube').material.color = 
+        new THREE.Color(control.color);
 
       // Render using requestAnimationFrame
       //
@@ -234,3 +273,5 @@
   <body>
   </body>
 </html>
+
+

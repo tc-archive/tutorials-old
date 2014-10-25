@@ -16,9 +16,20 @@
     //*************************************************************************
     // Global Variables
     //*************************************************************************
-    var renderer;
+    
+    // The thre basic object required to create a three.js application.
+
+    // A hierachical scene object.
+    //
     var scene;
+
+    // A camera from which to generate the view.
+    //
     var camera;
+
+    // A renderer for calculating and drawing a view.
+    //
+    var renderer;
 
     
     // Initializes the scene, camera and objects. Called when the window is
@@ -72,9 +83,28 @@
       var planeGeometry = new THREE.PlaneGeometry(20, 20);
       var planeMaterial = new THREE.MeshLambertMaterial({color: 0xcccccc});
       var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+      // To enable shadows, we must tell Three.js which objects cast a shadow 
+      // and which objects should receive a shadow. For this example, it's only 
+      // useful to show shadows on the ground plane, so we set the 
+      // plane.receiveShadow object to true to enable shadow rendering on this 
+      // plane. Now, we just need to set the castShadow object to true on the 
+      // cube and the light, and we're almost done. Finally, we need to 
+      // explicitly enable shadow rendering on the renderer. This is done by 
+      // setting the renderer.shadowMapEnabled object to true. 
+      //
       plane.receiveShadow = true;
 
       // Rotate and position the plane
+      //
+      // The rotation is needed because normally a THREE.PlaneGeometry object is
+      // oriented vertically, and as we want to have a horizontal plane, we need 
+      // to rotate it by 90 degrees (which is 0.5*Pi in radians). As you can see 
+      // in the previous code, we also set its position. If we don't do this, 
+      // our ground will cut through half of the cube as the center of the cube 
+      // is at the position 0, 0, 0 (because we didn't specify it explicitly). 
+      // The height of the cube is 4, so if we offset the position of the ground 
+      // by 2, the cube will fit in completely.
       //
       plane.rotation.x = -0.5 * Math.PI;
       plane.position.x = 0;

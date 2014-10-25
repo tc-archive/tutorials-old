@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>01.02 - Simple Mesh</title>
+    <title>01.03 - Vertices</title>
     <script src="../libs/three.js"></script>
     <style>
       body {
@@ -219,10 +219,20 @@
     //*************************************************************************
     // Global Variables
     //*************************************************************************
+    
+    // The thre basic object required to create a three.js application.
 
-    var renderer;
+    // A hierachical scene object.
+    //
     var scene;
+
+    // A camera from which to generate the view.
+    //
     var camera;
+
+    // A renderer for calculating and drawing a view.
+    //
+    var renderer;
 
     
     // Initializes the scene, camera and objects. Called when the window is
@@ -358,16 +368,16 @@
     // 
     function render() {
 
-    var rotSpeed = 0.01;
-    camera.position.x = 
-        camera.position.x * Math.cos(rotSpeed) 
-        + camera.position.z * Math.sin(rotSpeed);
+      var rotSpeed = 0.01;
+      camera.position.x = 
+          camera.position.x * Math.cos(rotSpeed) 
+          + camera.position.z * Math.sin(rotSpeed);
 
-    camera.position.z = 
-        camera.position.z * Math.cos(rotSpeed) 
-        - camera.position.x * Math.sin(rotSpeed);
+      camera.position.z = 
+          camera.position.z * Math.cos(rotSpeed) 
+          - camera.position.x * Math.sin(rotSpeed);
 
-    camera.lookAt(scene.position);
+      camera.lookAt(scene.position);
 
       // Render using requestAnimationFrame
       //
