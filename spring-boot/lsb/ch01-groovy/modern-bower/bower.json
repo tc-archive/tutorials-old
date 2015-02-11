@@ -1,0 +1,25 @@
+{
+  "name": "hw-app-with-thymeleaf-bower-jquery",
+  "version": "0.1.0",
+  "homepage": "https://github.com/TempleCloud/tutorials",
+  "authors": [
+    "Temple"
+  ],
+  "description": "Learning spring-boot with Bower.",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3"
+  }
+}
