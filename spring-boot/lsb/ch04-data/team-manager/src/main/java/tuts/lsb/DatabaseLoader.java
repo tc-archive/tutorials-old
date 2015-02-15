@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
  * Created by Temple on 15/02/15.
  */
 @Service
+//@Profile("!production")
 public class DatabaseLoader {
 
     private final TeammateRepository teammateRepository;
@@ -26,7 +27,7 @@ public class DatabaseLoader {
     @PostConstruct
     private void initDatabase() {
 
-        Team springBootTeam = new Team("Spring Boot Badgers");
+        Team springBootTeam = new Team("Spring Boot Hamsters");
         teamRepository.save(springBootTeam);
 
         Teammate greg = new Teammate("Temple", "Cloud");
