@@ -5,6 +5,8 @@ angularjs/angularjs-foundation/video-app/
 
 **/node_modules
 
+**/*.nocheckin
+
 
 # Compiled source #
 ###################
@@ -32,6 +34,7 @@ angularjs/angularjs-foundation/video-app/
 # IDE #
 ######################
 .idea
+.eclipse
 
 
 
