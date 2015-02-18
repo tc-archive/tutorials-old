@@ -3,8 +3,6 @@ package tuts.lsb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-
 /**
  * Created by Temple on 15/02/15.
  */
@@ -24,7 +22,7 @@ public class DatabaseLoader {
         this.teamRepository = teamRepository;
     }
 
-    @PostConstruct
+    // @PostConstruct
     private void initDatabase() {
 
         Team springBootTeam = new Team("Spring Boot Hamsters");
