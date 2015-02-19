@@ -1,0 +1,25 @@
+{
+  "name": "issue-manager-mobile",
+  "version": "0.1.0",
+  "homepage": "https://github.com/TempleCloud/tutorials",
+  "authors": [
+    "TempleCloud"
+  ],
+  "description": "Learning SpringBoot Mobile App Issue Manager",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/main/resources/public/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-mobile-bower": "~1.4.5"
+  }
+}
