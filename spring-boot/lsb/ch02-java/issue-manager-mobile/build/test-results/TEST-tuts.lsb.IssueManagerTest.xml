@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="tuts.lsb.IssueManagerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2015-02-18T22:03:22" hostname="plato.config" time="1.405">
+<testsuite name="tuts.lsb.IssueManagerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2015-02-19T21:24:26" hostname="plato.config" time="1.19">
   <properties/>
-  <testcase name="findOpenIssues" classname="tuts.lsb.IssueManagerTest" time="1.405"/>
-  <system-out><![CDATA[2015-02-18 22:03:22.156  INFO 20428 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
-2015-02-18 22:03:22.156  INFO 20428 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
-2015-02-18 22:03:22.157  INFO 20428 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Could not instantiate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
-2015-02-18 22:03:22.157  INFO 20428 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@1d472778, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@662bd984, org.springframework.test.context.support.DirtiesContextTestExecutionListener@5b8e0a5a]
+  <testcase name="findOpenIssues" classname="tuts.lsb.IssueManagerTest" time="1.19"/>
+  <system-out><![CDATA[2015-02-19 21:24:26.161  INFO 21109 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+2015-02-19 21:24:26.162  INFO 21109 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Could not instantiate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+2015-02-19 21:24:26.162  INFO 21109 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+2015-02-19 21:24:26.163  INFO 21109 --- [    Test worker] o.s.t.c.s.DefaultTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@fc40b77, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@70008d93, org.springframework.test.context.support.DirtiesContextTestExecutionListener@4ecb3d6e]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -15,10 +15,10 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v1.2.1.RELEASE)
 
-2015-02-18 22:03:22.177  INFO 20428 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on plato.config with PID 20428 (/Users/Temple/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/1.2.1.RELEASE/efe81809343f4fca576ea872eb6a269599ebb1d0/spring-boot-1.2.1.RELEASE.jar started by Temple in /Users/Temple/Work/dev/tutorials/spring-boot/lsb/ch02-java/issue-manager-mobile)
-2015-02-18 22:03:22.179  INFO 20428 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@53d0eb6f: startup date [Wed Feb 18 22:03:22 GMT 2015]; root of context hierarchy
-2015-02-18 22:03:22.307  INFO 20428 --- [    Test worker] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
-2015-02-18 22:03:22.350  INFO 20428 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 0.188 seconds (JVM running for 2.979)
+2015-02-19 21:24:26.181  INFO 21109 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on plato.config with PID 21109 (/Users/Temple/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/1.2.1.RELEASE/efe81809343f4fca576ea872eb6a269599ebb1d0/spring-boot-1.2.1.RELEASE.jar started by Temple in /Users/Temple/Work/dev/tutorials/spring-boot/lsb/ch02-java/issue-manager-mobile)
+2015-02-19 21:24:26.183  INFO 21109 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@55478e60: startup date [Thu Feb 19 21:24:26 GMT 2015]; root of context hierarchy
+2015-02-19 21:24:26.290  INFO 21109 --- [    Test worker] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2015-02-19 21:24:26.334  INFO 21109 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 0.166 seconds (JVM running for 2.558)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
