@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+// Taken from Spring-Boot Angular Security Tutorial Series
+// http://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application#how-does-it-work
+
 @SpringBootApplication
 @RestController
 public class SecureAngularApplication {
