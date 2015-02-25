@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: Secure SPA 03 - UI
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: tuts.secure
+Build-Jdk: 1.8.0_31
+Built-By: Temple
+Created-By: IntelliJ IDEA
+Main-Class: tuts.secure.SecureAngularApplication
+
