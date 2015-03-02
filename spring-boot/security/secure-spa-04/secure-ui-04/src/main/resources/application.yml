@@ -1,0 +1,14 @@
+security:
+  user:
+    password: password
+  ignored: /**/favicon.ico,/js/**,/css/**
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+zuul:
+  routes:
+    resource:
+      path: /resource/**
+      url: http://localhost:9000
