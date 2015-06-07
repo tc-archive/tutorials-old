@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ReplState" timestamp="1393165114430">{:repl-history {:ide [], :local [&quot;reduce (+ concat [1, 2] '(3, 4))&quot; &quot;reduce (+ ([1, 2]))&quot; &quot;reduce (+ [1, 2])&quot; &quot;(reduce + [1 2 3 4 5])&quot; &quot;(concat [1, 2] '(3, 4))&quot; &quot;reduce (+ (concat [1, 2] '(3, 4)))&quot; &quot;reduce (+ (doall(concat [1, 2] '(3, 4))))&quot; &quot;reduce (+ (vec(concat [1, 2] '(3, 4))))&quot; &quot;(into [] (concat [1, 2] '(3, 4)))&quot; &quot;(reduce + (into [] (concat [1, 2] '(3, 4))))&quot;], :remote []}}</component>
-</project>
-
